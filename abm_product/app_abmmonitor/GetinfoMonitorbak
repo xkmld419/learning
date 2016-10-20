@@ -1,0 +1,358 @@
+#include "ReadCfg.h"
+#include "ABMException.h"
+#include <string.h>
+#include <iostream>
+#include <sys/shm.h>
+#include <stdio.h>    
+#include "WfPublic.h"
+#include "CSemaphore.h"
+
+#include<sys/types.h>
+#include<sys/ipc.h>
+#include<sys/sem.h>
+
+#define C_CONTEXT_MAX 64
+#define SHM_MODE 0600
+#define SHM_SIZEL 150  //vector 内存大小 
+#define MQ_SIZE 60000
+
+
+//Monitor读取配置所需要参数信息
+static char g_sMonitorName[][18] = {
+    "app_id",
+    "app_name",
+    "app_process_name",
+    "app_exec",
+    "process_id_max",
+    "process_id_min",
+    "state",
+    "parammeter",
+    "recv_key",
+    "send_key",
+    "flag",
+    "auto_run",
+    "vp_id"
+};
+
+//MonitorInfo 最终结构信息
+struct MonitorCfg {
+    int  m_iAppID;
+    char m_sAppName[20];
+    char m_sProcessName[30];
+    char m_sAppExec[30];
+    int  m_iProcessIdMax;
+    int  m_iProcessIdMin;
+    char m_sState;
+    char m_sParammeter[50]; 
+    char m_sRecvKey[20];
+    char m_sSendKey[20];
+    int  m_iProcessID;
+    int  m_iSendMsg;
+    int  m_iRecvMsg;
+    int  m_iFlag;
+    int  m_iAutoRun;
+};
+
+
+
+
+//MonitorInfo 最终结构信息
+
+class MonitorInfo{
+public:
+    MonitorInfo(){}
+    ~MonitorInfo(){}
+    void getinfoInit(int i){
+        ABMException oExp;
+        long g_lVectorData=getInfoIpc(oExp,"SHM_VectorData");
+        m_lSHMSize = 0;
+        if(i > 0) {
+            m_lSHMSize=sizeof(int)+sizeof(MonitorCfg)*SHM_SIZEL;
+        }
+        int shmid=0;
+        shmid=shmget(g_lVectorData,m_lSHMSize,SHM_MODE);
+        if (shmid < 0) {
+            shmid=shmget(g_lVectorData,m_lSHMSize,SHM_MODE | IPC_CREAT);
+            if (shmid < 0) {
+                printf("create shm errno: %d\n", errno);
+                exit;
+            }
+        }
+        ptr=(char *)shmat(shmid,0,0);
+        if (!m_oSHMCSemaphore.getSem(g_lVectorData)) {
+            ADD_EXCEPT1(oExp, "CSemaphore.getSem(%s) failed.",g_lVectorData);    
+        }
+    }
+    //放入容器里面
+    int getCfgVec(ABMException &oExp){
+        char sFileName[1024];
+        char *penv = getenv("ABMAPP_DEPLOY");
+        if (!penv) {
+            ADD_EXCEPT0(oExp, "miss environment ABMAPP_DEPLOY, please add it to your.profile");
+            return 0;
+        }
+        
+        if (penv[strlen(penv)-1] != '/') {
+            snprintf (sFileName, sizeof(sFileName)-1, "%s/config/abm_app_cfg.ini",penv);
+        } else {
+            snprintf (sFileName, sizeof(sFileName)-1, "%sconfig/abm_app_cfg.ini",penv);
+        }
+        
+        ReadCfg monitorCfg;
+        ReadCfg infoCfg;
+        if (monitorCfg.read(oExp, sFileName, "SYSTEM_MONITOR" , '|') == -1) {
+            ADD_EXCEPT1(oExp, "ReadCfg::read(%s, \"SYSTEM_MONITOR\", '|') failed",sFileName);
+            return -1;     
+        }
+        char sValue[C_CONTEXT_MAX];
+        int irows = monitorCfg.getRows();
+        MonitorCfg tmpCfg;
+        int j=0;
+        int ii=0;
+        int a=0;
+        for(int i=1;i<=irows;i++){
+            
+            memset((void *)&tmpCfg, 0x00, sizeof(tmpCfg));
+            
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[0], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[0], i);
+                return -1;     
+            }
+            tmpCfg.m_iAppID=atoi(sValue);
+            
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[1], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[1], i);
+                return -1;     
+            }
+            strncpy(tmpCfg.m_sAppName, sValue,sizeof(tmpCfg.m_sAppName)-1);
+            
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[2], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[2], i);
+                return -1;     
+            }
+            strncpy(tmpCfg.m_sProcessName, sValue,sizeof(tmpCfg.m_sProcessName)-1);
+            
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[3], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[3], i);
+                return -1;     
+            }
+            strncpy(tmpCfg.m_sAppExec, sValue, sizeof(tmpCfg.m_sAppExec)-1);
+            
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[4], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[4], i);
+                return -1;     
+            }
+            tmpCfg.m_iProcessIdMax=atoi(sValue);
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[5], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[5], i);
+                return -1;     
+            }
+            tmpCfg.m_iProcessIdMin=atoi(sValue);
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[6], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                return -1;     
+            }
+            tmpCfg.m_sState=sValue[0];
+            //strncpy(tmpCfg.m_sState, sValue, sizeof(tmpCfg.m_sState)-1);
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[7], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[7], i);
+                return -1;     
+            }
+            strncpy(tmpCfg.m_sParammeter, sValue, sizeof(tmpCfg.m_sParammeter)-1);
+            
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[10], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[10], i);
+                return -1;     
+            }
+            tmpCfg.m_iFlag=atoi(sValue);
+            
+            memset(sValue, 0x00, sizeof(sValue));
+            if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[11], i)) {
+                ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[11], i);
+                return -1;     
+            }
+            tmpCfg.m_iAutoRun=atoi(sValue);
+            
+            if (infoCfg.read(oExp, sFileName, tmpCfg.m_sAppName, '|') == -1) {
+               ADD_EXCEPT1(oExp, "ReadCfg::read(%s, \"SYSTEM_MONITOR\", '|') failed",sFileName);
+               return -1;     
+             }
+            int irowsb = infoCfg.getRows();
+            
+            switch(tmpCfg.m_iFlag){
+               case 0://正常
+                   memset(sValue, 0x00, sizeof(sValue));
+                   if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[8], i)) {
+                       ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[8], i);
+                       return -1;     
+                   }
+                   strncpy(tmpCfg.m_sRecvKey, sValue, sizeof(tmpCfg.m_sRecvKey)-1);
+                   
+                   memset(sValue, 0x00, sizeof(sValue));
+                   if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[9], i)) {
+                       ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[9], i);
+                       return -1;     
+                   }
+                   strncpy(tmpCfg.m_sSendKey, sValue, sizeof(tmpCfg.m_sSendKey)-1);
+                   for(j=1;j<=irowsb;j++){
+                       memset(sValue, 0x00, sizeof(sValue));
+                       if (!infoCfg.getValue(oExp, sValue, "proc", j)) {
+                            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                            return -1;
+                       }
+                       tmpCfg.m_iProcessID=atoi(sValue);
+                       if(tmpCfg.m_iProcessID<tmpCfg.m_iProcessIdMin||tmpCfg.m_iProcessID>tmpCfg.m_iProcessIdMax){
+                           continue;
+                       }
+                       memset(sValue, 0x00, sizeof(sValue));
+                       if (!infoCfg.getValue(oExp, sValue, tmpCfg.m_sRecvKey, j)) {
+                            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                            tmpCfg.m_iRecvMsg=0;
+                       }
+                       tmpCfg.m_iRecvMsg=atoi(sValue);
+                       memset(sValue, 0x00, sizeof(sValue));
+                       if (!infoCfg.getValue(oExp, sValue, tmpCfg.m_sSendKey, j)) {
+                            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                            tmpCfg.m_iSendMsg=0;
+                       }
+                       tmpCfg.m_iSendMsg=atoi(sValue);
+                       m_vecMonitor.push_back(tmpCfg);
+                       ii++;
+                   }
+                   break;
+               case 1://重复现象
+                   memset(sValue, 0x00, sizeof(sValue));
+                   if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[8], i)) {
+                       ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[8], i);
+                       return -1;     
+                   }
+                   strncpy(tmpCfg.m_sRecvKey, sValue, sizeof(tmpCfg.m_sRecvKey)-1);
+                   
+                   memset(sValue, 0x00, sizeof(sValue));
+                   if (!monitorCfg.getValue(oExp, sValue, g_sMonitorName[9], i)) {
+                       ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[9], i);
+                       return -1;     
+                   }
+                   strncpy(tmpCfg.m_sSendKey, sValue, sizeof(tmpCfg.m_sSendKey)-1);
+                   a=ii-1;
+                   for(j=1;j<=irowsb;j++){
+                       memset(sValue, 0x00, sizeof(sValue));
+                       if (!infoCfg.getValue(oExp, sValue, "proc", j)) {
+                            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                            return -1;
+                       }
+                       tmpCfg.m_iProcessID=atoi(sValue);
+                       
+                       memset(sValue, 0x00, sizeof(sValue));
+                       if (!infoCfg.getValue(oExp, sValue, tmpCfg.m_sRecvKey, j)) {
+                            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                            tmpCfg.m_iRecvMsg=0;
+                       }
+                       tmpCfg.m_iRecvMsg=atoi(sValue);
+                       memset(sValue, 0x00, sizeof(sValue));
+                       if (!infoCfg.getValue(oExp, sValue, tmpCfg.m_sSendKey, j)) {
+                            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                            tmpCfg.m_iSendMsg=0;
+                       }
+                       tmpCfg.m_iSendMsg=atoi(sValue);
+                       
+                       for(int aa=0;aa<j;aa++){
+                         int k=aa+a;
+                         int kkk=m_vecMonitor[k].m_iProcessID;
+                         if((m_vecMonitor[k].m_iProcessID==tmpCfg.m_iProcessID)&&(m_vecMonitor[k].m_iSendMsg==tmpCfg.m_iSendMsg)
+                            &&(m_vecMonitor[k].m_iRecvMsg==tmpCfg.m_iRecvMsg)){
+                             continue;
+                         }else{
+                            if((aa+a)==(ii-1)){
+                              if(tmpCfg.m_iProcessID>=tmpCfg.m_iProcessIdMin&&tmpCfg.m_iProcessID<=tmpCfg.m_iProcessIdMax){
+                                  m_vecMonitor.push_back(tmpCfg);
+                                  ii++;
+                              }
+                            }
+                         }
+                       }
+                   
+                   }
+                   break;
+               case 2://没有消息队列
+                   for(j=1;j<=irowsb;j++){
+                       memset(sValue, 0x00, sizeof(sValue));
+                       if (!infoCfg.getValue(oExp, sValue, "proc", j)) {
+                            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",g_sMonitorName[6], i);
+                            return -1;
+                       }
+                       tmpCfg.m_iProcessID=atoi(sValue);
+                       if(tmpCfg.m_iProcessID<tmpCfg.m_iProcessIdMin||tmpCfg.m_iProcessID>tmpCfg.m_iProcessIdMax){
+                           continue;
+                       }
+                       tmpCfg.m_iRecvMsg=0;
+                       tmpCfg.m_iSendMsg=0;
+                       m_vecMonitor.push_back(tmpCfg);
+                       ii++;
+                   }
+                   break;
+            }
+        }
+        return ii;
+    }
+    // 放入内存
+    int putCfgShm(ABMException &oExp){
+        int i=getCfgVec(oExp);
+        getinfoInit(i);
+        m_oSHMCSemaphore.P();
+        memset(ptr, 0x00, m_lSHMSize);
+        memcpy(ptr,&i,sizeof(int));
+        memcpy(ptr+sizeof(int),&m_vecMonitor[0],sizeof(MonitorCfg)*m_vecMonitor.size());
+        m_oSHMCSemaphore.V();
+        return 0;
+     }
+    //从内存取出来
+    int getInfoCfg(){
+        getinfoInit(0);
+        m_piNum=(int*)ptr;
+        m_poMonitorCfg= (MonitorCfg*)(ptr+sizeof(int));
+        return 0;
+    }
+    //去共享内存id与，信号量ip和容器共享内存id
+    int getInfoIpc(ABMException &oExp,char *pIpcName){
+        char sFileName[1024];
+        char *penv = getenv("ABMAPP_DEPLOY");
+        if (!penv) {
+            ADD_EXCEPT0(oExp, "miss environment ABMAPP_DEPLOY, please add it to your.profile");
+            return 0;
+        }
+        
+        if (penv[strlen(penv)-1] != '/') {
+            snprintf (sFileName, sizeof(sFileName)-1, "%s/config/abm_app_cfg.ini",penv);
+        } else {
+            snprintf (sFileName, sizeof(sFileName)-1, "%sconfig/abm_app_cfg.ini",penv);
+        }
+        ReadCfg tempCfg;
+        if (tempCfg.read(oExp, sFileName, "MONITOR_IPCKEY" , '|') == -1) {
+            ADD_EXCEPT1(oExp, "ReadCfg::read(%s, \"SYSTEM_MONITOR\", '|') failed",sFileName);
+            return -1;     
+        }
+        int sValue=0;
+        if (!tempCfg.getValue(oExp, sValue, pIpcName, 1)) {
+            ADD_EXCEPT2(oExp, "ReadCfg::getValue(\"%s\", %d) failed",*pIpcName, 1);
+            return -1;     
+        }
+        return sValue;
+    }
+public:
+    vector<MonitorCfg>  m_vecMonitor;
+    CSemaphore  m_oSHMCSemaphore;
+    int *m_piNum;
+    MonitorCfg *m_poMonitorCfg;
+    long m_lSHMSize;
+    char *ptr; 
+};

@@ -1,0 +1,31 @@
+include ../../Make.defines
+
+##### self define #####
+TARGETS=sqlite
+ALL_OBJS= sqlite3.o shell.o TSQLIteQuery.o
+
+SQLITE_LIBS= libsqlite3.a
+
+CURENT_LIBS=$(SQLITE_LIBS)
+
+##### create curent libs #####
+$(CURENT_LIBS): $(ALL_OBJS)
+	@echo "=======[ $(CURENT_LIBS) ]======="
+	$(AR) $(CURENT_LIBS) $(ALL_OBJS)
+
+all: $(CURENT_LIBS) $(TARGETS)
+
+##### create executed files #####
+#test: test1.o test2.o
+#	make -f ./Makefile OBJS="test1.o test2.o" EXE=$@ build_bill
+
+
+sqlite: $(CURENT_LIBS)
+	@echo
+	make -f ./Makefile OBJS="$(CURENT_LIBS)" EXE=$@ build_prod_main
+	@echo
+	
+clean:
+	rm -f *.o $(CURENT_LIBS) $(CLEANFILES) $(TARGETS)
+	
+#xlC -q64 -g  -o sqlite -I. libsqlite3.a  -lm -lpthread  -lcurses -L/oracle/OraHome/rdbms/lib -L/oracle/OraHome/lib -locci -lclntsh -lm `cat /oracle/OraHome/lib/sysliblist` -lpthread  -lc 

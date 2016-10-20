@@ -1,0 +1,157 @@
+#!/sbin/sh
+
+cd /oradata/abmaccu/abm_product/lib
+rm *
+
+cd /oradata/abmaccu/abm_product/lib_bak
+rm *
+
+
+echo " ¿ªÊ¼±àÒërun_time."
+cd /oradata/abmaccu/abm_product/src/run_time/algo
+make clean
+make all
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/run_time/dccparser
+make clean
+make all
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/run_time/oracle_op
+make clean
+make all
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/run_time/shm_op
+make clean
+make all
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/run_time/tt_op
+make clean
+make all
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/run_time/xml_op
+make clean
+make all
+sleep 3
+
+
+echo " ?*J<1`RksrcOB5Dlib."
+
+cd /oradata/abmaccu/abm_product/src/cparser
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/framework
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/lib
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/public
+make clean
+make lib
+make install
+sleep 3
+
+
+cd /oradata/abmaccu/abm_product/src/libbnftp
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/liboci
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/mmdb
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/newace
+make clean
+make lib
+make install
+sleep 3
+
+
+cd /oradata/abmaccu/abm_product/src/terminal_control
+make clean
+make lib
+make install
+sleep 3
+
+
+cd /oradata/abmaccu/abm_product/src/threelogapi
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/app_init
+make clean
+make lib
+make install
+sleep 3
+
+
+cd /oradata/abmaccu/abm_product/src/app_abmmonitor
+make clean
+make lib
+make install
+sleep 3
+
+cd /oradata/abmaccu/abm_product/src/app_json
+make clean
+make lib
+make install
+sleep 3
+
+
+echo " ?*J<:O3Ilibbm28.a."
+
+cd /oradata/abmaccu/abm_product/lib
+cp *.a lib_bak
+cd lib_bak
+rm libbm28.a
+ar -x libace.a          
+ar -x libalgo.a         
+ar -x libbillcommon.a   
+ar -x libbnftp.a   
+ar -x libcontrols.a           
+ar -x libdccparser.a     
+ar -x libframework.a 
+ar -x libinit.a    
+ar -x libjson.a              
+ar -x libliboci.a         
+ar -x libmmdb.a           
+ar -x liboracleop.a       
+ar -x libparser.a         
+ar -x libpublic.a        
+ar -x libshmop.a         
+ar -x libsystem.a        
+ar -x libthreelogapi.a  
+ar -x libttop.a                     
+ar -x libworkflow.a  
+ar -x libxmlop.a     
+
+ar -r libbm28.a *.o
+cp libbm28.a ..
+
+echo "tttttt"

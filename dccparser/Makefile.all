@@ -1,0 +1,104 @@
+AM_CPPFLAGS = 
+INCLUDES = -I. 
+AM_LDFLAGS = -L.
+RM = rm -rf
+AR = ar -rv
+LIBPARSER=libdccparser.a
+
+CXXFLAGS = -DMXML -w -g
+CFLAGS = $(CXXFLAGS)
+LD    = $(LIBPARSER)
+LDADD = 
+CXX=g++
+
+include Makefile.$(EXT)
+
+PUBLIBOBJS	=	mxml-attr.o mxml-entity.o mxml-file.o mxml-index.o \
+			mxml-node.o mxml-search.o mxml-set.o
+XMLLIBOBJS		=	$(PUBLIBOBJS) mxml-private.o mxml-string.o
+ALL_OBJS = $(XMLLIBOBJS) Time_Value.o Message_Block.o Free_List.o \
+	ACE.o Auto_Ptr.o Node.o Unbounded_Set.o Local_Memory_Pool.o \
+	Malloc.o Malloc_T.o Malloc_Allocator.o\
+	avplist.o q_avplist.o comlist.o g_avplist.o \
+	parser.o avp_container.o parser_avp.o avp_header.o \
+	error_status.o parser_q_avplist.o xml.o xmldict.o \
+	xml_errorreporter.o memory_manager.o parser_avpvalue.o DccMsgParser.o
+
+TARGETS=  libdccparser.a
+PUBLIB_SRC	=	mxml-attr.cpp mxml-entity.cpp mxml-file.cpp mxml-index.cpp \
+			mxml-node.cpp mxml-search.cpp mxml-set.cpp
+XMLLIB_SRC		=	$(PUBLIB_SRC) mxml-private.cpp mxml-string.cpp
+ALL_SRC = $(XMLLIB_SRC) avplist.cpp q_avplist.cpp comlist.cpp g_avplist.cpp \
+	parser.cpp avp_container.cpp parser_avp.cpp avp_header.cpp \
+	error_status.cpp parser_q_avplist.cpp xml.cpp xmldict.cpp \
+	xml_errorreporter.cpp memory_manager.cpp parser_avpvalue.cpp \
+	Time_Value.cpp Message_Block.cpp Free_List.cpp \
+	ACE.cpp Auto_Ptr.cpp Node.cpp Unbounded_Set.cpp Local_Memory_Pool.cpp \
+	Malloc.cpp Malloc_T.cpp Malloc_Allocator.cpp
+XMLLIB_H = config.h mxml.h mxml-private.h
+ALL_H   = $(XMLLIB_H) parser_avp.h parser_avpvalue.h \
+				parser.h xmldict.h \
+				avp_header.h \
+				comlist.h \
+				error_status.h \
+				parser_q_avplist.h \
+				xml_errorreporter.h \
+				avplist.h \
+				g_avplist.h \
+				q_avplist.h \
+        memory_manager.h \
+        xml.h \
+        Malloc_Base.h \
+        macros.h \
+        Time_Value.h \
+        Message_Block.h \
+        Free_List.h \
+        Default_Constants.h \
+        ACE.h Auto_Ptr.h Node.h Unbounded_Set.h Local_Memory_Pool.h \
+        Malloc.h Malloc_T.h Malloc_Allocator.h \
+        diameter_parser_api.h
+
+CPPCOMPILE = $(CXX) $(CFLAGS) $(AM_CPPFLAGS) $(INCLUDES) -D$(HOST_OS) 
+
+.SUFFIXES:
+.SUFFIXES: .cpp .o .h
+CURRLIBS=libdccparser.a
+
+TARGETS=parser_test2
+DCCPARSER=dccparser.dll
+TEST=parser_test
+
+all: $(CURRLIBS) $(TARGETS) $(TEST) 
+
+$(CURRLIBS): $(ALL_OBJS) $(ALL_H)
+	$(AR) libdccparser.a $(ALL_OBJS)
+
+$(TARGETS): test2.o $(CURRLIBS) $(ALL_H) $(LIBPARSER)
+	$(CPPLINK) $(LIBS) $(LD) $(LDADD)
+
+$(TEST): DccMsgParser.o test.o $(CURRLIBS) $(ALL_H) $(LIBPARSER)
+	$(TESTLINK) $(LIBS) $(LD) $(LDADD)
+	
+$(DCCPARSER): DccMsgParser.o DccParser.o $(CURRLIBS) $(ALL_H) $(LIBPARSER)
+	$(CXX) -shared -o $(DCCPARSER) DccMsgParser.o DccParser.o $(LIBS) $(LD) $(LDADD)
+
+packOneMsg:DccMsgParser.o packOneMsg.o $(CURRLIBS) $(ALL_H) $(LIBPARSER)
+	$(PARSERLINK) $(LIBS) $(LD) $(LDADD)
+	
+testpackOneMsg:DccMsgParser.o testpackOneMsg.o $(CURRLIBS) $(ALL_H) $(LIBPARSER)
+	$(TESTPARSERLINK) $(LIBS) $(LD) $(LDADD)
+	
+CPPLINK = $(CXX) $(CFLAGS) -o $@ test2.o $(AM_CPPFLAGS) $(AM_LDFLAGS) $(LDFLAGS) 
+
+TESTLINK = $(CXX) $(CFLAGS) -o $@ DccMsgParser.o test.o $(AM_CPPFLAGS) $(AM_LDFLAGS) $(LDFLAGS) 
+
+PARSERLINK = $(CXX) $(CFLAGS) -o $@ DccMsgParser.o packOneMsg.o $(AM_CPPFLAGS) $(AM_LDFLAGS) $(LDFLAGS) 
+
+TESTPARSERLINK = $(CXX) $(CFLAGS) -o $@ DccMsgParser.o testpackOneMsg.o $(AM_CPPFLAGS) $(AM_LDFLAGS) $(LDFLAGS) 
+
+.cpp.o:$(ALL_H) $(ALL_SRC) test2.cpp DccMsgParser.cpp
+	$(CPPCOMPILE) -c -o $@ $<
+
+clean:
+	$(RM) *.o *.a *.exe *.dll $(TARGETS) $(TEST)
+

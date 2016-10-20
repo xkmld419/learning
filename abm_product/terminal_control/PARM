@@ -1,0 +1,59 @@
+(ld): setopt 64
+(ld): halt 4
+(ld): setfflag 4
+(ld): savename makeform
+(ld): filelist 14 1
+(ld): i /lib/crt0_64.o
+(ld): i makeform.o
+(ld): lib /lib/libc.a
+(ld): lib /oracle/app/product/10.2.0/db_1/lib/libocci.a
+(ld): lib /oracle/app/product/10.2.0/db_1/lib/libclntsh.a
+(ld): lib /lib/libpthread.a
+(ld): lib /lib/libdl.a
+(ld): lib /lib/libm.a
+(ld): lib /lib/libodm.a
+(ld): lib /lib/libbsd_r.a
+(ld): lib /lib/libld.a
+(ld): lib /lib/libperfstat.a
+(ld): lib /lib/libxlopt.a
+(ld): lib /lib/libC.a
+LIBRARY: Shared object libc.a[shr_64.o]: 2665 symbols imported.
+LIBRARY: Shared object libc.a[posix_aio_64.o]: 20 symbols imported.
+LIBRARY: Shared object libc.a[aio_64.o]: 18 symbols imported.
+LIBRARY: Shared object libc.a[pse_64.o]: 5 symbols imported.
+LIBRARY: Shared object libc.a[dl_64.o]: 4 symbols imported.
+LIBRARY: Shared object libc.a[pty_64.o]: 1 symbols imported.
+LIBRARY: Shared object libocci.a[shr.o]: 3142 symbols imported.
+LIBRARY: Shared object libclntsh.a[shr.o]: 1492 symbols imported.
+LIBRARY: Shared object libpthread.a[shr_xpg5_64.o]: 332 symbols imported.
+LIBRARY: Shared object libdl.a[shr_64.o]: 4 symbols imported.
+LIBRARY: Shared object libodm.a[shr_64.o]: 41 symbols imported.
+LIBRARY: Shared object libperfstat.a[shr_64.o]: 19 symbols imported.
+LIBRARY: Symbols imported from import file /lib/libC.a[shr_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[shr2_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[shr3_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[ansi_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[shr_64.imp]: 383
+LIBRARY: Symbols imported from import file /lib/libC.a[shr2_64.imp]: 24
+LIBRARY: Symbols imported from import file /lib/libC.a[shr3_64.imp]: 27
+LIBRARY: Symbols imported from import file /lib/libC.a[ansi_64.imp]: 2448
+LIBRARY: Shared object libC.a[ansi_64.o]: 2658 symbols imported.
+FILELIST: Number of previously inserted files processed: 14
+(ld): resolve
+RESOLVE: 115 of 15297 symbols were kept.
+(ld): addgl /usr/lib/glink64.o
+ADDGL: Glink code added for 25 symbols.
+(ld): er full
+ER: There are no unresolved symbols.
+(ld): mismatch
+MISMATCH: No type mismatches exist.
+(ld): comprld
+COMPRLD: Kept 300 of 300 relocation entries.
+(ld): origin page 0x100000000 0x110000000
+(ld): libpath /oracle/app/product/10.2.0/db_1/rdbms/lib:/oracle/app/product/10.2.0/db_1/lib:/lib:/usr/vac/lib:/usr/vacpp/lib:/usr/lib:/lib
+LIBPATH: Library path set to /oracle/app/product/10.2.0/db_1/rdbms/lib:/oracle/app/product/10.2.0/db_1/lib:/lib:/usr/vac/lib:/usr/vacpp/lib:/usr/lib:/lib
+(ld): save 1L .
+SAVE: Section sizes = 12287+825+0 (0x2FFF+0x339+0x0 hex)
+SAVE: Size of TOC: 400 (0x190 hex)
+(ld): rc
+RC: Highest return code was 0.

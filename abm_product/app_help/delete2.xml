@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<help option="delete">
+	<commandHelp>
+		<command code="hbfinderr">
+		</command>
+  	<command code="hbhelp">
+				<subcommand subcode="-version">
+				</subcommand>
+		</command>
+	</commandHelp>
+	
+	<paramHelp>
+		<param code="log.path">
+		</param>
+		<param code="max_product">
+		</param>
+	</paramHelp>
+</help>

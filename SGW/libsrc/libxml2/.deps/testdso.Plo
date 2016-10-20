@@ -1,0 +1,23 @@
+testdso.lo: testdso.c \
+ /usr/include/stdio.h \
+ /usr/include/sys/stdsyms.h \
+ /usr/include/sys/_inttypes.h \
+ /usr/include/sys/types.h \
+ /usr/include/machine/vm/vmtypes.h \
+ /usr/include/sys/_fd_macros.h \
+ /usr/include/sys/_size_t.h \
+ /usr/include/sys/_time_t.h \
+ /usr/include/sys/_clock_t.h \
+ /usr/include/sys/_null.h \
+ ./include/libxml/xmlexports.h 
+/usr/include/stdio.h:
+/usr/include/sys/stdsyms.h:
+/usr/include/sys/_inttypes.h:
+/usr/include/sys/types.h:
+/usr/include/machine/vm/vmtypes.h:
+/usr/include/sys/_fd_macros.h:
+/usr/include/sys/_size_t.h:
+/usr/include/sys/_time_t.h:
+/usr/include/sys/_clock_t.h:
+/usr/include/sys/_null.h:
+./include/libxml/xmlexports.h:

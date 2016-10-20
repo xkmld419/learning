@@ -1,0 +1,171 @@
+schematron.lo: schematron.c \
+ libxml.h \
+ config.h \
+ ./include/libxml/xmlversion.h \
+ ./include/libxml/xmlexports.h \
+ /usr/include/stdio.h \
+ /usr/include/sys/stdsyms.h \
+ /usr/include/sys/_inttypes.h \
+ /usr/include/sys/types.h \
+ /usr/include/machine/vm/vmtypes.h \
+ /usr/include/sys/_fd_macros.h \
+ /usr/include/sys/_size_t.h \
+ /usr/include/sys/_time_t.h \
+ /usr/include/sys/_clock_t.h \
+ /usr/include/sys/_null.h \
+ /usr/include/string.h \
+ /usr/include/sys/_null.h \
+ ./include/libxml/parser.h \
+ /usr/include/stdarg.h \
+ /usr/include/varargs.h \
+ ./include/libxml/tree.h \
+ ./include/libxml/xmlstring.h \
+ ./include/libxml/xmlregexp.h \
+ ./include/libxml/tree.h \
+ ./include/libxml/dict.h \
+ ./include/libxml/hash.h \
+ ./include/libxml/parser.h \
+ ./include/libxml/valid.h \
+ ./include/libxml/xmlerror.h \
+ ./include/libxml/list.h \
+ ./include/libxml/xmlautomata.h \
+ ./include/libxml/entities.h \
+ ./include/libxml/xmlerror.h \
+ ./include/libxml/encoding.h \
+ /usr/include/iconv.h \
+ /usr/include/wchar.h \
+ /usr/include/ctype.h \
+ /usr/include/stddef.h \
+ /usr/include/sys/_null.h \
+ /usr/include/sys/_wchar_t.h \
+ /usr/include/stdlib.h \
+ /usr/include/sys/wait.h \
+ /usr/include/sys/resource.h \
+ /usr/include/sys/time.h \
+ /usr/include/sys/_timeval.h \
+ /usr/include/sys/_timespec.h \
+ /usr/include/sys/_rlimit_body.h \
+ /usr/include/sys/signal.h \
+ /usr/include/sys/sigevent.h \
+ /usr/include/sys/stdpad.h \
+ /usr/include/machine/sys/_types.h \
+ /usr/include/machine/sys/inline.h \
+ /usr/include/sys/siginfo.h \
+ /usr/include/machine/sys/siginfo.h \
+ /usr/include/sys/newsig.h \
+ /usr/include/machine/sys/newsig.h \
+ /usr/include/machine/sys/signal.h \
+ /usr/include/machine/sys/sigcontext.h \
+ /usr/include/machine/sys/frame.h \
+ /usr/include/pwd.h \
+ /usr/include/errno.h \
+ /usr/include/sys/errno.h \
+ /usr/include/time.h \
+ /usr/include/sys/_time.h \
+ /usr/include/sys/_null.h \
+ /usr/include/limits.h \
+ /usr/include/sys/param.h \
+ /usr/include/sys/sysmacros.h \
+ /usr/include/machine/sys/param.h \
+ /usr/include/sys/debug.h \
+ ./include/libxml/xmlIO.h \
+ ./include/libxml/globals.h \
+ ./include/libxml/xmlerror.h \
+ ./include/libxml/SAX.h \
+ ./include/libxml/xlink.h \
+ ./include/libxml/SAX2.h \
+ ./include/libxml/xmlmemory.h \
+ ./include/libxml/threads.h \
+ ./include/libxml/globals.h \
+ ./include/libxml/uri.h \
+ ./include/libxml/xpath.h \
+ ./include/libxml/xmlerror.h \
+ ./include/libxml/xpathInternals.h \
+ ./include/libxml/pattern.h \
+ ./include/libxml/schematron.h \
+ elfgcchack.h 
+libxml.h:
+config.h:
+./include/libxml/xmlversion.h:
+./include/libxml/xmlexports.h:
+/usr/include/stdio.h:
+/usr/include/sys/stdsyms.h:
+/usr/include/sys/_inttypes.h:
+/usr/include/sys/types.h:
+/usr/include/machine/vm/vmtypes.h:
+/usr/include/sys/_fd_macros.h:
+/usr/include/sys/_size_t.h:
+/usr/include/sys/_time_t.h:
+/usr/include/sys/_clock_t.h:
+/usr/include/sys/_null.h:
+/usr/include/string.h:
+/usr/include/sys/_null.h:
+./include/libxml/parser.h:
+/usr/include/stdarg.h:
+/usr/include/varargs.h:
+./include/libxml/tree.h:
+./include/libxml/xmlstring.h:
+./include/libxml/xmlregexp.h:
+./include/libxml/tree.h:
+./include/libxml/dict.h:
+./include/libxml/hash.h:
+./include/libxml/parser.h:
+./include/libxml/valid.h:
+./include/libxml/xmlerror.h:
+./include/libxml/list.h:
+./include/libxml/xmlautomata.h:
+./include/libxml/entities.h:
+./include/libxml/xmlerror.h:
+./include/libxml/encoding.h:
+/usr/include/iconv.h:
+/usr/include/wchar.h:
+/usr/include/ctype.h:
+/usr/include/stddef.h:
+/usr/include/sys/_null.h:
+/usr/include/sys/_wchar_t.h:
+/usr/include/stdlib.h:
+/usr/include/sys/wait.h:
+/usr/include/sys/resource.h:
+/usr/include/sys/time.h:
+/usr/include/sys/_timeval.h:
+/usr/include/sys/_timespec.h:
+/usr/include/sys/_rlimit_body.h:
+/usr/include/sys/signal.h:
+/usr/include/sys/sigevent.h:
+/usr/include/sys/stdpad.h:
+/usr/include/machine/sys/_types.h:
+/usr/include/machine/sys/inline.h:
+/usr/include/sys/siginfo.h:
+/usr/include/machine/sys/siginfo.h:
+/usr/include/sys/newsig.h:
+/usr/include/machine/sys/newsig.h:
+/usr/include/machine/sys/signal.h:
+/usr/include/machine/sys/sigcontext.h:
+/usr/include/machine/sys/frame.h:
+/usr/include/pwd.h:
+/usr/include/errno.h:
+/usr/include/sys/errno.h:
+/usr/include/time.h:
+/usr/include/sys/_time.h:
+/usr/include/sys/_null.h:
+/usr/include/limits.h:
+/usr/include/sys/param.h:
+/usr/include/sys/sysmacros.h:
+/usr/include/machine/sys/param.h:
+/usr/include/sys/debug.h:
+./include/libxml/xmlIO.h:
+./include/libxml/globals.h:
+./include/libxml/xmlerror.h:
+./include/libxml/SAX.h:
+./include/libxml/xlink.h:
+./include/libxml/SAX2.h:
+./include/libxml/xmlmemory.h:
+./include/libxml/threads.h:
+./include/libxml/globals.h:
+./include/libxml/uri.h:
+./include/libxml/xpath.h:
+./include/libxml/xmlerror.h:
+./include/libxml/xpathInternals.h:
+./include/libxml/pattern.h:
+./include/libxml/schematron.h:
+elfgcchack.h:

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<help option="add">
+	<commandHelp>
+		<command code="hbshm">
+			<subcommand subcode="-stat">
+					<function>内存状态核查</function>
+					<format>hbshm -stat</format>
+					<description></description>
+			</subcommand>
+			<subcommand subcode="-show">
+					<function>内存数据核查-查询实体数据</function>
+					<format>hbshm -show table_name [indexcolumn=value] [,...]</format>
+					<description></description>
+			</subcommand>
+			<subcommand subcode="-count">
+					<function>内存数据核查-查询实体记录数</function>
+					<format>hbshm -count table_name [indexcolumn=value] [,...]</format>
+					<description></description>
+			</subcommand>
+			<subcommand subcode="-lockstat">
+					<function>共享内存锁状态核查</function>
+					<format>hbshm -lockstat [table_name]</format>
+					<description></description>
+			</subcommand>
+			<subcommand subcode="-lockreset">
+					<function>共享内存锁状态复位</function>
+					<format>hbshm -lockreset [table_name] [,table_name]</format>
+					<description></description>
+			</subcommand>
+	  </command>
+	</commandHelp>
+	
+	<paramHelp>
+	  <param code="[module].max_process">
+				<name>高低水的最大进程数</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定</range>
+						<value>厂家自行确定</value>
+				</attributes>
+	  </param>
+
+	</paramHelp>
+</help>

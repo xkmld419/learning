@@ -1,0 +1,334 @@
+///////////////////////////////////////////////////////////////
+//	文 件 名 :ThreeLogGroup.h
+//	文件功能 :日志管理头文件
+//	作    者 : njw
+//	创建时间 : 2010年9月10日
+//	项目名称 ：日志管理-日志组
+//	历史记录 ：
+//			Ver1.0
+//			2010.9.9  针对2.8测试的版本
+//
+//			
+//
+///////////////////////////////////////////////////////////////
+#ifndef THREE_LOG_GROUP_H
+#define THREE_LOG_GROUP_H
+
+#include <map>
+#include <vector>
+#include <string>
+
+#include "Log.h"
+#include "IpcKey.h"
+#include "SHMData.h"
+#include "SHMData_A.h"
+#include "SeqMgrExt.h"
+#include "CommandCom.h"
+#include "CSemaphore.h"
+#include "ParamDefineMgr.h"
+#include "SHMIntHashIndex.h"
+#include "SHMIntHashIndex_A.h"
+#include "CheckPointMgr.h"
+
+#ifdef erase
+#undef erase
+#endif
+
+#ifdef move
+#undef move
+#endif
+
+using namespace std;
+
+#define SHM_LOG_GROUP_DATA          (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_DATA"))
+#define SHM_LOG_GROUP_INDEX         (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_INDEX"))
+#define SHM_LOG_GROUP_LOCK          (IpcKeyMgr::getIpcKeyEx(-1, "LOCK_LOGGROUP_DATA"))
+#define SHM_LOG_GROUP_INDEX_LOCK    (IpcKeyMgr::getIpcKeyEx(-1, "LOCK_LOGGROUP_INDEX_DATA"))
+
+#define SHM_LOG_GROUP_INFO_DATA_1       (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_INFO_DATA_1"))
+#define SHM_LOG_GROUP_INFO_DATA_2       (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_INFO_DATA_2"))
+#define SHM_LOG_GROUP_INFO_DATA_3       (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_INFO_DATA_3"))
+
+#define SHM_LOG_GROUP_INFO_INDEX_1      (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_INFO_INDEX_1"))
+#define SHM_LOG_GROUP_INFO_INDEX_2      (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_INFO_INDEX_2"))
+#define SHM_LOG_GROUP_INFO_INDEX_3      (IpcKeyMgr::getIpcKeyEx(-1, "SHM_LOGGROUP_INFO_INDEX_3"))
+
+//#define SHM_LOG_GROUP_INFO_LOCK         (IpcKeyMgr::getIpcKeyEx(-1, "LOCK_LOGGROUP_INFO_DATA"))
+
+#define SHM_LOG_GROUP_INFO_LOCK_1		(IpcKeyMgr::getIpcKeyEx(-1, "LOCK_LOGGROUP_INFO_DATA_1"))
+
+#define SHM_LOG_GROUP_INFO_LOCK_2		(IpcKeyMgr::getIpcKeyEx(-1, "LOCK_LOGGROUP_INFO_DATA_2"))
+
+#define SHM_LOG_GROUP_INFO_LOCK_3		(IpcKeyMgr::getIpcKeyEx(-1, "LOCK_LOGGROUP_INFO_DATA_3"))
+
+#define SHM_LOG_GROUP_COUNT \
+                    (ParamDefineMgr::getLongParam("MEMORY_DB", "LogGroupDataCount"))
+/*                    
+#define SHM_LOG_INFO_COUNT \
+                    (ParamDefineMgr::getLongParam("MEMORY_DB", "LogGroupInfoDataCount"))
+*/
+#define SHM_LOG_GROUP_INDEX_COUNT \
+                    (ParamDefineMgr::getLongParam("MEMORY_DB", "LogGroupIndexCount"))
+
+#define SHM_LOG_INFO_INDEX_COUNT \
+                    (ParamDefineMgr::getLongParam("MEMORY_DB", "LogGroupInfoIndexCount"))                    
+
+
+#define  GROUP_LOG_NUMS     3
+#define  GROUP_FILE_CNT     6
+//日志组状态
+#define  INACTIVE           1                       //空闲
+#define  CURRENT            2                       //在用
+#define  ACTIVE             3                       //清仓
+
+//归档状态
+#define  UNDOWN             0                       //未归档
+#define  ALLDOWN            1                       //已归档
+#define  NEEDDOWN           2                       //待归档
+#define  FILEDOWN           3                       //已落地
+
+#define  WRITEFILE          0                       //写文件
+#define  WRITESHARE         1                       //写共享
+
+#define  DATASIZE           290                     //数据区大小
+
+#define  FILEMIN            50                      //文件最小值
+#define  FILEMAX            500                     //文件最大值
+
+#define  CHECKPOINT75       75                      //checkpoint触发点
+#define  CALLBACKPOINT      90                      //共享内存回收点
+
+#define  DISPLAYMAXCNT      3000                    //界面展示维数
+
+//日志分类
+#define  OPERATIONLOG       1                       //业务进程处理日志
+#define  PARAMLOG           2                       //参数管理日志
+#define  ATTEMPERLOG        3                       //进程调度日志
+#define  HBACCESS           4                       //数据库修改日志
+#define  SYSTEMLOG          5                       //系统管理日志
+
+//查询细类
+#define  PINFOPOINT         1                       //业务进程信息点
+#define  DISALARM           2                       //告警信息点
+#define  DISBYTABLE         3                       //按表名展现
+#define  DISBYTYPE          4                       //按sql类别展现
+#define  DISBYCHECK         5                       //展现checkpoint
+#define  DISBYSTAFF         6                       //展现工号
+#define  DISBYDML           7                       //展现DML操作
+#define  DISBYPARAM         8                       //展现参数
+#define  DISPLAYALL         9                       //查询所有
+
+class LogFileData
+{//文件数据区
+ public:
+    LogFileData():m_lFileSize(0)
+    {
+        memset(m_sFileName,0,sizeof(m_sFileName));
+        memset(m_sGroupPath,0,sizeof(m_sGroupPath));
+    }
+ public:
+    long m_lFileSize;               //文件大小:byte
+    char m_sFileName[100];          //文件名
+    char m_sGroupPath[500];         //文件路径
+};
+
+
+class LogInfoData
+{//信息数据区
+ public:
+    LogInfoData():m_iNextOffset(0)
+    {
+        memset(m_sInfo,0,sizeof(m_sInfo));
+    }
+ public:
+    char m_sInfo[DATASIZE];        //数据
+    unsigned int m_iNextOffset;    //游标
+};
+
+class ThreeLogGoupData
+{
+ public:
+    ThreeLogGoupData():m_iGoupId(0),m_iSeq(0),m_iState(0)
+        ,m_bPigeonhole(false),m_bCheckPoint(false),m_bPigeonholeState(0),
+        m_lCurFileSize(0),m_lCurDirSize(0),m_iNext(0),m_iWritSeq(0)
+    {
+    }
+ public:
+	int m_iGoupId;                      //日志组标识
+	int m_iSeq;                         //文件数
+	int m_iState;                       //当前状态
+	int m_bPigeonholeState;             //归档状态
+	int m_iWritSeq;                     //记录写的文件的序数
+	bool m_bPigeonhole;                 //是否归档
+	bool m_bCheckPoint;                 //是否checkpoint
+	long m_lCurFileSize;                //当前文件大小:byte
+	long m_lCurDirSize;                 //当前日志组大小:byte
+	LogFileData m_File[GROUP_FILE_CNT]; //成员文件
+	unsigned int m_iNext;               //下一个日志组
+};
+
+class ThreeLogGroupBase {
+public:
+    ThreeLogGroupBase();
+    ~ThreeLogGroupBase();
+
+protected:
+    static void bindData();
+    static void bindGroupData(int GroupId);
+    static void freeAll();
+    static bool m_bAttached;
+    static bool m_bInfoAttached;
+
+    static ThreeLogGoupData *m_poLogGroup;
+    static SHMIntHashIndex *m_poLogGroupIndex;
+    static SHMData<ThreeLogGoupData> *m_poLogGroupData;
+
+    static SHMData_A<LogInfoData> *m_poInfoData_1;
+    static SHMData_A<LogInfoData> *m_poInfoData_2;
+    static SHMData_A<LogInfoData> *m_poInfoData_3;
+    static SHMIntHashIndex_A *m_poInfoIndex_1;
+    static SHMIntHashIndex_A *m_poInfoIndex_2;
+    static SHMIntHashIndex_A *m_poInfoIndex_3;
+    static LogInfoData *m_poInfoGroup;
+ //   static LogInfoData *m_poInfoGroup_2;
+ //   static LogInfoData *m_poInfoGroup_3;
+
+    static SHMData_A<LogInfoData> *m_poInfoData;               //全局数据DATA区
+    static SHMIntHashIndex_A *m_poInfoIndex;                   //全局数据Index区
+};
+
+
+class ThreeLogGroupMgr : public ThreeLogGroupBase
+{
+  public:
+    ThreeLogGroupMgr();
+    ~ThreeLogGroupMgr();
+    bool  create();
+    bool  exist();
+    bool  remove();
+
+ public:
+
+    bool  init(CommandCom *pCmdCom,bool bRegister);
+    bool  updateIpcCfgDate(char *sIpcName);
+    void  bakGroupFile(int LogGroupId,char *path);
+    void  DisplayFileList(int GroupId);
+
+    void  CheckLogDir(char* Path);
+    void  CheckLogFile();
+
+    int   GetUseGroup();
+    int   GetGroupState(int GroupId);
+    int   GetGroupWriteMode();
+    int   GetGroupFileSeq(int GroupId);
+    int   GetGroupInfoUsed(int GroupId);
+    bool  GetGroupPigeonhole(int GroupId);
+    bool  GetPigeonholeFileName(char *pFileName);
+    long  GetGroupMaxSize();
+    long  GetGroupMaxFileSize();
+    char* GetGroupBakPath();
+    double GetGroupSize(int GroupId);
+    double GetGroupPercent(int GroupId);
+    double GetGroupInfoPercent(int GroupId);
+    bool  GetCurUsedInfoData(int GroupId);
+    bool  GetCurUsedInfoIndex(int GroupId);
+    bool  GetCurUsedInfoLock(int GroupId);
+
+    bool  GetProNameByModule(int iParam, char * sReturn);
+    long  GetTotalInfoSizeForShm();
+    long  GetInfoUsedSizeForShm(int GroupId);
+
+    bool  AddLogGroup(int GroupId);
+    bool  AddLogGroupFile(int GroupId,char *pPath,bool bmml=false);
+    bool  DisplayLogGroup(int GroupId);
+    bool  GetCurUseFileName(int GroupId,char *pFileName,char *pFilePath);
+    bool  GetInitDirState(LogFileData *pFileData);
+    bool  ClearGroupFile(int LogGroupId,char *pFileName,bool bmml=false);
+    bool  ChangeLogGroup(bool bmml,int GroupId=-1);
+    bool  SetLogGroupPigeonhole(bool bParam);
+    bool  SetGroupBakPath(char *path);
+    bool  SetGroupDefaultPath(char *path);
+    bool  SetGroupMaxFileSize(int size);
+    bool  SetGroupMaxSize(int size);
+    bool  SetGroupWriteMode(int mode);
+    bool  SetGroupCheckTouch(int iTouchSize);
+    void  SetGroupFilePath(int GroupId,int FileSeq,char *path);
+
+    bool  CheckPointIn(char *sBatch);
+    bool  CheckPointOut(char *sBatch);
+    bool  AnalyzesFileInfo(vector<string> &vec_tag);
+    bool  AnalyzesDataInfo(int LogFlag,int StandId1,char *sStandId1,vector<string> &m_vDisplayInfo);
+//    bool  DisplayDataInfo(int idisNum,bool bspecify=false);
+//    bool  IfCDisplayInfo();
+
+    bool  GetGroupFilePath(int GroupId);
+    LogInfoData* GetGroupInfoData();
+    bool  Check75CheckPoint();
+    bool  CheckInfoCallBack();
+    bool  FileDownInfo(int GroupId);
+    bool  CallBackInfo(int GroupId);
+
+    bool  CommitInfoFile();
+
+    void  LogGroupWriteFile(int LogFlag,char *pData);
+
+ public:
+    //对外提取数据的接口
+    bool  GetAttemperLog(char *pbeginTime,int iTimeSec,vector<string> &vAttrpLog);
+    bool  GetAlarmLog(char *pbeginTime,int iTimeSec,vector<string> &vAlarmLog);
+    bool  GetParamLog(char *pbeginTime,int iTimeSec,vector<string> &vParamLog);
+    bool  GetSystemLog(vector<string> &vSystemLog);
+    bool  GetHighFeeLog(vector<string> &vHighfeeLog);
+
+ private:
+    void  InitLogGroup();
+    bool  AddInfoDataInfo(char* pData,ThreeLogGoupData* p,int iLogFlag);
+
+ private:
+
+    int  m_iCurUseGroupId;              //当前正在是用的日志组标识
+    
+    long m_lMaxLogFileSize;             //日志文件的最大资源 单位:byte
+    
+    long m_lMaxLogDirSize;              //每个日志组的最大资源 单位:byte
+    
+    char m_sBakLogGroupPath[500];       //归档备份目录
+    
+    char m_sDefaultLogGroupPath[500];   //日志组成员文件没有指定目录情况下默认配置目录
+    
+    char m_sCheckPointPath[500];
+    
+    SeqMgrExt* m_poSeqExt;              //文件流水号
+
+    CSemaphore* m_poDataLock;           //日志组信息锁
+
+	CSemaphore* m_poInfoDataLock_1;
+
+	CSemaphore* m_poInfoDataLock_2;
+
+	CSemaphore* m_poInfoDataLock_3;
+
+    CSemaphore* m_poIndexLock;          //索引区锁
+
+    map<string,string> m_mFilePathMap;  //文件路径
+
+ //   vector<string> m_vDisplayInfo;      //查询缓存器
+
+    int  m_iWriteMode;                  //写数据的方式(0-文件 1-共享内存)
+
+    long m_lInfoDataSize;               //共享内存数据区大小
+
+    int  m_iCheckPointTouch;            //checkpoint触发日志组切换点
+
+ public:
+
+    CommandCom *m_poCmdCom;             //核心参数
+	
+    static bool m_bParamInit;           //是否核心参数直接初始化
+
+    static CSemaphore* m_poInfoDataLock;//数据区锁
+
+};
+
+#endif
+

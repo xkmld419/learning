@@ -1,0 +1,69 @@
+include ../../Make.defines
+
+##### self define #####
+TARGETS=GuardMain monitor server_monitor server_client GuardRemote cpmnt
+
+MONITOR_OBJS=monitor.o login_f.o login_j.o password_f.o password_j.o \
+	mainmenu_j.o mainmenu_f.o process_f.o process_j.o ticket_f.o ticket_j.o \
+	msgqueue_j.o msgqueue_f.o sharedmemory_f.o sharedmemory_j.o \
+	../bill/BillOperationMgr.o ../bill/BillConditionMgr.o
+
+MNT_OBJS= Guard.o Server.o GuardMain.o WfPublic.o
+
+CURENT_LIBS=$(BILL_WORKFLOW_LIBS)
+
+SERVER_MONITOR_OBJS = ServerMonitor.o Server.o  WfPublic.o
+SERVER_CLIENT_OBJS = ServerClient.o Server.o WfPublic.o
+
+#GUARD_MAIN_OBJS = Guard.o Server.o GuardMain.o
+GUARD_REMOTE_OBJS = Guard.o Server.o GuardRemote.o WfPublic.o
+
+
+ALL_OBJS=mntapi.o WfPublic.o
+
+##### create curent libs #####
+$(CURENT_LIBS): $(ALL_OBJS)
+	@echo "=======[ $(CURENT_LIBS) ]======="
+	$(AR) $(CURENT_LIBS) $(ALL_OBJS)
+	$(RANLIB) $(CURENT_LIBS)
+
+lib: $(CURENT_LIBS)
+
+all: $(CURENT_LIBS) $(TARGETS)
+
+
+##### create executed files #####
+monitor: $(MONITOR_OBJS)
+	make -f ./Makefile OBJS="$(MONITOR_OBJS) $(LD_BILL_CURSES_LIBS)" BILL_MAIN_OBJ="" EXE=$@ build_bill
+	cp -p *.rc ../../bin/
+	
+GuardMain: $(MNT_OBJS)
+	make -f ./Makefile OBJS="$(MNT_OBJS)" EXE=$@ build_main
+
+
+GuardRemote: $(GUARD_REMOTE_OBJS)
+	make -f ./Makefile OBJS="$(GUARD_REMOTE_OBJS)" EXE=$@ build_client
+	chmod 777 rmnt
+	cp rmnt ../../bin/
+
+
+server_monitor_svc=MONITOR_LOGIN,MONITOR_LOGOUT,RECV_APPINFO,SEND_COMMAND,CHANGE_STATUS,REFRESH_RUNPLAN
+server_monitor: $(SERVER_MONITOR_OBJS)
+	make -f ./Makefile SVC="$(server_monitor_svc)" OBJS="$(SERVER_MONITOR_OBJS)" EXE=$@ build_server
+	mkdir -p $(TIBS_HOME)/tuxsvc/
+	cp -p sample_ubbcfg.h $(TIBS_HOME)/tuxsvc/
+	
+
+server_client_svc=CLIENT_LOGIN,CLIENT_LOGOUT,GET_COMMAND,ACK_COMMAND,SEND_REMOTEMSG
+server_client: $(SERVER_CLIENT_OBJS)
+	make -f ./Makefile SVC="$(server_client_svc)" OBJS="$(SERVER_CLIENT_OBJS)" EXE=$@ build_server
+
+cpmnt:
+	chmod 777 MNT
+	cp -p MNT ./guard
+	cp -p MNT ./mnt
+	cp -p MNT mnt guard ../../bin/
+
+
+clean:
+	rm -f *.o *.a $(CLEANFILES) $(TARGETS)

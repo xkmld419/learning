@@ -1,0 +1,11 @@
+// -*- C++ -*-
+#ifndef __STD_HASH_SET__
+#define __STD_HASH_SET__
+
+#include <rw/stdex/hashset.h>
+#include <rw/stdex/hashmset.h>
+
+#define hash_set rw_hashset
+#define hash_multiset rw_hashmultiset
+
+#endif   // __STD_HASH_SET__

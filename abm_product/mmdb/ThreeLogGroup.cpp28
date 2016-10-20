@@ -1,0 +1,3492 @@
+#include <stdlib.h>
+#include "Process.h"
+#include <stdarg.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fstream>
+#include <math.h>
+#include "ReadIni.h"
+#include "IpcKey.h"
+#include "Environment.h"
+#include "ThreeLogGroup.h"
+
+bool ThreeLogGroupBase::m_bAttached = false;
+ThreeLogGoupData * ThreeLogGroupBase::m_poLogGroup = 0;
+SHMIntHashIndex * ThreeLogGroupBase::m_poLogGroupIndex = 0;
+SHMData<ThreeLogGoupData> * ThreeLogGroupBase::m_poLogGroupData = 0;
+
+bool ThreeLogGroupBase::m_bInfoAttached = false;
+LogInfoData * ThreeLogGroupBase::m_poInfoGroup = 0;
+//LogInfoData * ThreeLogGroupBase::m_poInfoGroup_2 = 0;
+//LogInfoData * ThreeLogGroupBase::m_poInfoGroup_3 = 0;
+
+SHMIntHashIndex_A * ThreeLogGroupBase::m_poInfoIndex_1 = 0;
+SHMIntHashIndex_A * ThreeLogGroupBase::m_poInfoIndex_2 = 0;
+SHMIntHashIndex_A * ThreeLogGroupBase::m_poInfoIndex_3 = 0;
+
+SHMData_A<LogInfoData> * ThreeLogGroupBase::m_poInfoData_1 = 0;
+SHMData_A<LogInfoData> * ThreeLogGroupBase::m_poInfoData_2 = 0;
+SHMData_A<LogInfoData> * ThreeLogGroupBase::m_poInfoData_3 = 0;
+
+//全局数据索引
+SHMIntHashIndex_A * ThreeLogGroupBase::m_poInfoIndex = 0;
+//全局数据DATA
+SHMData_A<LogInfoData> * ThreeLogGroupBase::m_poInfoData = 0;
+
+CSemaphore * ThreeLogGroupMgr::m_poInfoDataLock = 0;
+
+bool ThreeLogGroupMgr::m_bParamInit = false;
+
+ThreeLogGroupBase::ThreeLogGroupBase()
+{
+    if(m_bAttached==false)
+    {
+        ATTACH_DATA(m_poLogGroupData, ThreeLogGoupData, SHM_LOG_GROUP_DATA);
+        ATTACH_INT_INDEX(m_poLogGroupIndex, SHM_LOG_GROUP_INDEX);
+		//m_poLogGroup = (ThreeLogGoupData *)(*m_poLogGroupData); 
+        m_bAttached = true;
+    }
+    if(m_bInfoAttached==false)
+    {
+        ATTACH_DATA_A(m_poInfoData_1, LogInfoData, SHM_LOG_GROUP_INFO_DATA_1);
+        ATTACH_DATA_A(m_poInfoData_2, LogInfoData, SHM_LOG_GROUP_INFO_DATA_2);
+        ATTACH_DATA_A(m_poInfoData_3, LogInfoData, SHM_LOG_GROUP_INFO_DATA_3);
+        m_bInfoAttached = true;
+
+        ATTACH_INT_INDEX_A(m_poInfoIndex_1, SHM_LOG_GROUP_INFO_INDEX_1);
+        ATTACH_INT_INDEX_A(m_poInfoIndex_2, SHM_LOG_GROUP_INFO_INDEX_2);
+        ATTACH_INT_INDEX_A(m_poInfoIndex_3, SHM_LOG_GROUP_INFO_INDEX_3);
+
+    }
+    if(!m_poLogGroupData->exist())
+        m_bAttached = false;    
+    if(!m_poLogGroupIndex->exist())    
+        m_bAttached = false;
+    
+    if(!m_poInfoData_1->exist())
+        m_bInfoAttached = false;
+    if(!m_poInfoData_2->exist())
+        m_bInfoAttached = false;
+    if(!m_poInfoData_3->exist())
+        m_bInfoAttached = false;
+
+    if(!m_poInfoIndex_1->exist())
+        m_bInfoAttached = false;
+    if(!m_poInfoIndex_2->exist())
+        m_bInfoAttached = false;    
+    if(!m_poInfoIndex_3->exist())
+        m_bInfoAttached = false;
+
+    if(m_bAttached)
+        bindData();
+/*    
+    if(m_bInfoAttached)
+        bindGroupData();
+*/
+}
+
+ThreeLogGroupBase::~ThreeLogGroupBase()
+{
+
+}
+
+void ThreeLogGroupBase::bindData()
+{
+    m_poLogGroup = (ThreeLogGoupData *)(*m_poLogGroupData);
+}
+
+void ThreeLogGroupBase::bindGroupData(int GroupId)
+{
+    if(GroupId==1)
+        m_poInfoGroup = (LogInfoData *)(*m_poInfoData_1);
+    else if(GroupId==2)
+        m_poInfoGroup = (LogInfoData *)(*m_poInfoData_2);
+    else if(GroupId==3)
+        m_poInfoGroup = (LogInfoData *)(*m_poInfoData_3);
+    else
+        m_poInfoGroup = 0;
+}
+
+void ThreeLogGroupBase::freeAll()
+{
+    if(m_poLogGroupData) 
+    {
+        delete m_poLogGroupData;
+        m_poLogGroupData = 0;
+    }
+    if(m_poLogGroupIndex) 
+    {
+        delete m_poLogGroupIndex;
+        m_poLogGroupIndex = 0;
+    }
+    if(m_poInfoData_1)
+    {
+        delete m_poInfoData_1;
+        m_poInfoData_1 = 0;
+    }
+    if(m_poInfoData_2)
+    {
+        delete m_poInfoData_2;
+        m_poInfoData_2 = 0;
+    }
+    if(m_poInfoData_3)
+    {
+        delete m_poInfoData_3;
+        m_poInfoData_3 = 0;
+    }
+
+    if(m_poInfoIndex_1)
+    {
+        delete m_poInfoIndex_1;
+        m_poInfoIndex_1 = 0;
+    }
+    if(m_poInfoIndex_2)
+    {
+        delete m_poInfoIndex_2;
+        m_poInfoIndex_2 = 0;
+    }
+    if(m_poInfoIndex_3)
+    {
+        delete m_poInfoIndex_3;
+        m_poInfoIndex_3 = 0;
+    }
+    if(m_poInfoData)
+    {
+        delete m_poInfoData;
+        m_poInfoData = 0;
+    }
+    if(m_poInfoIndex)
+    {
+        delete m_poInfoIndex;
+        m_poInfoIndex = 0;
+    }
+
+}
+
+ThreeLogGroupMgr::ThreeLogGroupMgr():ThreeLogGroupBase(),m_lMaxLogFileSize(0),
+                m_lMaxLogDirSize(0),m_iCurUseGroupId(0),m_poDataLock(0),m_poSeqExt(0),
+                m_poIndexLock(0),m_iWriteMode(1),m_lInfoDataSize(0),m_poCmdCom(0),
+                m_poInfoDataLock_1(0),m_poInfoDataLock_2(0),m_poInfoDataLock_3(0),
+                m_iCheckPointTouch(75)
+{
+    char sTemp[32];
+    bool bRegister = true;
+    
+    memset(m_sBakLogGroupPath,0,sizeof(m_sBakLogGroupPath));
+    memset(m_sDefaultLogGroupPath,0,sizeof(m_sDefaultLogGroupPath));
+    memset(m_sCheckPointPath,0,sizeof(m_sCheckPointPath));
+    memset(sTemp,0,sizeof(sTemp));
+
+//    m_vDisplayInfo.clear();
+    if(!m_poDataLock)
+    {
+        m_poDataLock = new CSemaphore ();
+        sprintf (sTemp, "%d", SHM_LOG_GROUP_LOCK);
+        m_poDataLock->getSem (sTemp, 1, 1);
+    }
+    
+    memset(sTemp,0,sizeof(sTemp));
+    if(!m_poInfoDataLock_1)
+    {
+        m_poInfoDataLock_1 = new CSemaphore();
+        sprintf (sTemp, "%d", SHM_LOG_GROUP_INFO_LOCK_1);
+        m_poInfoDataLock_1->getSem (sTemp, 1, 1);
+    }
+
+    memset(sTemp,0,sizeof(sTemp));
+    if(!m_poInfoDataLock_2)
+    {
+        m_poInfoDataLock_2 = new CSemaphore();
+        sprintf (sTemp, "%d", SHM_LOG_GROUP_INFO_LOCK_2);
+        m_poInfoDataLock_2->getSem (sTemp, 1, 1);
+    }
+
+    memset(sTemp,0,sizeof(sTemp));
+    if(!m_poInfoDataLock_3)
+    {
+        m_poInfoDataLock_3 = new CSemaphore();
+        sprintf (sTemp, "%d", SHM_LOG_GROUP_INFO_LOCK_3);
+        m_poInfoDataLock_3->getSem (sTemp, 1, 1);
+    }
+    
+    memset(sTemp,0,sizeof(sTemp));
+    if(!m_poIndexLock)
+    {
+        m_poIndexLock = new CSemaphore();
+        sprintf (sTemp, "%d", SHM_LOG_GROUP_INDEX_LOCK);
+        m_poIndexLock->getSem(sTemp, 1, 1);
+    }
+    if(!m_poSeqExt)
+        m_poSeqExt = new SeqMgrExt ("seq_log_group_id",1);
+
+    if(!m_poCmdCom && ThreeLogGroupMgr::m_bParamInit==false)
+    {
+        m_poCmdCom = new CommandCom();
+       
+		if(!m_poCmdCom->InitClient())
+        {
+            bRegister = false;
+        }
+	 
+
+         /*if(!m_poCmdCom->GetInitParam("LOG"))
+        {
+            bRegister = false;
+        }
+        if(!m_poCmdCom->SubscribeCmd("LOG",MSG_PARAM_CHANGE))
+        {
+            bRegister = false;
+        }*/
+    }
+    if(ThreeLogGroupMgr::m_bParamInit==false)
+        init(m_poCmdCom,bRegister);
+    else
+        init(NULL,false);
+    GetUseGroup();
+    bindGroupData(m_iCurUseGroupId);
+    GetCurUsedInfoData(m_iCurUseGroupId);
+    GetCurUsedInfoIndex(m_iCurUseGroupId);
+    GetCurUsedInfoLock(m_iCurUseGroupId);
+}
+
+ThreeLogGroupMgr::~ThreeLogGroupMgr()
+{
+    if(m_poSeqExt)
+    {
+        delete m_poSeqExt;
+        m_poSeqExt=0;
+    }
+
+    if(m_poDataLock)
+    {
+        delete m_poDataLock;
+        m_poDataLock=0;
+    }
+    if(m_poInfoDataLock_1)
+    {
+        delete m_poInfoDataLock_1;
+        m_poInfoDataLock_1 = 0;
+    }
+    if(m_poInfoDataLock_2)
+    {
+        delete m_poInfoDataLock_2;
+        m_poInfoDataLock_2 = 0;
+    }
+    if(m_poInfoDataLock_3)
+    {
+        delete m_poInfoDataLock_3;
+        m_poInfoDataLock_3 = 0;
+    }
+/*    不能释放啊
+    if(m_poInfoDataLock)
+    {
+        delete m_poInfoDataLock;
+        m_poInfoDataLock = 0;
+    }
+*/
+    if(m_poIndexLock)
+    {
+        delete  m_poIndexLock;
+        m_poIndexLock =0;
+    }
+
+    if(m_poCmdCom)
+    {
+        delete m_poCmdCom;
+        m_poCmdCom = 0;
+    }
+    
+//    m_vDisplayInfo.clear();
+}
+
+bool ThreeLogGroupMgr::create()
+{
+    bool bNew = false;
+    if(!m_poLogGroupData->exist())
+    {
+        m_poLogGroupData->create (SHM_LOG_GROUP_COUNT);
+        bNew = true;
+    }
+    if(!m_poLogGroupIndex->exist())
+    {
+        m_poLogGroupIndex->create (SHM_LOG_GROUP_INDEX_COUNT);
+        bNew = true;
+    }
+
+
+    if(!m_poInfoData_1->exist())
+    {
+        m_poInfoData_1->create(m_lInfoDataSize);
+        updateIpcCfgDate("SHM_LOGGROUP_INFO_DATA_1");
+    }
+    if(!m_poInfoData_2->exist())
+    {
+        m_poInfoData_2->create(m_lInfoDataSize);
+        updateIpcCfgDate("SHM_LOGGROUP_INFO_DATA_2");
+    }
+    if(!m_poInfoData_3->exist())
+    {
+        m_poInfoData_3->create(m_lInfoDataSize);
+        updateIpcCfgDate("SHM_LOGGROUP_INFO_DATA_3");
+    }
+
+    if(!m_poInfoIndex_1->exist())
+        m_poInfoIndex_1->create(SHM_LOG_INFO_INDEX_COUNT);
+    if(!m_poInfoIndex_2->exist())
+        m_poInfoIndex_2->create(SHM_LOG_INFO_INDEX_COUNT);    
+    if(!m_poInfoIndex_3->exist())
+        m_poInfoIndex_3->create(SHM_LOG_INFO_INDEX_COUNT);
+
+    bindData();
+    m_bAttached = true;
+    if(bNew==true)
+        InitLogGroup();
+    GetUseGroup();
+    bindGroupData(m_iCurUseGroupId);
+    GetCurUsedInfoData(m_iCurUseGroupId);
+    GetCurUsedInfoIndex(m_iCurUseGroupId);
+    GetCurUsedInfoLock(m_iCurUseGroupId);
+    m_bInfoAttached = true;
+    return true;
+}
+
+bool ThreeLogGroupMgr::exist()
+{
+    if(!m_poLogGroupData->exist())
+        return false;
+    if(!m_poLogGroupIndex->exist())
+        return false;
+    if(!m_poInfoData_1->exist())
+        return false;
+    if(!m_poInfoData_2->exist())
+        return false;
+    if(!m_poInfoData_3->exist())
+        return false;
+    if(!m_poInfoIndex_1->exist())
+        return false;
+    if(!m_poInfoIndex_2->exist())
+        return false;
+    if(!m_poInfoIndex_3->exist())
+        return false;
+    return true;
+}
+
+bool ThreeLogGroupMgr::remove()
+{
+    if(m_poLogGroupData->exist())
+        m_poLogGroupData->remove();
+
+    if(m_poLogGroupIndex->exist()) 
+        m_poLogGroupIndex->remove();
+
+    if(m_poInfoData_1->exist())
+        m_poInfoData_1->remove();
+    
+    if(m_poInfoData_2->exist())
+        m_poInfoData_2->remove();
+
+    if(m_poInfoData_3->exist())
+        m_poInfoData_3->remove();
+  
+    if(m_poInfoIndex_1->exist())
+        m_poInfoIndex_1->remove();
+
+    if(m_poInfoIndex_2->exist())
+        m_poInfoIndex_2->remove();
+
+    if(m_poInfoIndex_3->exist())
+        m_poInfoIndex_3->remove();
+      
+    m_bAttached = false;
+    
+    m_bInfoAttached = false;
+
+    freeAll();
+
+    return true;
+}
+
+bool ThreeLogGroupMgr::updateIpcCfgDate(char *sIpcName)
+{
+         char *pUserName = getenv("LOGNAME");
+         if(pUserName[0] == '\0')
+         {
+                return false;
+         }
+         char sHostName[200] = {0};
+     int iHostID = IpcKeyMgr::getHostInfo(sHostName);
+         
+         DEFINE_QUERY(qry);
+         char sSql[1000];
+     char sDate[16]={0};
+     Date dCurr;
+     dCurr.getTimeString(sDate);
+    
+     sprintf(sSql,"UPDATE B_IPC_CFG  SET INI_TIME = '%s' "
+                        " WHERE BILLFLOW_ID=%d AND IPC_NAME='%s' "
+                        " AND host_id=%d "
+                        " AND sys_username='%s' "
+                        ,sDate,-1,sIpcName, iHostID, pUserName);
+                
+     qry.close();
+     qry.setSQL(sSql);          
+     if(qry.execute())
+     {
+                qry.commit();    
+         } else {
+                qry.rollback();
+         }
+         qry.close();
+         return true;
+}
+
+/*
+ *	函 数 名 : init
+ *	函数功能 : 日志组获取核心参数的接口
+ *	时    间 : 2010年9月13日
+ *	返 回 值 : bool
+ *	参数说明 : CommandCom-注册的核心参数端,bRegister-是否注册成功
+*/
+bool ThreeLogGroupMgr::init(CommandCom *pCmdCom,bool bRegister)
+{
+    char sPath[100],sFileSize[10],sGroupSize[10],sBakPath[100];
+    char sDataSize[100];
+    bool balarm = false;
+
+    memset(sPath,0,sizeof(sPath));
+    memset(sBakPath,0,sizeof(sBakPath));
+    memset(sFileSize,0,sizeof(sFileSize));
+    memset(sGroupSize,0,sizeof(sGroupSize));
+    memset(sDataSize,0,sizeof(sDataSize));
+
+    if(bRegister==false)
+    {//注册核心参数失败，从配置文件读
+        char sHome[254]={0};
+        char *p;
+        ReadIni RD;
+
+        if ((p=getenv ("HBCONFIGDIR")) == NULL)
+            sprintf (sHome, "/opt/opthb/etc");
+        else
+            sprintf (sHome, "%s", p);
+        
+        char sFile[254];
+
+        if (sHome[strlen(sHome)-1] == '/') {
+                sprintf (sFile, "%sbillingconfig.std", sHome);
+        } else {
+                sprintf (sFile, "%s/billingconfig.std", sHome);
+        }
+//        Log::m_iInfoLevel = RD.readIniInteger(sFile,"LOG","log.level",-1);
+        Log::m_iAlarmLevel = RD.readIniInteger(sFile,"LOG","log_alarm_level",-1);
+        Log::m_iAlarmDbLevel = RD.readIniInteger(sFile,"LOG","log_alarmdb_level",-1);
+        Log::m_iMode = RD.readIniInteger(sFile,"LOG","log_mode",-1);
+        Log::m_interval = RD.readIniInteger(sFile,"LOG","log.interval",1);
+        m_iWriteMode = RD.readIniInteger(sFile,"LOG","log_group_mode",1);
+        int iTouchSize = RD.readIniInteger(sFile,"LOG","log_group_checkpoint_size",75);
+        SetGroupCheckTouch(iTouchSize);
+
+        RD.readIniString(sFile,"MEMORY","log_data_size",sDataSize,NULL);
+        m_lInfoDataSize = atol(sDataSize);
+        RD.readIniString(sFile,"LOG","log_size",sFileSize,NULL);
+        int iFileSize = atoi(sFileSize);
+        if(iFileSize==0)
+        {
+            Log::log(0,"核心参数LOG.log_size没有配置，取默认文件大小");
+            iFileSize = 200;
+        }
+        SetGroupMaxFileSize(iFileSize);
+        RD.readIniString(sFile,"LOG","log_file_dir_size",sGroupSize,NULL);
+        int iGroupSize = atoi(sGroupSize);
+        if(iGroupSize==0)
+            iGroupSize = 700;
+        SetGroupMaxSize(iGroupSize);
+        RD.readIniString(sFile,"LOG","log_path",sPath,NULL);
+        SetGroupDefaultPath(sPath);
+        memset(sPath,0,sizeof(sPath));
+        RD.readIniString(sFile,"LOG","log(1)(1).path",sPath,NULL);
+        SetGroupFilePath(1,1,sPath);
+        memset(sPath,0,sizeof(sPath));
+        RD.readIniString(sFile,"LOG","log(1)(2).path",sPath,NULL);
+        SetGroupFilePath(1,2,sPath);
+        memset(sPath,0,sizeof(sPath));
+        RD.readIniString(sFile,"LOG","log(2)(1).path",sPath,NULL);
+        SetGroupFilePath(2,1,sPath);
+        memset(sPath,0,sizeof(sPath));
+        RD.readIniString(sFile,"LOG","log(2)(2).path",sPath,NULL);
+        SetGroupFilePath(2,2,sPath);
+        memset(sPath,0,sizeof(sPath));
+        RD.readIniString(sFile,"LOG","log(3)(1).path",sPath,NULL);
+        SetGroupFilePath(3,1,sPath);
+        memset(sPath,0,sizeof(sPath));
+        RD.readIniString(sFile,"LOG","log(3)(2).path",sPath,NULL);
+        SetGroupFilePath(3,2,sPath);
+        RD.readIniString(sFile,"LOG","log_archive_path",sBakPath,NULL);
+        SetGroupBakPath(sBakPath);
+        return true;
+    }
+
+//    Log::m_iInfoLevel = pCmdCom->readIniInteger("LOG","log.level",-1); 
+    Log::m_iAlarmLevel = pCmdCom->readIniInteger("LOG","log_alarm_level",-1);
+    Log::m_iAlarmDbLevel = pCmdCom->readIniInteger("LOG","log_alarmdb_level",-1);
+    Log::m_interval = pCmdCom->readIniInteger("LOG","log.interval",1);
+    Log::m_iMode = pCmdCom->readIniInteger("LOG","log_mode",-1);
+    int iTochSize = pCmdCom->readIniInteger("LOG","log_group_checkpoint_size",75);
+    SetGroupCheckTouch(iTochSize);
+    pCmdCom->readIniString("LOG","log.size",sFileSize,NULL);
+    int iFIleSize = atoi(sFileSize);
+    if(iFIleSize<=0)
+    {//给个默认值
+        balarm = true;
+        iFIleSize=200;
+    }
+    if(!SetGroupMaxFileSize(iFIleSize))
+    {
+       Log::log(0,"核心参数LOG.log.size配置错误");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log_size配置错误");
+       return false;
+    }
+    pCmdCom->readIniString("LOG","log_file_dir_size",sGroupSize,NULL);
+    int iGroupSize = atoi(sGroupSize);
+    if(iGroupSize<=0)
+    {
+        balarm = true;
+        iGroupSize=700;
+    }
+    if(!SetGroupMaxSize(iGroupSize))
+    {
+       Log::log(0,"核心参数LOG.log_file_dir_size配置错误");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log_file_dir_size配置错误");
+       return false;
+    }
+    pCmdCom->readIniString("LOG","log_path",sPath,NULL);
+    if(!SetGroupDefaultPath(sPath))
+    {
+       Log::log(0,"核心参数LOG.log_path配置错误");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log_path配置错误");
+       return false;
+    }
+    pCmdCom->readIniString("LOG","log_archive_path",sBakPath,NULL);
+    if(sBakPath==0)
+    {
+       Log::log(0,"获取不到核心参数LOG.log_archive_path的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log_archive_path配置错误");
+       return false;
+    }
+    if(!SetGroupBakPath(sBakPath))
+    {
+       Log::log(0,"核心参数LOG.log_archive_path配置错误");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log_archive_path配置错误");
+       return false;
+    }
+    int modeid = pCmdCom->readIniInteger("LOG","log_group_mode",1);
+    if(!SetGroupWriteMode(modeid))
+    {
+       Log::log(0,"核心参数LOG.log_group_mode配置错误");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log_group_mode配置错误");
+       return false;
+    }
+    memset(sPath,0,sizeof(sPath));
+    pCmdCom->readIniString("LOG","log(1)(1).path",sPath,NULL);
+    if(strlen(sPath)==0)
+    {
+       Log::log(0,"获取不到核心参数LOG.log(1)(1).path的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log[1][1].path配置错误");
+       return false;
+    }
+    SetGroupFilePath(1,1,sPath);
+    memset(sPath,0,sizeof(sPath));
+    pCmdCom->readIniString("LOG","log(1)(2).path",sPath,NULL);
+    if(strlen(sPath)==0)
+    {
+       Log::log(0,"获取不到核心参数LOG.log(1)(2).path的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log[1][2].path配置错误");
+       return false;
+    }
+    SetGroupFilePath(1,2,sPath);
+    memset(sPath,0,sizeof(sPath));
+    pCmdCom->readIniString("LOG","log(2)(1).path",sPath,NULL);
+    if(strlen(sPath)==0)
+    {
+       Log::log(0,"获取不到核心参数LOG.log(2)(1).path的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log[2][1].path配置错误");
+       return false;
+    }
+    SetGroupFilePath(2,1,sPath);
+    memset(sPath,0,sizeof(sPath));
+    pCmdCom->readIniString("LOG","log(2)(2).path",sPath,NULL);
+    if(strlen(sPath)==0)
+    {
+       Log::log(0,"获取不到核心参数LOG.log(2)(2).path的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log[2][2].path配置错误");
+       return false;
+    }
+    SetGroupFilePath(2,2,sPath);
+    memset(sPath,0,sizeof(sPath));
+    pCmdCom->readIniString("LOG","log(3)(1).path",sPath,NULL);
+    if(strlen(sPath)==0)
+    {
+       Log::log(0,"获取不到核心参数LOG.log(3)(1).path的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log[3][1].path配置错误");
+       return false;
+    }
+    SetGroupFilePath(3,1,sPath);
+    memset(sPath,0,sizeof(sPath));
+    pCmdCom->readIniString("LOG","log(3)(2).path",sPath,NULL);
+    if(strlen(sPath)==0)
+    {
+       Log::log(0,"获取不到核心参数LOG.log(3)(2).path的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数LOG.log[3][2].path配置错误");
+       return false;
+    }
+    SetGroupFilePath(3,2,sPath);
+
+    memset(sDataSize,0,sizeof(sDataSize));
+    //pCmdCom->GetInitParam("MEMORY");
+    //pCmdCom->SubscribeCmd("MEMORY",MSG_PARAM_CHANGE);
+    pCmdCom->readIniString("MEMORY","log_data_size",sDataSize,NULL);
+    if(strlen(sDataSize)==0)
+    {
+       Log::log(0,"获取不到核心参数MEMORY.log_data_size的配置,请检查");
+//       ALARMLOG(0,MBC_Log_Group+5,"%s","核心参数MEMORY.log_data_size配置错误");
+       return false;   
+    }
+    m_lInfoDataSize = atol(sDataSize);
+
+    if(balarm==true)
+    {//到这才可以写告警信息
+        Log::LoggLog("日志组获取核心参数失败");
+        return false;
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : InitLogGroup
+ *	函数功能 : 初始化日志组
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : void
+ *	参数说明 : 
+*/
+void ThreeLogGroupMgr::InitLogGroup()
+{
+    ThreeLogGoupData * p = m_poLogGroup;
+    if(!p)
+    {
+//        ALARMLOG(0,MBC_Log_Group+4,"%s","日志组获取共享内存信息失败");
+        Log::LoggLog("日志组获取共享内存信息失败");
+        THROW(MBC_Log_Group+4);
+    }
+    for(int num=1;num<=GROUP_LOG_NUMS;++num)
+    {//初始化日志组，并创建两个默认配置的成员文件
+        AddLogGroup(num);
+        char stemp[50],stempPath[500];
+        memset(stemp,0,sizeof(stemp));
+        memset(stempPath,0,sizeof(stempPath));
+        sprintf(stemp,"%d_1",num);
+        string sFileId_1(stemp);
+        strcpy(stempPath,m_mFilePathMap.find(sFileId_1)->second.c_str());
+        if(AddLogGroupFile(num,stempPath,true)==false)
+        {
+//            ALARMLOG(0,MBC_Log_Group+7,"%s","日志组配置成员文件失败");
+            Log::LoggLog("日志组配置成员文件失败");
+            THROW(MBC_Log_Group+7);
+        }
+        memset(stemp,0,sizeof(stemp));
+        memset(stempPath,0,sizeof(stempPath));
+        sprintf(stemp,"%d_2",num);
+        string sFileId_2(stemp);
+        strcpy(stempPath,m_mFilePathMap.find(sFileId_2)->second.c_str());
+        if(AddLogGroupFile(num,stempPath,true)==false)
+        {
+//            ALARMLOG(0,MBC_Log_Group+7,"%s","日志组配置成员文件失败");
+            Log::LoggLog("日志组配置成员文件失败");
+            THROW(MBC_Log_Group+7);            
+        }
+    }
+}
+
+/*
+ *	函 数 名 : AddLogGroupFile
+ *	函数功能 : 添加日志组成员文件
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : bool
+ *	参数说明 : GroupId-日志组标识;pPath-文件路径;bmml-是否外围控制增加
+ *             此功能函数可于外围命令添加调用或者是日志组内部切换更换流水文件调用
+*/
+bool ThreeLogGroupMgr::AddLogGroupFile(int GroupId,char * pPath,bool bmml)
+{
+    unsigned int i ;
+    int count=-1,fd;
+    long seq=0;
+    char tempPath[500]={0};
+    ThreeLogGoupData * p = m_poLogGroup;
+
+    if(!p)
+    {
+//        Log::log(0,"关联日志组共享内存失败");
+        Log::LoggLog("关联日志组共享内存失败");
+        return false;
+    }
+    
+    if(!m_poLogGroupIndex->get(GroupId, &i))
+    {
+//        Log::log(0,"关联日志组共享内存失败");
+        Log::LoggLog("关联日志组共享内存失败");
+        return false;        
+    }
+
+    if(bmml == true)
+    {//是否来源于外围命令
+        m_poDataLock->P();
+        p[i].m_iSeq++;
+        if(p[i].m_iSeq > GROUP_FILE_CNT)
+        {
+            p[i].m_iSeq--;
+//            Log::log(0,"超出日志组最大日志文件限制\n");
+            Log::LoggLog("超出日志组最大日志文件限制\n");
+            m_poDataLock->V();
+            return  false;
+        }
+        m_poDataLock->V();
+        if(strlen(pPath)==0)
+        {//20100803增加成员文件默认存储路径的核心参数
+            if(strlen(m_sDefaultLogGroupPath))
+                strcpy(pPath,m_sDefaultLogGroupPath);
+            else
+            {
+//                Log::log(0,"请配置日志组成员文件默认目录的核心参数\n");
+                Log::LoggLog("请配置日志组成员文件默认目录的核心参数\n");
+                return false;
+            }
+        }
+        if(strlen(pPath))
+        {
+            for(int j=0;j!=GROUP_FILE_CNT;j++)
+            {
+                if(strlen(p[i].m_File[j].m_sFileName)==0)
+                {
+                    count = j;
+                    sprintf(p[i].m_File[count].m_sGroupPath,"%s",pPath);
+                    break;
+                }
+            }            
+        }
+        if(count == -1)
+        {
+//            Log::log(0,"日志组组内成员数据错误\n");
+            Log::LoggLog("日志组组内成员数据错误\n");
+            return false;
+        }
+//        seq = m_poSeqExt->getNextVal();
+//        Date dt;
+        m_poDataLock->P();
+//        sprintf(p[i].m_File[count].m_sFileName,"hblog_%s%04ld.log",dt.toString("yyyymmdd"),seq);
+        strcpy(p[i].m_File[count].m_sFileName,"hblog");
+        p[i].m_File[count].m_lFileSize = 0;
+        m_poDataLock->V();
+        CheckLogDir(p[i].m_File[count].m_sGroupPath);
+        sprintf(tempPath,"%s%s",p[i].m_File[count].m_sGroupPath,p[i].m_File[count].m_sFileName);
+        if((fd=open(tempPath, O_RDWR|O_CREAT|O_TRUNC, 0770)) < 0)
+        {
+//            Log::log(0,"打开日志组成员文件:%s失败\n",tempPath);
+            Log::LoggLog("打开日志组成员文件:%s失败n",tempPath);
+            return false;
+        }
+        close(fd);
+        return true;
+    }
+    else
+    {
+        for(int j=0;j!=GROUP_FILE_CNT;j++)
+        {  
+            if(strlen(p[i].m_File[j].m_sFileName)==0)
+                continue;
+//            long seq = m_poSeqExt->getNextVal();
+//            Date dt;
+            m_poDataLock->P();
+//            sprintf(p[i].m_File[j].m_sFileName,"hblog_%s%04ld.log",dt.toString("yyyymmdd"),seq);
+            strcpy(p[i].m_File[j].m_sFileName,"hblog");
+            p[i].m_File[j].m_lFileSize = 0;
+            m_poDataLock->V();
+            CheckLogDir(p[i].m_File[j].m_sGroupPath);
+            sprintf(tempPath,"%s%s",p[i].m_File[j].m_sGroupPath,p[i].m_File[j].m_sFileName);
+            if((fd=open (tempPath, O_RDWR|O_CREAT|O_TRUNC, 0770)) < 0)
+            {
+//                Log::log(0,"打开日志组成员文件:%s失败\n",tempPath);
+                Log::LoggLog("打开日志组成员文件:%s失败n",tempPath);
+                return false;
+            }
+            close(fd);
+        }    
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : AddLogGroup
+ *	函数功能 : 添加日志组
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : bool
+ *	参数说明 : GroupId-日志组标识
+*/
+bool ThreeLogGroupMgr::AddLogGroup(int GroupId)
+{
+    unsigned int i ;
+	ThreeLogGoupData * p = m_poLogGroup;
+
+    if(!m_poLogGroupIndex->get(GroupId, &i)) 
+    {
+        i = m_poLogGroupData->malloc();
+        if(!i) 
+        {
+//            ALARMLOG(0,MBC_Log_Group+1,"%s","日志组申请内存失败");
+            Log::LoggLog("日志组申请内存失败");
+            THROW(MBC_Log_Group+1);
+        }
+        m_poIndexLock->P();
+        m_poLogGroupIndex->add(GroupId,i);
+        m_poIndexLock->V();
+        m_poDataLock->P();
+        p[i].m_iGoupId = GroupId;
+        p[i].m_iSeq = 0;
+        if(p[i].m_iGoupId == 1)
+            p[i].m_iState = CURRENT;
+        else
+            p[i].m_iState = INACTIVE;
+        p[i].m_lCurFileSize = 0;
+        p[i].m_lCurDirSize = 0;
+        p[i].m_bPigeonhole = false;
+        p[i].m_bCheckPoint = false;
+        p[i].m_bPigeonholeState = UNDOWN;
+        p[i].m_iWritSeq = 0;
+        if(GroupId!=GROUP_LOG_NUMS)
+            p[i].m_iNext = GroupId +1;
+        else
+            p[i].m_iNext = 1;
+        m_poDataLock->V();
+        return true;
+    }
+   return true ;
+
+}
+
+/*
+ *	函 数 名 : GetInitDirState
+ *	函数功能 : 初始加载日志组目录
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::GetInitDirState(LogFileData *pFileData)
+{
+    FILE *fp;
+    DIR *dirp=NULL;
+    struct dirent *dp=NULL;
+    struct stat statbuf;
+    char sName[500]={0};
+    bool bFind = false;
+
+    if(strlen(pFileData->m_sGroupPath)==0)
+        return false;
+    dirp = opendir(pFileData->m_sGroupPath);
+    if(dirp==NULL)
+    {//已经无此目录
+        mkdir(pFileData->m_sGroupPath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+        return false;
+    }
+    if(pFileData->m_sGroupPath[strlen(pFileData->m_sGroupPath)-1] != '/')
+    {
+        strcat(pFileData->m_sGroupPath, "/");
+    }
+    for(dp = readdir(dirp); dp != NULL; dp = readdir(dirp))
+    {
+        strncpy(sName, dp->d_name, 500-1);
+        if(strcmp(sName, ".")==0 || strcmp(sName, "..")==0)
+            continue;
+        char TempName[500]={0};
+        snprintf(TempName,500,"%s%s/",pFileData->m_sGroupPath,sName);
+        if(lstat(TempName, &statbuf)<0)
+        {
+            perror("istate");
+            printf("获取文件状态出错,文件名:%s",sName);
+            continue;    
+        }
+        if(strcmp(sName, pFileData->m_sFileName))
+                continue;
+        pFileData->m_lFileSize = statbuf.st_size;
+        bFind = true;
+        break;
+    }
+    closedir(dirp);
+    if(!bFind)
+        return false;
+    return true;
+}
+
+/*
+ *	函 数 名 : CheckLogDir
+ *	函数功能 : 检查配置目录是否创建
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : 
+ *	参数说明 : 
+*/
+void ThreeLogGroupMgr::CheckLogDir(char* Path)
+{
+    DIR *dirp=NULL;
+
+    if(strlen(Path)==0)
+        return;
+    dirp = opendir(Path);
+    if(dirp==NULL)
+    {
+        mkdir(Path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+    }
+    else
+        closedir(dirp);
+    if(Path[strlen(Path)-1] != '/')
+    {
+        strcat(Path, "/");
+    }
+}
+
+/*
+ *	函 数 名 : CheckLogFile
+ *	函数功能 : 检查日志组文件
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : 
+ *	参数说明 : 
+*/
+void ThreeLogGroupMgr::CheckLogFile()
+{
+//    int fd;
+    unsigned int i;
+    char tempPath[500];
+    ThreeLogGoupData * p = m_poLogGroup;
+
+    for(int num=1;num<=GROUP_LOG_NUMS;++num)
+    {
+        if(!m_poLogGroupIndex->get(num,&i))
+            THROW(MBC_Log_Group+4);
+        if(p[i].m_iSeq==0)
+        {//如果当前日志组文件数位0，则默认创建两个
+            AddLogGroupFile(num,m_sDefaultLogGroupPath,true);
+            AddLogGroupFile(num,m_sDefaultLogGroupPath,true);
+            GetGroupFilePath(num);
+            continue;
+        }
+        for(int j=0;j!=GROUP_FILE_CNT;j++)
+        {
+            if(strlen(p[i].m_File[j].m_sFileName)==0)
+                continue;
+            if(strlen(p[i].m_File[j].m_sGroupPath)==0)
+                continue;
+            CheckLogDir(p[i].m_File[j].m_sGroupPath);
+            memset(tempPath,0,sizeof(tempPath));
+            sprintf(tempPath,"%s%s",p[i].m_File[j].m_sGroupPath,p[i].m_File[j].m_sFileName);
+            if(access(tempPath, F_OK)!=0)
+            {
+//                Log::log(0,"打开日志组成员文件失败\n");
+                ALARMLOG28(0,MBC_COMMAND_hblogg,101,"日志组%d成员文件:%s 被删除",i,tempPath);
+//                THROW(MBC_Log_Group+7);
+            }
+//            close (fd);
+        }
+    }
+}
+
+/*
+ *	函 数 名 : ChangeLogGroup
+ *	函数功能 : 切换日志组
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : bool
+ *	参数说明 : GroupId-要切换到的日志组标识;bmml-是否来自外围命令
+*/
+bool ThreeLogGroupMgr::ChangeLogGroup(bool bmml,int GroupId)
+{
+    unsigned int icur,ilast;
+   
+    if(!m_poLogGroupIndex->get(m_iCurUseGroupId,&icur))
+    {
+        Log::LoggLog("关联日志组共享内存失败\n");
+        return false;        
+    }
+    ThreeLogGoupData *pCur = m_poLogGroup + icur;
+    if(!pCur)
+    {
+        Log::LoggLog("关联日志组共享内存失败\n");
+        return false;
+    }
+    ThreeLogGoupData *pNext = 0;
+    if(GroupId!=-1)
+    {//指定目标切换
+        if(GroupId >GROUP_LOG_NUMS || GroupId < 1)
+        {
+            Log::LoggLog("无法识别的日志组\n");
+            return false;
+        }
+        if(!m_poLogGroupIndex->get(GroupId, &ilast))
+        {
+            Log::LoggLog("关联日志组共享内存失败\n");
+            return false;
+        }
+        pNext =  m_poLogGroup + ilast;
+        if(!pNext)
+        {
+            Log::LoggLog("关联日志组共享内存失败\n");
+            return false;
+        }
+        if(pNext->m_iState!=INACTIVE)
+        {
+            if(m_iWriteMode==WRITESHARE)
+            {//给出告警
+                Log::LoggLog("指定切换的日志组不为空闲态，请重新指定\n");
+                return false;
+            }
+        }
+    }
+    else
+    {//自动切换
+        if(!m_poLogGroupIndex->get(pCur->m_iNext, &ilast))
+        {
+            Log::LoggLog("关联日志组共享内存失败\n");
+            return false;
+        }
+        pNext =  m_poLogGroup + ilast;
+        if(!pNext)
+        {
+            Log::LoggLog("关联日志组共享内存失败\n");
+            return false;
+        }
+        if(pNext->m_iState!=INACTIVE)
+        {//查找下个日志组
+            if(m_iWriteMode==WRITESHARE)
+            {
+                if(!m_poLogGroupIndex->get(pNext->m_iNext, &ilast))
+                {
+                    Log::LoggLog("关联日志组共享内存失败\n");
+                    return false;
+                }
+                pNext =  m_poLogGroup + ilast;
+                if(!pNext)
+                {
+                    Log::LoggLog("关联日志组共享内存失败\n");
+                    return false;
+                }
+                if(pNext->m_iState!=INACTIVE)
+                {//没有空闲的日志组
+                    Log::LoggLog("当前没有空闲的日志组，请检查日志组及清仓进程状态\n");
+                    return false;
+                }
+            }
+        }
+    }
+    CheckPointMgr *m_poCheckPoint = new CheckPointMgr();
+    if(!m_poCheckPoint)
+    {
+        Log::LoggLog("创建CheckPointMgr管理对象失败\n");
+    }
+    if(pNext->m_iSeq==0)                                   
+    {//如果当前日志组文件数为0，则默认创建两个           
+        AddLogGroupFile(pNext->m_iGoupId,m_sDefaultLogGroupPath,true);
+        AddLogGroupFile(pNext->m_iGoupId,m_sDefaultLogGroupPath,true);
+        GetGroupFilePath(pNext->m_iGoupId);
+    }
+    if(pNext->m_lCurDirSize == 0)
+    {//如果切换的日志组为空，直接切换
+        m_poDataLock->P();
+        pCur->m_iState = ACTIVE;
+        if(m_iWriteMode==WRITESHARE)
+        {
+            if(bmml)
+            {//来源于命令的归档
+                pCur->m_bPigeonholeState = NEEDDOWN;
+            }
+        }
+        else if(m_iWriteMode==WRITEFILE)
+        {
+            pCur->m_bPigeonholeState = FILEDOWN;
+        }
+        pNext->m_iState = CURRENT;
+        pNext->m_bCheckPoint = false;
+        pNext->m_bPigeonholeState = UNDOWN;
+        m_iCurUseGroupId = pNext->m_iGoupId;
+        m_poDataLock->V();
+        //重新定位数据区
+        bindGroupData(m_iCurUseGroupId);
+        GetCurUsedInfoData(m_iCurUseGroupId);
+        GetCurUsedInfoIndex(m_iCurUseGroupId);
+        GetCurUsedInfoLock(m_iCurUseGroupId);
+        //切换的时候自动触发落地checkpoint文件
+        if(m_poCheckPoint)
+        {
+            m_poCheckPoint->touchInfoDown(true,true);
+            delete m_poCheckPoint;
+        }
+        return true;
+    }
+
+    if(pNext->m_bPigeonhole == true && pNext->m_bPigeonholeState != ALLDOWN)
+    {
+        bakGroupFile(pNext->m_iGoupId,m_sBakLogGroupPath);    
+        m_poDataLock->P();
+        pNext->m_iState = INACTIVE;
+        pNext->m_bPigeonholeState=ALLDOWN;
+        m_poDataLock->V();
+    }
+
+    for(int num =0;num!=GROUP_FILE_CNT;++num)
+    {
+        if(strlen(pNext->m_File[num].m_sFileName)==0)
+            continue;
+        if(ClearGroupFile(pNext->m_iGoupId,pNext->m_File[num].m_sFileName)==false)
+            return false;
+    }
+    if(AddLogGroupFile(pNext->m_iGoupId,NULL)==false)
+        return false;
+
+    m_poDataLock->P();
+    pCur->m_iState = ACTIVE;
+    if(bmml)
+    {//来源于命令的归档
+        pCur->m_bPigeonholeState = NEEDDOWN;
+    }
+    pNext->m_iState = CURRENT;
+    pNext->m_bCheckPoint = false;
+    pNext->m_bPigeonholeState=UNDOWN;
+    m_iCurUseGroupId = pNext->m_iGoupId;
+    pNext->m_lCurDirSize = 0;
+    pNext->m_lCurFileSize = 0;
+    m_poDataLock->V();
+    //重新定位数据区
+    bindGroupData(m_iCurUseGroupId);
+    GetCurUsedInfoData(m_iCurUseGroupId);
+    GetCurUsedInfoIndex(m_iCurUseGroupId);
+    GetCurUsedInfoLock(m_iCurUseGroupId);
+    //切换的时候自动触发落地checkpoint文件
+    if(m_poCheckPoint)
+    {
+        m_poCheckPoint->touchInfoDown(true,true);
+        delete m_poCheckPoint;
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : ClearTempGroup
+ *	函数功能 : 删除日志组成员文件
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : bool
+ *	参数说明 : GroupId-日志组标识; pFileName-成员文件名; bmml-是否外围命令增加
+*/
+bool ThreeLogGroupMgr::ClearGroupFile(int LogGroupId,char *pFileName,bool bmml)
+{
+    char scmd[1024]={0};
+    char tempPath[500];
+    unsigned int i;
+
+    if(LogGroupId >GROUP_LOG_NUMS || LogGroupId < 1)
+    {
+        Log::log(0,"无法识别的日志组\n");
+        return false;        
+    }
+    if(!m_poLogGroupIndex->get(LogGroupId,&i))
+    {
+        Log::log(0,"关联日志组共享内存失败\n");
+        return false;        
+    }
+
+    ThreeLogGoupData * p = m_poLogGroup + i;
+        
+    if(!p)
+    {
+        Log::log(0,"关联日志组共享内存失败\n");
+        return false;
+    }
+/*
+    if(p->m_iState == ACTIVE || p->m_iState == CURRENT)
+    {
+        Log::log(0,"当前日志组状态不满足删除条件\n");
+        return false;
+    }
+
+    if(bmml == true && p->m_iSeq <=1)
+    {
+        Log::log(0,"当前日志组只有一个成员文件，不满足删除条件\n");
+        return false;        
+    }
+*/
+    for(int j=0;j!=GROUP_FILE_CNT;j++)
+    {
+        if(strlen(p->m_File[j].m_sFileName) && strcmp(p->m_File[j].m_sFileName,pFileName)==0)
+        {
+            memset(tempPath,0,sizeof(tempPath));
+            sprintf(tempPath,"%s%s",p->m_File[j].m_sGroupPath,p->m_File[j].m_sFileName);
+            sprintf(scmd,"rm -r %s",tempPath);
+            system(scmd);
+            m_poDataLock->P();
+            p->m_File[j].m_lFileSize = 0;
+            if(bmml==true)
+            {
+                Log::log(0,"日志组%d中删除了一个成员文件:%s",p->m_iGoupId,p->m_File[j].m_sFileName);
+                p->m_iSeq--;
+                memset(p->m_File[j].m_sFileName,0,sizeof(p->m_File[j].m_sFileName));
+                memset(p->m_File[j].m_sGroupPath,0,sizeof(p->m_File[j].m_sGroupPath));
+            }
+            m_poDataLock->V();
+            return true;
+        }           
+    }
+    Log::log(0,"该日志组没有找到符合条件的文件，请检查\n");
+    return false;
+}
+
+/*
+ *	函 数 名 : bakGroupFile
+ *	函数功能 : 备份指定日志组文件
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : 
+ *	参数说明 : LogGroupId-要备份的日志组标识; path-要备份到的目录
+*/
+void ThreeLogGroupMgr::bakGroupFile(int LogGroupId,char *path)
+{
+    char scmd[1024]={0};
+    char TempPath[500],tempName[500],tempbak[500];
+    unsigned int i;
+
+    if(strlen(path)==0)
+    {
+        Log::log(0,"未指定备份目录\n");
+        return;
+    }
+    CheckLogDir(path);
+    if(LogGroupId==-1)
+        LogGroupId = GetUseGroup();
+    if(!m_poLogGroupIndex->get(LogGroupId, &i))
+    {
+        Log::log(0,"关联日志组共享内存失败\n");
+        return ;        
+    }
+    ThreeLogGoupData * p = m_poLogGroup + i;
+    if(!p)
+    {
+        Log::log(0, "获取日志组共享内存数据失败\n");
+        return;
+    }
+    for(int j=0;j!=GROUP_FILE_CNT;j++)
+    {
+        if(strlen(p->m_File[j].m_sGroupPath) && strlen(p->m_File[j].m_sFileName))
+        {
+            memset(tempName,0,sizeof(tempName));
+            memset(TempPath,0,sizeof(TempPath));
+            memset(tempbak,0,sizeof(tempbak));
+            strcpy(tempName,p->m_File[j].m_sFileName);
+            sprintf(TempPath,"%s%s",p->m_File[j].m_sGroupPath,p->m_File[j].m_sFileName);
+            if(!GetPigeonholeFileName(tempName))
+                sprintf(tempbak,"%s%s",path,p->m_File[j].m_sFileName);
+            else
+                sprintf(tempbak,"%s%s",path,tempName);
+            sprintf(scmd,"cp -f %s %s",TempPath,tempbak);
+            system(scmd);
+        }
+    }
+}
+
+/*
+ *	函 数 名 : GetUseGroup
+ *	函数功能 : 获取当前正在运行的日志组标识
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : int
+ *	参数说明 : 
+*/
+int ThreeLogGroupMgr::GetUseGroup()
+{
+    unsigned int i;
+    ThreeLogGoupData * p = m_poLogGroup;
+    bool bFind = false;
+
+    if(m_bAttached==false)
+       return -1;
+    
+    if(!p)
+    {
+//        Log::log(0,"日志组获取共享内存信息失败\n");
+        Log::LoggLog("日志组获取共享内存信息失败\n");
+        return -1;
+    }
+
+    for(int num=1;num<=GROUP_LOG_NUMS;++num)
+    {
+        if(!m_poLogGroupIndex->get(num,&i))
+        {
+//            Log::log(0,"日志组获取共享内存信息失败\n");
+            Log::LoggLog("日志组获取共享内存信息失败\n");
+            return -1;            
+        }
+        p = m_poLogGroup + i;
+        if(p->m_iState==CURRENT)
+        {
+            m_iCurUseGroupId = p->m_iGoupId;
+            bFind = true;
+            break;
+        }
+    }
+    if(bFind==false)
+    {
+//        Log::log(0,"日志组状态出错\n");
+        Log::LoggLog("日志组状态出错\n");
+        return -1;    
+    }
+    return m_iCurUseGroupId;
+}
+
+/*
+ *	函 数 名 : DisplayFileList
+ *	函数功能 : 展现指定日志组成员文件信息
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : 
+ *	参数说明 : GroupId-要展现的日志组标识
+*/
+void ThreeLogGroupMgr::DisplayFileList(int GroupId)
+{
+    unsigned int i;
+    
+    if(!m_poLogGroupIndex->get(GroupId, &i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    for(int j=0;j!=GROUP_FILE_CNT;++j)
+    {
+        double dFileSize=0;
+        if(strlen(p->m_File[j].m_sFileName)==0)
+            continue;
+        
+        printf(" 文件名  :%s\n",p->m_File[j].m_sFileName);
+        printf(" 文件路径:%s\n",p->m_File[j].m_sGroupPath);
+        if(p->m_File[j].m_lFileSize < 1024)
+            printf(" 文件大小:%ld Byte\n",p->m_File[j].m_lFileSize);
+        else if(p->m_File[j].m_lFileSize < 1024 *1024)
+        {
+            dFileSize = p->m_File[j].m_lFileSize/1024.000;
+            printf(" 文件大小:%6.3f K\n",dFileSize);
+        }
+        else
+        {
+            dFileSize = ((int)(p->m_File[j].m_lFileSize/1024.000)/1024.000);
+            printf(" 文件大小:%6.3f M\n",dFileSize);
+        }
+        cout<<endl;
+    }
+    return ;
+}
+
+/*
+ *	函 数 名 : DisplayLogGroup
+ *	函数功能 : 展现指定日志组信息
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : 
+ *	参数说明 : GroupId-要展现的日志组标识
+*/
+bool ThreeLogGroupMgr::DisplayLogGroup(int GroupId)
+{
+    unsigned int i;
+
+    if(m_bAttached==false)
+        THROW(MBC_Log_Group+4);
+    if(GetUseGroup()<=0)
+        THROW(MBC_Log_Group+12);
+    if(GroupId == -1)
+        GroupId = m_iCurUseGroupId;           
+
+    if(GroupId > GROUP_LOG_NUMS || GroupId <1)
+        THROW(MBC_Log_Group+11);
+
+    if(!m_poLogGroupIndex->get(GroupId, &i))
+        THROW(MBC_Log_Group+4);
+
+    ThreeLogGoupData * p = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    
+    printf("*******************************************\n");
+    printf("日志组标识:%d\n",p->m_iGoupId);
+    if(p->m_iState==CURRENT)
+        printf("日志组状态:CURRENT\n");
+    else if(p->m_iState==INACTIVE)
+        printf("日志组状态:INACTIVE\n");
+    else if(p->m_iState==ACTIVE)
+        printf("日志组状态:ACTIVE\n");
+    else
+        return false;
+    if(p->m_bPigeonhole)
+        printf("日志组归档标识: 打开\n");
+    else
+        printf("日志组归档标识: 关闭\n");
+    
+    if(p->m_bPigeonholeState==UNDOWN)
+        printf("日志组归档状态: 未归档\n");
+    else if(p->m_bPigeonholeState==ALLDOWN)
+        printf("日志组归档状态: 已归档\n");
+    else if(p->m_bPigeonholeState==NEEDDOWN)
+        printf("日志组归档状态: 等待归档\n");
+    else if(p->m_bPigeonholeState==FILEDOWN)
+        printf("日志组归档状态: 已落地\n");
+
+    if(m_iWriteMode==WRITEFILE)
+        printf("日志组写方式: 写文件\n");
+    else if(m_iWriteMode==WRITESHARE)
+        printf("日志组写方式: 写内存\n");
+
+    printf("日志组文件数:%d\n",p->m_iSeq);
+    double dGroupSize=0,dNewFileSize=0;
+    //当前写的数据区
+    if(p->m_lCurFileSize < 1024)
+    {
+        dNewFileSize = p->m_lCurFileSize;
+        printf("当前最新数据区:%ld Byte\n",p->m_lCurFileSize);
+    }
+    else if(p->m_lCurFileSize < 1024*1024)
+    {
+        dNewFileSize = p->m_lCurFileSize/1024.000;
+        printf("当前最新数据区:%6.3f K\n",dNewFileSize);
+    }
+    else
+    {
+        dNewFileSize = ((int)(p->m_lCurFileSize/1024.000)/1024.000);
+        dNewFileSize = floor(dNewFileSize*100.000)/100.000;
+        printf("当前最新数据区:%6.3f M\n",dNewFileSize);
+    }
+    //整块日志组
+    if(p->m_lCurDirSize < 1024)
+    {
+        dGroupSize = p->m_lCurDirSize;
+        printf("日志组大小:%ld Byte\n",p->m_lCurDirSize);
+    }
+    else if(p->m_lCurDirSize < 1024*1024)
+    {
+        dGroupSize = p->m_lCurDirSize/1024.000;
+        printf("日志组大小:%6.3f K\n",dGroupSize);     
+    }
+    else
+    {
+        dGroupSize = ((int)(p->m_lCurDirSize/1024.000)/1024.000);
+        dGroupSize = floor(dGroupSize*100.000)/100.000;
+        printf("日志组大小:%6.3f M\n",dGroupSize);
+    }
+    printf("日志组成员文件列表:\n");
+    DisplayFileList(p->m_iGoupId);
+    if(m_iWriteMode==WRITESHARE)
+    {
+        if(p->m_bCheckPoint==false)
+            printf("是否checkpoint: 否\n");
+        else
+            printf("是否checkpoint: 是\n");
+    }
+    double size = GetGroupSize(GroupId);
+    double used = GetGroupPercent(GroupId);
+    double unused = 1-used;
+    printf("逻辑空间使用:%6.3f M\n",size);
+    printf("逻辑空间使用率:%6.3f %%\n",used*100);
+    printf("逻辑空间可用率:%6.3f %%\n",unused*100);
+    printf("数据序数:%d \n",p->m_iWritSeq);
+    printf("内存使用:%d \n",GetGroupInfoUsed(GroupId));
+    printf("内存总数:%d \n",m_lInfoDataSize);
+    printf("内存使用率:%6.3f %%\n",(GetGroupInfoPercent(GroupId))*100);
+    printf("文件大小限制:%ld M\n",(m_lMaxLogFileSize/(1024*1024)));
+    printf("日志组大小限制:%ld M\n",(m_lMaxLogDirSize/(1024*1024)));
+    printf("日志组归档文件备份目录:%s \n",m_sBakLogGroupPath);
+    printf("\n");
+    printf("*******************************************\n");
+    return true;
+}
+
+
+/*
+ *	函 数 名 : DisplayDataInfo
+ *	函数功能 : 展现数据区信息的对外接口
+ *	时    间 : 2010年9月18日
+ *	返 回 值 : 
+ *	参数说明 : 
+*/
+/*
+bool ThreeLogGroupMgr::DisplayDataInfo(int idisNum,bool bspecify)
+{
+//    vector<string>::reverse_iterator r_iter;
+    vector<string>::iterator iter;
+    int ifindcnt=0;
+    
+    if(m_vDisplayInfo.size()==0)
+    {
+//        cout<<"**************没有查询到符合的信息**************"<<endl;
+        return false;
+    }
+//    for(r_iter=m_vDisplayInfo.rbegin();r_iter!=m_vDisplayInfo.rend();++r_iter)
+    for(iter=m_vDisplayInfo.begin();iter!=m_vDisplayInfo.end();++iter)
+    {
+        if(ifindcnt>=idisNum)
+        {
+            if(bspecify==true)
+                break;
+            if(!IfCDisplayInfo())
+                break;
+            ifindcnt = 0;
+        }
+        cout<<*iter<<endl;
+        ifindcnt++;
+    }
+    cout<<endl;
+    m_vDisplayInfo.clear();
+    return true;
+}
+*/
+/*
+ *	函 数 名 : IfCDisplayInfo
+ *	函数功能 : 是否继续展现
+ *	时    间 : 2010年9月18日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+/*
+bool ThreeLogGroupMgr::IfCDisplayInfo()
+{
+	string m_key;
+
+	cout<<"c:继续 其他:退出"<<endl;
+	cin>>m_key;
+	if((!strcmp(m_key.c_str(),"c"))||(!strcmp(m_key.c_str(),"C")))
+		return true;
+	return false;
+}
+*/
+
+/*
+ *	函 数 名 : SetLogGroupPigeonhole
+ *	函数功能 : 设置日志组归档标识
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : bool
+ *	参数说明 : bParam-归档标识
+*/
+bool ThreeLogGroupMgr::SetLogGroupPigeonhole(bool bParam)
+{
+    unsigned int i;
+
+    for(int num=1;num<=GROUP_LOG_NUMS;++num)
+    {
+        if(!m_poLogGroupIndex->get(num,&i))
+            THROW(MBC_Log_Group+4);    
+        ThreeLogGoupData * p  = m_poLogGroup + i;
+        if(!p)
+            THROW(MBC_Log_Group+4);
+        m_poDataLock->P();
+        p->m_bPigeonhole = bParam;
+        m_poDataLock->V();
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : GetGroupSize
+ *	函数功能 : 获取指定日志组大小
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : 日志组大小(单位M)
+ *	参数说明 : GroupId-日志组标识
+*/
+double ThreeLogGroupMgr::GetGroupSize(int GroupId)
+{
+    unsigned int i;
+    
+    if(GroupId >GROUP_LOG_NUMS || GroupId < 1)
+        GroupId = m_iCurUseGroupId;
+    if(!m_poLogGroupIndex->get(GroupId,&i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p  = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    if(p->m_iGoupId == GroupId)
+    {
+       double dGroupSize = ((int)(p->m_lCurDirSize/1024.000)/1024.000);
+       dGroupSize = floor(dGroupSize*100.000)/100.000;
+       return dGroupSize;
+    }
+    return 0;
+}
+
+/*
+ *	函 数 名 : GetGroupPercent
+ *	函数功能 : 获取指定日志组利用率
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : double
+ *	参数说明 : GroupId-日志组标识
+*/
+
+double ThreeLogGroupMgr::GetGroupPercent(int GroupId)
+{
+    unsigned int i;
+    
+    if(GroupId >GROUP_LOG_NUMS || GroupId < 1)
+        GroupId = m_iCurUseGroupId;    
+    if(!m_poLogGroupIndex->get(GroupId,&i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p  = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    if(p->m_iGoupId == GroupId)
+    {
+        double temp = p->m_lCurDirSize/(m_lMaxLogDirSize*1.000);
+        return temp;
+    }
+    return 0;
+}
+
+/*
+ *	函 数 名 : GetGroupInfoPercent
+ *	函数功能 : 获取在用日志组共享内存区利用率
+ *	时    间 : 2010年9月3日
+ *	返 回 值 : double
+ *	参数说明 : GroupId-日志组标识
+*/
+
+double ThreeLogGroupMgr::GetGroupInfoPercent(int GroupId)
+{
+    int usedcnt = GetGroupInfoUsed(GroupId);
+    double temp = usedcnt/(m_lInfoDataSize*1.000);
+    return temp;
+}
+
+/*
+ *	函 数 名 : GetGroupState
+ *	函数功能 : 获取指定日志组状态
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : double
+ *	参数说明 : GroupId-日志组标识
+*/
+int ThreeLogGroupMgr::GetGroupState(int GroupId)
+{
+    unsigned int i;
+    
+    if(GroupId >GROUP_LOG_NUMS || GroupId < 1)
+        GroupId = m_iCurUseGroupId;    
+    if(!m_poLogGroupIndex->get(GroupId,&i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p  = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    if(p->m_iGoupId == GroupId)
+        return p->m_iState;
+    return 0;
+}
+
+/*
+ *	函 数 名 : GetGroupWriteMode
+ *	函数功能 : 获取日志组写数据方式
+ *	时    间 : 2010年9月9日
+ *	返 回 值 : int
+ *	参数说明 : 0-写文件 1-写共享内存
+*/
+int ThreeLogGroupMgr::GetGroupWriteMode()
+{
+    return m_iWriteMode;
+}
+
+/*
+ *	函 数 名 : GetGroupPigeonhole
+ *	函数功能 : 获取指定日志组归档标识状态
+ *	时    间 : 2010年9月9日
+ *	返 回 值 : bool
+ *	参数说明 : GroupId-日志组标识
+*/
+bool ThreeLogGroupMgr::GetGroupPigeonhole(int GroupId)
+{
+    unsigned int i;
+    
+    if(GroupId >GROUP_LOG_NUMS || GroupId < 1)
+        GroupId = m_iCurUseGroupId;    
+    if(!m_poLogGroupIndex->get(GroupId,&i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p  = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    if(p->m_iGoupId == GroupId)
+        return p->m_bPigeonhole;
+    return false;    
+}
+
+/*
+ *	函 数 名 : GetPigeonholeFileName
+ *	函数功能 : 获取归档文件名
+ *	时    间 : 2010年9月15日
+ *	返 回 值 : bool
+ *	参数说明 : pFileName -返回的文件名
+*/
+bool ThreeLogGroupMgr::GetPigeonholeFileName(char *pFileName)
+{
+    char *p;
+
+/*    
+    char temp[500];
+
+    p = strchr(pFileName,'_');
+    if(!p)
+        return false;
+    p++;
+    memset(temp,0,sizeof(temp));
+    strcpy(temp,p);
+*/
+    memset(pFileName,0,sizeof(pFileName));
+    long seq = m_poSeqExt->getNextVal();
+    Date dt;
+    sprintf(pFileName,"hblog_archive_%s%04ld",dt.toString("yyyymmdd"),seq);
+    return true;
+}
+
+/*
+ *	函 数 名 : GetGroupFileSeq
+ *	函数功能 : 获取指定日志组成员文件数
+ *	时    间 : 2010年9月9日
+ *	返 回 值 : bool
+ *	参数说明 : GroupId-日志组标识
+*/
+int ThreeLogGroupMgr::GetGroupFileSeq(int GroupId)
+{
+    unsigned int i;
+    
+    if(GroupId >GROUP_LOG_NUMS || GroupId < 1)
+        GroupId = m_iCurUseGroupId;    
+    if(!m_poLogGroupIndex->get(GroupId,&i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p  = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    if(p->m_iGoupId == GroupId)
+        return p->m_iSeq;
+    return 0;
+}
+
+/*
+ *	函 数 名 : GetGroupInfoUsed
+ *	函数功能 : 获取指定日志组内存块使用数
+ *	时    间 : 2010年9月9日
+ *	返 回 值 : int
+ *	参数说明 : GroupId-日志组标识
+*/
+int ThreeLogGroupMgr::GetGroupInfoUsed(int GroupId)
+{
+    unsigned int iOffset;
+    LogInfoData InfoData;
+    int usedcnt=0;
+    /*
+    SHMData_A<LogInfoData>::Iteration iter = m_poInfoData_1->getIteration();
+    if(GroupId==1)
+        iter = m_poInfoData_1->getIteration();
+    else if(GroupId==2)
+        iter = m_poInfoData_2->getIteration();
+    else if(GroupId==3)
+        iter = m_poInfoData_3->getIteration();
+    while(iter.next(InfoData,iOffset))
+    {
+        usedcnt++;
+    }
+    if(usedcnt<m_lInfoDataSize)
+        return usedcnt;
+    else
+        return m_lInfoDataSize;
+    */
+    if(GroupId==1)
+        return m_poInfoData_1->getCount();
+    else if(GroupId==2)
+        return m_poInfoData_2->getCount();
+    else if(GroupId==3)
+        return m_poInfoData_3->getCount();
+    return 0;
+}
+
+/*
+ *	函 数 名 : GetGroupMaxFileSize
+ *	函数功能 : 获取日志组文件大小限制
+ *	时    间 : 2010年7月23日
+ *	返 回 值 : long
+ *	参数说明 : 返回单位为M
+*/
+long ThreeLogGroupMgr::GetGroupMaxFileSize()
+{
+    return m_lMaxLogFileSize/(1024*1024);    
+}
+
+/*
+ *	函 数 名 : GetGroupMaxSize
+ *	函数功能 : 获取日志组大小限制
+ *	时    间 : 2010年7月23日
+ *	返 回 值 : long
+ *	参数说明 : 返回单位为M
+*/
+long ThreeLogGroupMgr::GetGroupMaxSize()
+{
+    return m_lMaxLogDirSize/(1024*1024);
+}
+
+/*
+ *	函 数 名 : GetGroupBakPath
+ *	函数功能 : 获取日志组归档后的备份目录
+ *	时    间 : 2010年7月23日
+ *	返 回 值 : char
+ *	参数说明 : 
+*/
+char* ThreeLogGroupMgr::GetGroupBakPath()
+{
+    return m_sBakLogGroupPath;
+}
+
+/*
+ *	函 数 名 : GetCurUseFileName
+ *	函数功能 : 获取当前正在写的文件名
+ *	时    间 : 2010年7月28日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::GetCurUseFileName(int GroupId,char *pFileName,char *pFilePath)
+{
+    unsigned int i;
+
+    if(GroupId >GROUP_LOG_NUMS || GroupId < 1)
+        GroupId = m_iCurUseGroupId;   
+    if(!m_poLogGroupIndex->get(GroupId,&i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p  = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    for(int j=0;j!=GROUP_FILE_CNT;++j)
+    {
+        if(strlen(p->m_File[j].m_sFileName)==0)
+            continue;
+        strcpy(pFileName,p->m_File[j].m_sFileName);
+        strcpy(pFilePath,p->m_File[j].m_sGroupPath);
+        return true;
+    }
+    return false;
+}
+
+/*
+ *	函 数 名 : GetCurUsedInfoData
+ *	函数功能 : 获取当前正在用的共享内存数据区
+ *	时    间 : 2010年9月18日
+ *	返 回 值 : void
+ *	参数说明 : GroupId-当前日志组标识
+*/
+bool ThreeLogGroupMgr::GetCurUsedInfoData(int GroupId)
+{
+    if(GroupId==1)
+        m_poInfoData = m_poInfoData_1;
+    else if(GroupId==2)
+        m_poInfoData = m_poInfoData_2;
+    else if(GroupId==3)
+        m_poInfoData = m_poInfoData_3;
+    else
+        m_poInfoData = 0;
+    return true;
+}
+
+/*
+ *	函 数 名 : GetCurUsedInfoIndex
+ *	函数功能 : 获取当前正在用的共享内存索引区
+ *	时    间 : 2010年9月18日
+ *	返 回 值 : void
+ *	参数说明 : GroupId-当前日志组标识
+*/
+bool ThreeLogGroupMgr::GetCurUsedInfoIndex(int GroupId)
+{
+    if(GroupId==1)
+        m_poInfoIndex = m_poInfoIndex_1;
+    else if(GroupId==2)
+        m_poInfoIndex = m_poInfoIndex_2;
+    else if(GroupId==3)
+        m_poInfoIndex = m_poInfoIndex_3;
+    else
+        m_poInfoIndex = 0;
+    return true;    
+}
+
+/*
+ *	函 数 名 : GetCurUsedInfoLock
+ *	函数功能 : 获取当前正在用的共享内存区数据锁
+ *	时    间 : 2010年9月18日
+ *	返 回 值 : void
+ *	参数说明 : GroupId-当前日志组标识
+*/
+bool ThreeLogGroupMgr::GetCurUsedInfoLock(int GroupId)
+{
+    if(GroupId==1)
+        m_poInfoDataLock = m_poInfoDataLock_1;
+    else if(GroupId==2)
+        m_poInfoDataLock = m_poInfoDataLock_2;
+    else if(GroupId==3)
+        m_poInfoDataLock = m_poInfoDataLock_3;
+    else
+        m_poInfoDataLock = 0;
+    return true;    
+}
+
+/*
+ *	函 数 名 : GetAttemperLog
+ *	函数功能 : 获取数据区进程调度信息
+ *	时    间 : 2010年9月22日
+ *	返 回 值 : bool
+ *	参数说明 : m_vAttrpLog-存放返回信息
+*/
+bool ThreeLogGroupMgr::GetAttemperLog(char *pbeginTime,int iTimeSec,vector < string > & vAttrpLog)
+{
+    string strinfo;
+    unsigned int m=0;
+    string::size_type loc=0;
+    long timediff=0;
+    int cnt=0;
+    
+    LogInfoData * p = m_poInfoGroup;
+    if(!p)
+        return false;
+    if(!m_poInfoIndex)
+        return false;
+    unsigned int lPrm=0;
+    if(m_poInfoIndex->get(ATTEMPERLOG,&m))
+    {
+	    while(m)
+        {
+            if(lPrm==m)
+                break;
+            if(cnt>=DISPLAYMAXCNT)
+                break;
+            strinfo = p[m].m_sInfo;
+            char *pbegin=p[m].m_sInfo;
+            char *ptime=0;
+            char tempTime[30]={0};
+            //解析时间[yyyy-mm-dd hh:mi:ss]
+            pbegin++;
+            ptime=strchr(pbegin,']');
+            int len = ptime - pbegin;
+            strncpy(tempTime,pbegin,len);
+            Date dt(tempTime,"yyyy-mm-dd hh:mi:ss");
+            Date dBegin(pbeginTime,"yyyymmddhhmiss");
+            timediff = dt.diffSec(dBegin);
+            if(timediff>0 && timediff<iTimeSec)
+            {
+                vAttrpLog.push_back(strinfo);
+                cnt++;
+            }
+            lPrm = m;
+            m = p[m].m_iNextOffset;
+	    }
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : GetSystemLog
+ *	函数功能 : 获取数据区系统管理信息
+ *	时    间 : 2010年10月1日
+ *	返 回 值 : bool
+ *	参数说明 : m_vSystemLog-存放返回信息
+*/
+bool ThreeLogGroupMgr::GetSystemLog(vector<string> &vSystemLog)
+{
+    string strinfo;
+    unsigned int m=0;
+    char rule[100]={0};
+    int cnt=0;
+    string::size_type loc=0;
+
+    strcpy(rule,"[ADMIN]");
+    LogInfoData * p = m_poInfoGroup;
+    if(!p)
+        return false;
+    if(!m_poInfoIndex)
+        return false;
+    unsigned int lPrm=0;
+    if(m_poInfoIndex->get(SYSTEMLOG,&m))
+    {
+	    while(m)
+        {
+            if(lPrm==m)
+                break;
+            if(cnt>=DISPLAYMAXCNT)
+                break;
+            strinfo = p[m].m_sInfo;
+            loc = strinfo.find(rule,0);
+            if(loc!=string::npos)
+            {
+                vSystemLog.push_back(strinfo);
+                cnt++;
+            }
+            lPrm = m;
+            m = p[m].m_iNextOffset;
+	    }
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : GetAlarmLog
+ *	函数功能 : 获取数据区告警信息
+ *	时    间 : 2010年10月1日
+ *	返 回 值 : bool
+ *	参数说明 : m_vSystemLog-存放返回信息
+*/
+bool ThreeLogGroupMgr::GetAlarmLog(char *pbeginTime,int iTimeSec,vector < string > & vAlarmLog)
+{
+    string strinfo;
+    unsigned int m=0;
+    char rule[100]={0};
+    int cnt=0;
+    int timediff=0;
+    string::size_type loc=0;
+
+    strcpy(rule,"[ALARM]");
+    LogInfoData * p = m_poInfoGroup;
+    if(!p)
+        return false;
+    if(!m_poInfoIndex)
+        return false;
+    unsigned int lPrm=0;
+    if(m_poInfoIndex->get(OPERATIONLOG,&m))
+    {
+	    while(m)
+        {
+            if(lPrm==m)
+                break;
+            if(cnt>=DISPLAYMAXCNT)
+                break;
+            strinfo = p[m].m_sInfo;
+            loc = strinfo.find(rule,0);
+            if(loc!=string::npos)
+            {
+                char *pbegin=p[m].m_sInfo;
+                char *ptime=0;
+                char tempTime[30]={0};
+                //解析时间[yyyy-mm-dd hh:mi:ss]
+                pbegin++;
+                ptime=strchr(pbegin,']');
+                int len = ptime - pbegin;
+                strncpy(tempTime,pbegin,len);
+                Date dt(tempTime,"yyyy-mm-dd hh:mi:ss");
+                Date dBegin(pbeginTime,"yyyymmddhhmiss");
+                timediff = dt.diffSec(dBegin);
+                if(timediff>0 && timediff<iTimeSec)
+                {
+                    vAlarmLog.push_back(strinfo);
+                    cnt++;
+                }
+            }
+            lPrm = m;
+            m = p[m].m_iNextOffset;
+	    }
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : GetParamLog
+ *	函数功能 : 获取数据区参数修改信息
+ *	时    间 : 2010年10月1日
+ *	返 回 值 : bool
+ *	参数说明 : m_vSystemLog-存放返回信息
+*/
+bool ThreeLogGroupMgr::GetParamLog(char *pbeginTime,int iTimeSec,vector<string> &vParamLog)
+{
+    string strinfo;
+    unsigned int m=0;
+    int cnt=0;
+    int timediff=0;
+    string::size_type loc=0;
+
+    LogInfoData * p = m_poInfoGroup;
+    if(!p)
+        return false;
+    if(!m_poInfoIndex)
+        return false;
+    unsigned int lPrm=0;
+    if(m_poInfoIndex->get(PARAMLOG,&m))
+    {
+	    while(m)
+        {
+            if(lPrm==m)
+                break;
+            if(cnt>=DISPLAYMAXCNT)
+                break;
+            strinfo = p[m].m_sInfo;
+            char *pbegin=p[m].m_sInfo;
+            char *ptime=0;
+            char tempTime[30]={0};
+            //解析时间[yyyy-mm-dd hh:mi:ss]
+            pbegin++;
+            ptime=strchr(pbegin,']');
+            int len = ptime - pbegin;
+            strncpy(tempTime,pbegin,len);
+            Date dt(tempTime,"yyyy-mm-dd hh:mi:ss");
+            Date dBegin(pbeginTime,"yyyymmddhhmiss");
+            if(timediff>0 && timediff<iTimeSec)
+            {
+                vParamLog.push_back(strinfo);
+                cnt++;
+            }
+            lPrm = m;
+            m = p[m].m_iNextOffset;
+	    }
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : GetHighFeeLog
+ *	函数功能 : 获取数据区高额告警信息
+ *	时    间 : 2010年10月1日
+ *	返 回 值 : bool
+ *	参数说明 : m_vHighfeeLog-存放返回信息
+*/
+bool ThreeLogGroupMgr::GetHighFeeLog(vector<string> &vHighfeeLog)
+{
+    string strinfo;
+    unsigned int m=0;
+    char rule[100]={0};
+    int cnt=0;
+    string::size_type loc=0;
+
+    strcpy(rule,"[HIGHFEE]");
+    LogInfoData * p = m_poInfoGroup;
+    if(!p)
+        return false;
+    if(!m_poInfoIndex)
+        return false;
+    unsigned int lPrm=0;
+    if(m_poInfoIndex->get(OPERATIONLOG,&m))
+    {
+	    while(m)
+        {
+            if(lPrm==m)
+                break;
+            if(cnt>=DISPLAYMAXCNT)
+                break;
+            strinfo = p[m].m_sInfo;
+            loc = strinfo.find(rule,0);
+            if(loc!=string::npos)
+            {
+                vHighfeeLog.push_back(strinfo);
+                cnt++;
+            }
+            lPrm = m;
+            m = p[m].m_iNextOffset;
+	    }
+    }
+    return true;
+}
+
+
+/*
+ *	函 数 名 : GetProNameByModule
+ *	函数功能 : 根据进程名获取模块号
+ *	时    间 : 2010年9月23日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::GetProNameByModule(int iParam, char * sReturn)
+{
+    char sSql[1024]={0};
+    int iModId=0;
+
+    memset(sReturn,0,sizeof(sReturn));
+    DEFINE_QUERY(qry);
+    try
+    {
+    sprintf(sSql,"select a.exec_name from wf_application a where "
+        "a.module_id = %d",iParam);
+    qry.setSQL(sSql);
+    qry.open ();
+    if(qry.next())
+        strcpy(sReturn,qry.field(0).asString());
+    qry.close();
+
+    if(strlen(sReturn)==0)
+        return false;
+    }
+    catch(TOCIException & e)
+    {
+        Log::log(0,"数据库错误，信息如下：\nSQL->%s\nERROR->%s",e.getErrSrc(),e.getErrMsg());
+        return false;
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : GetTotalInfoSizeForShm
+ *	函数功能 : 获取共享内存总大小
+ *	时    间 : 2010年9月23日
+ *	返 回 值 : long
+ *	参数说明 : 
+*/
+long ThreeLogGroupMgr::GetTotalInfoSizeForShm()
+{
+    return m_lInfoDataSize*(DATASIZE*(sizeof(char))+sizeof(unsigned int));
+}
+
+/*
+ *	函 数 名 : GetInfoUsedSizeForShm
+ *	函数功能 : 获取共享内存使用大小
+ *	时    间 : 2010年9月23日
+ *	返 回 值 : long
+ *	参数说明 : GroupId-指定的日志组内存块
+*/
+long ThreeLogGroupMgr::GetInfoUsedSizeForShm(int GroupId)
+{
+    return GetGroupInfoUsed(GroupId)*(DATASIZE*(sizeof(char))+sizeof(unsigned int));
+}
+
+/*
+ *	函 数 名 : GetGroupMaxFileSize
+ *	函数功能 : 设置日志组文件大小限制
+ *	时    间 : 2010年7月23日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::SetGroupMaxFileSize(int size)
+{
+    if(size<0)
+        return false;
+    if(size<=FILEMIN)
+    {
+        Log::log(0,"日志文件大小设置过小,可能会导致频繁切换,请重新设置.建议范围:200~300M");
+        size = 200;
+    }
+    if(size>=FILEMAX)
+    {
+        Log::log(0,"日志文件大小设置过大,请重新设置.建议范围:200~300M");
+        size = 200;
+    }
+    m_lMaxLogFileSize = size*1024*1024;
+    return true;
+}
+
+/*
+ *	函 数 名 : GetGroupMaxSize
+ *	函数功能 : 设置日志组大小限制
+ *	时    间 : 2010年7月23日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::SetGroupMaxSize(int size)
+{
+    if(size<0)
+        return false;
+    m_lMaxLogDirSize = size*1024*1024;
+    return true;
+}
+
+/*
+ *	函 数 名 : SetGroupDefaultPath
+ *	函数功能 : 设置日志组成员文件的默认存储目录
+ *	时    间 : 2010年8月3日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::SetGroupDefaultPath(char *path)
+{
+    if(strlen(path)==0)
+        return false;
+    strcpy(m_sDefaultLogGroupPath,path);
+    CheckLogDir(m_sDefaultLogGroupPath);
+    return true;
+}
+
+
+void ThreeLogGroupMgr::SetGroupFilePath(int GroupId,int FileSeq,char *path)
+{
+    char temp[10]={0};
+
+    sprintf(temp,"%d_%d",GroupId,FileSeq);
+    string sFileId(temp);
+    m_mFilePathMap.insert(map<string,string>::value_type(sFileId,path));
+}
+
+/*
+ *	函 数 名 : GetGroupBakPath
+ *	函数功能 : 设置日志组归档后的备份目录
+ *	时    间 : 2010年7月23日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::SetGroupBakPath(char *path)
+{
+    if(strlen(path)==0)
+        return false;
+    strcpy(m_sBakLogGroupPath,path);
+    CheckLogDir(m_sBakLogGroupPath);
+    return true;
+}
+
+/*
+ *	函 数 名 : SetGroupWriteMode
+ *	函数功能 : 设置日志组写数据方式
+ *	时    间 : 2010年9月7日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::SetGroupWriteMode(int mode)
+{
+    m_iWriteMode = mode;
+    return true;
+}
+
+/*
+ *	函 数 名 : SetGroupCheckTouch
+ *	函数功能 : 设置checkpoint触发日志组切换的阀值
+ *	时    间 : 2010年10月15日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::SetGroupCheckTouch(int iTouchSize)
+{
+    m_iCheckPointTouch = iTouchSize;
+    if(m_iCheckPointTouch<=0 || m_iCheckPointTouch>=100)
+    {
+        m_iCheckPointTouch = 75;
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : AnalyzesCFileInfo
+ *	函数功能 : 解析checkpoint文件内容
+ *	时    间 : 2010年8月10日
+ *	返 回 值 : bool
+ *	参数说明 : 解析的是一块日志组的信息
+*/
+bool ThreeLogGroupMgr::AnalyzesFileInfo(vector<string> &vec_tag)
+{
+    int cnt = vec_tag.size();
+    int iGroupId = 0,filedcnt=0;
+    unsigned int icnt=0,i=0,FileDataCnt=3;
+    
+    if(cnt==0)
+    {
+        Log::log(0,"解析checkpoint文件内容为空");
+        return false;
+    }
+    iGroupId = atoi(vec_tag[icnt++].c_str());
+    if(!m_poLogGroupIndex->get(iGroupId,&i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p  = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    //初始化内存信息
+    m_poDataLock->P();
+    p->m_iGoupId = iGroupId;
+    p->m_iSeq = 0;
+    int iSeq = atoi(vec_tag[icnt++].c_str());
+    p->m_iNext = atoi(vec_tag[icnt++].c_str());
+    p->m_iState = atoi(vec_tag[icnt++].c_str());
+    p->m_bPigeonhole = atoi(vec_tag[icnt++].c_str());
+    p->m_bPigeonholeState = atoi(vec_tag[icnt++].c_str());
+    p->m_bCheckPoint = atoi(vec_tag[icnt++].c_str());
+    p->m_lCurFileSize = 0;
+    p->m_lCurDirSize =0;
+    long iCurFileSize = atol(vec_tag[icnt++].c_str());
+    long iCurDirSize  = atol(vec_tag[icnt++].c_str());
+    filedcnt = cnt - icnt;
+    if(filedcnt==0)
+    {
+        m_poDataLock->V();
+        return true;
+    }
+    if((filedcnt % FileDataCnt))
+    {
+        Log::log(0,"解析checkpoint文件字段个数不符合数据结构!");
+        m_poDataLock->V();
+        return false;              
+    }
+    filedcnt = filedcnt/FileDataCnt;
+    if(filedcnt > GROUP_FILE_CNT)
+    {
+        Log::log(0,"解析checkpoint文件字段个数出错");
+        m_poDataLock->V();
+        return false;        
+    }
+    for(int num =0;num!=GROUP_FILE_CNT;++num)
+    {//清空成员文件区
+        if(strlen(p->m_File[num].m_sFileName)==0)
+            continue;
+        p->m_File[num].m_lFileSize = 0;
+        memset(p->m_File[num].m_sGroupPath,0,sizeof(p->m_File[num].m_sGroupPath));
+        memset(p->m_File[num].m_sFileName,0,sizeof(p->m_File[num].m_sFileName));
+    }
+    for(int j=0;j!=filedcnt;++j)
+    {//解析获取一个日志组下的所有成员文件信息
+        strcpy(p->m_File[j].m_sGroupPath,vec_tag[icnt++].c_str());
+        strcpy(p->m_File[j].m_sFileName,vec_tag[icnt++].c_str());
+        p->m_File[j].m_lFileSize = 0;
+        long ifileSize = atol(vec_tag[icnt++].c_str());
+        if(strlen(p->m_File[j].m_sFileName)==0)
+            continue;
+        if(!GetInitDirState(&p->m_File[j]))
+        {//如果从信息中核实的数据不对，创建一个初始化的环境
+            Log::log(0,"找不到指定日志组成员文件 filename:%s;filepath:%s",
+                                p->m_File[j].m_sFileName,p->m_File[j].m_sGroupPath);
+            memset(p->m_File[j].m_sFileName,0,sizeof(p->m_File[j].m_sFileName));
+            m_poDataLock->V();
+            Log::log(0,"重新创建新成员文件");
+            AddLogGroupFile(iGroupId,p->m_File[j].m_sGroupPath,true);
+            continue;
+        }
+        if(p->m_File[j].m_lFileSize!=ifileSize)
+        {//文件大小以实际的为准，此处仅告警提示
+//            Log::log(0,"checkpoint文件记录的日志组成员文件大小信息与实际有出入");    
+        }
+        p->m_iSeq++;
+        p->m_lCurFileSize = p->m_File[j].m_lFileSize;
+        p->m_lCurDirSize += p->m_File[j].m_lFileSize;
+    }
+    if(p->m_iSeq!=iSeq)
+    {
+        Log::log(0,"解析checkpoint文件文件个数字段出错");
+        m_poDataLock->V();
+        return false;                
+    }
+    if(p->m_lCurDirSize!=iCurDirSize)
+    {
+//        Log::log(0,"checkpoint文件记录的日志组大小信息与实际有出入");      
+    }
+    m_poDataLock->V();
+    return true;
+}
+
+
+/*
+ *	函 数 名 : AnalyzesDataInfo
+ *	函数功能 : 解析数据建索引
+ *	时    间 : 2010年9月5日
+ *	返 回 值 : bool
+ *	参数说明 : LogFlag-对应的日志类别,StandId-备用条件选项
+*/
+bool ThreeLogGroupMgr::AnalyzesDataInfo(int LogFlag,int StandId1,char *sStandId1,vector<string> &m_vDisplayInfo)
+{
+    string strinfo;
+    unsigned int m=0;
+    int cnt=0;
+    char rule[100];
+    string::size_type loc=0;
+
+    memset(rule,0,sizeof(rule));
+    LogInfoData * p = m_poInfoGroup;
+	switch(LogFlag)
+	{
+	case OPERATIONLOG:
+        if(StandId1==PINFOPOINT)
+        {//按等级查询信息点
+            int iLevelid = atoi(sStandId1);
+            if(iLevelid==1)
+                strcpy(rule,"[LV-1]");
+            else if(iLevelid==2)
+                strcpy(rule,"[LV-2]");
+            else if(iLevelid==3)
+                strcpy(rule,"[LV-3]");
+            else
+                strcpy(rule,"[LV");
+        }
+        else if(StandId1==DISALARM)
+        {
+            if(strlen(sStandId1))
+            {
+                int iModueId= atoi(sStandId1);
+                sprintf(rule,"ModuleId:[%d]",iModueId);
+            }
+            else
+                strcpy(rule,"[ALARM]");
+        }
+        else if(StandId1==DISBYDML)
+        {
+            strcpy(rule,"[DML]");
+        }
+        else if(StandId1==DISPLAYALL)
+            strcpy(rule,"[");
+		break;
+	case SYSTEMLOG:
+        if(StandId1==DISPLAYALL)
+            strcpy(rule,"[");
+        else if(StandId1==DISBYCHECK)
+            strcpy(rule,"[checkpoint]");
+        else if(StandId1==DISBYSTAFF)
+            strcpy(rule,"[STAFFID:");
+        else if(StandId1==DISBYPARAM)
+            sprintf(rule,"[%s]",sStandId1);
+		break;
+	case PARAMLOG:
+        if(StandId1==DISPLAYALL)
+            strcpy(rule,"[");
+        else if(StandId1==DISBYSTAFF)
+            sprintf(rule,"[STAFFID:%s]",sStandId1);
+        else
+            sprintf(rule,"[PARAM:%s]",sStandId1);
+		break;
+    case ATTEMPERLOG:
+        if(StandId1==DISPLAYALL)
+            strcpy(rule,"[");
+        else
+            sprintf(rule,"[PRO:%s]",sStandId1);
+        break;
+    case HBACCESS:
+        if(StandId1==DISPLAYALL)
+            strcpy(rule,"[");
+        else
+            sprintf(rule,"[%s]",sStandId1);
+        break;
+
+	default:
+		break;
+	}
+    unsigned int lPrm=0;
+    if(m_poInfoIndex->get(LogFlag,&m))
+    {
+	    while(m)
+        {
+            if(lPrm==m)
+                break;
+            loc=0;
+            if(cnt>=DISPLAYMAXCNT)
+                break;
+            strinfo = p[m].m_sInfo;
+            loc = strinfo.find(rule,0);
+            if(loc!=string::npos)
+            {
+                m_vDisplayInfo.push_back(strinfo);
+                cnt++;
+            }
+            lPrm = m;
+            m = p[m].m_iNextOffset;
+	    }
+    }
+    return true;
+}
+
+
+
+/*
+ *	函 数 名 : CheckPointIn
+ *	函数功能 : 核心系统信息加载接口
+ *	时    间 : 2010年8月10日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::CheckPointIn(char * sBatch)
+{   
+    struct stat statbuf;
+    char sTempName[1024],sFilePath[1024],buf[10000];
+    FILE *fp;
+    vector<string> vectag;
+    
+    memset(sTempName,0,sizeof(sTempName));
+    memset(sFilePath,0,sizeof(sFilePath));
+    if(m_bAttached==false)
+    {
+        Log::log(0, "获取日志组共享内存信息失败!请查看是否创建");
+        return false;
+    }
+    if( !sBatch || !sBatch[0])
+    {
+        Log::log(0, "请指定正确的批次号！");
+        return false;
+    }
+    Log::log(0, "日志组开始进行checkpoint加载操作,批次号:%s",sBatch);
+    CheckPointMgr *m_poCheckPoint = new CheckPointMgr();
+    if(!m_poCheckPoint)
+    {
+        Log::log(0,"创建CheckPointMgr管理对象失败"); 
+        return false;
+    }
+   if(m_poCheckPoint->getCheckPointPath(sFilePath)==false)
+    {
+        Log::log(0,"获取checkpoint配置目录失败"); 
+        return false;        
+    }
+    if(strlen(sFilePath)==0)
+    {
+        Log::log(0, "没有配置checkpoint文件目录!"); 
+        return false;
+    }
+    if(sFilePath[strlen(sFilePath)-1] != '/')
+    {
+        strcat(sFilePath, "/");
+    }
+    CheckLogDir(sFilePath);
+    sprintf(sTempName,"%sLogGroup/",sFilePath);
+    CheckLogDir(sTempName);
+    sprintf(m_sCheckPointPath,"%s%s",sTempName,sBatch);
+    if(lstat(m_sCheckPointPath, &statbuf)<0)
+    {
+        perror("istate");
+        Log::log (0, "获取checkpoint文件状态出错，文件名:%s",m_sCheckPointPath);
+        return false;   
+    }
+    if(0 == statbuf.st_size)
+    {
+        Log::log (0, "获取checkpoint文件大小为空，文件名:%s",m_sCheckPointPath);
+        return false;
+    }
+    fp = fopen(m_sCheckPointPath,"r");
+    if(fp==NULL)
+    {
+        Log::log (0, "打开checkpoint文件失败，文件名:%s",m_sCheckPointPath);
+        return false;
+    }
+    while(fgets(buf,sizeof(buf),fp))
+    {
+        vectag.clear();
+        if(strcmp(buf,"\n")==0)
+             continue;
+        char *p= strchr(buf, '|');
+        char *p1= buf;
+        while(p)
+        {
+            char sTmp[1024]={0};
+            strncpy(sTmp,p1,p-p1);
+            vectag.push_back(sTmp);
+            p++;
+            p1=p;
+            p=strchr(p1, '|');
+        }
+        if(!AnalyzesFileInfo(vectag))
+        {
+            fclose(fp);
+            Log::log (0, "解析checkpoint文件失败，文件名:%s",m_sCheckPointPath);            
+            return false;                
+        }
+    }
+    fclose(fp);
+    Log::log(0, "日志组checkpoint加载操作完成");
+    return true;
+}
+
+/*
+ *	函 数 名 : CheckPointOut
+ *	函数功能 : 核心系统信息落地文件接口
+ *	时    间 : 2010年8月10日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::CheckPointOut(char * sBatch)
+{
+    ofstream *pfstream = new ofstream;
+    const char* GDIV= "|";
+    char sTempName[1024],sFilePath[1025];
+    
+    memset(sTempName,0,sizeof(sTempName));
+    memset(sFilePath,0,sizeof(sFilePath));
+    if( !sBatch || !sBatch[0])
+    {
+        Log::log(0, "请指定正确的批次号！");
+        return false;
+    }
+    if(m_bAttached==false)
+    {
+        Log::log(0, "获取日志组共享内存信息失败!请查看是否创建");
+        return false;
+    }
+    Log::log(0, "日志组开始进行checkpoint落地操作,批次号:%s",sBatch);
+
+    CheckPointMgr *m_poCheckPoint = new CheckPointMgr();
+    if(!m_poCheckPoint)
+    {
+        Log::log(0,"创建CheckPointMgr管理对象失败");
+        return false;
+    }
+    if(m_poCheckPoint->getCheckPointPath(sFilePath)==false)
+    {
+        Log::log(0,"获取checkpoint配置目录失败"); 
+        return false;
+    }
+
+    if(strlen(sFilePath)==0)
+    {
+        Log::log(0, "没有配置checkpoint文件目录!"); 
+        return false;
+    }
+    if(sFilePath[strlen(sFilePath)-1] != '/')
+    {
+        strcat(sFilePath, "/");
+    }
+    CheckLogDir(sFilePath);
+    sprintf(sTempName,"%sLogGroup/",sFilePath);
+    CheckLogDir(sTempName);
+    sprintf(m_sCheckPointPath,"%s%s",sTempName,sBatch);
+    pfstream->open(m_sCheckPointPath,ios::trunc);
+    if(!pfstream->good())
+    {
+        Log::log(0, "创建checkpoint文件出错!"); 
+        return false;
+    }
+    for(int num=1;num<=GROUP_LOG_NUMS;++num)
+    {
+        unsigned int i;
+        m_poLogGroupIndex->get(num,&i);
+        ThreeLogGoupData * p  = m_poLogGroup + i;
+        if(!p)
+            THROW(MBC_Log_Group+4);
+        *pfstream<<p->m_iGoupId<<GDIV
+                 <<p->m_iSeq<<GDIV
+                 <<p->m_iNext<<GDIV
+                 <<p->m_iState<<GDIV
+                 <<p->m_bPigeonhole<<GDIV
+                 <<p->m_bPigeonholeState<<GDIV
+                 <<p->m_bCheckPoint<<GDIV
+                 <<p->m_lCurDirSize<<GDIV
+                 <<p->m_lCurFileSize<<GDIV;
+        for(int j=0;j!=GROUP_FILE_CNT;++j)
+        {
+            if(strlen(p->m_File[j].m_sFileName)==0)
+                continue;
+            *pfstream<<p->m_File[j].m_sGroupPath<<GDIV  
+                     <<p->m_File[j].m_sFileName<<GDIV       
+                     <<p->m_File[j].m_lFileSize<<GDIV;         	                        
+        }
+        *pfstream<<endl;  
+    }
+    pfstream->close();
+    pfstream->clear();
+    Log::log(0, "日志组checkpoint落地文件完成");
+    return true;
+}
+
+/*
+ *	函 数 名 : GetGroupInfoData
+ *	函数功能 : 获取当前日志组内存数据区
+ *	时    间 : 2010年9月5日
+ *	返 回 值 : LogInfoData*
+ *	参数说明 : 
+*/
+LogInfoData* ThreeLogGroupMgr::GetGroupInfoData()
+{
+    return m_poInfoGroup;
+}
+
+/*
+ *	函 数 名 : GetGroupFilePath
+ *	函数功能 : 获取当前日志组文件路径配置
+ *	时    间 : 2010年9月8日
+ *	返 回 值 : 
+ *	参数说明 : GroupId-日志组标识
+*/
+bool ThreeLogGroupMgr::GetGroupFilePath(int GroupId)
+{
+    unsigned int i;
+    int filecnt=0;
+    map<string, string>::iterator mIter;
+    
+    for(int num=1;num<=GROUP_LOG_NUMS;++num)
+    {
+        if(!m_poLogGroupIndex->get(num, &i))
+            THROW(MBC_Log_Group+4);
+        ThreeLogGoupData * p = m_poLogGroup + i;
+        if(!p)
+            THROW(MBC_Log_Group+4);
+        if(p->m_iGoupId!=GroupId)
+            continue;
+        for(int j=0;j!=GROUP_FILE_CNT;++j)
+        {
+            if(strlen(p->m_File[j].m_sFileName)==0)
+                continue;
+            filecnt++;
+            char temp[10]={0};
+            sprintf(temp,"%d_%d",num,filecnt);
+            string sFileId(temp);
+            mIter = m_mFilePathMap.find(sFileId);
+            if(mIter == m_mFilePathMap.end())
+            {//没有找到
+                continue;
+            }
+            string sPath (m_mFilePathMap.find(sFileId)->second);
+            m_poDataLock->P();
+            strcpy(p->m_File[j].m_sGroupPath,sPath.c_str());
+            m_poDataLock->V();
+        }
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : Check75CheckPoint
+ *	函数功能 : 逻辑日志写满75%的时候触发checkpoint
+ *	时    间 : 2010年9月16日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::Check75CheckPoint()
+{
+    unsigned int i;
+    int GroupId=0;
+
+    if(m_iWriteMode!=WRITESHARE)
+        return true;
+    if(m_bAttached==false)
+        THROW(MBC_Log_Group+4);
+    GroupId = GetUseGroup();
+    if(GroupId > GROUP_LOG_NUMS || GroupId <1)
+        THROW(MBC_Log_Group+11);
+    if(!m_poLogGroupIndex->get(GroupId, &i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    if(p->m_bCheckPoint == true)
+        return true;
+    int iPercent = GetGroupInfoPercent(GroupId)*100;
+    if(iPercent<m_iCheckPointTouch)
+        return true;
+    //逻辑日志75%触发checkpoint
+    m_poDataLock->P();
+    p->m_bCheckPoint = true;
+    m_poDataLock->V();
+    int iGroupId = GetUseGroup();
+    if(ChangeLogGroup(false,-1)==true)
+    {
+        char stemp[200]={0};
+        int itempId = GetUseGroup();
+        sprintf(stemp,"[logg] 日志组由组%d切换到组%d",iGroupId,itempId);
+        LogGroupWriteFile(SYSTEMLOG,stemp);
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : CheckInfoCallBack
+ *	函数功能 : 检查共享内存是否需要回收
+ *	时    间 : 2010年9月16日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::CheckInfoCallBack()
+{
+    unsigned int i;
+    int GroupId=0;
+
+    if(m_iWriteMode!=WRITESHARE)
+        return true;
+    if(m_bAttached==false || m_bInfoAttached==false)
+        THROW(MBC_Log_Group+4);
+    GroupId = GetUseGroup();
+    int iPercent = GetGroupInfoPercent(GroupId)*100;
+    if(iPercent>=CALLBACKPOINT)
+    {
+        //落地文件
+        if(!FileDownInfo(GroupId))
+        {
+            Log::log(0,"清仓进程落地文件失败");
+            return false;
+        }
+        //落地完要回收
+        if(!CallBackInfo(GroupId))
+        {
+            Log::log(0,"清仓进程回收共享内存失败");
+            return false;
+        } 
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : FileDownInfo
+ *	函数功能 : 落地内存信息到文件
+ *	时    间 : 2010年9月16日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::FileDownInfo(int GroupId)
+{
+    DIR *dirp=NULL;
+    char tempPath[500];
+//    char sTemp[10000];
+    char sInfo[DATASIZE+1];
+    int fd;
+    long lCnt=0,MixCnt=0;
+    unsigned int i;
+    
+    if(m_iWriteMode!=WRITESHARE)
+        return true;
+    if(m_bAttached==false)
+        THROW(MBC_Log_Group+4);
+    if(GroupId > GROUP_LOG_NUMS || GroupId <1)
+        THROW(MBC_Log_Group+11);
+    if(!m_poLogGroupIndex->get(GroupId, &i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p = m_poLogGroup + i;
+    if(!p)
+        THROW(MBC_Log_Group+4);
+    /*
+    if(GroupId==1)
+        m_poInfoDataLock_1->P();
+    else if(GroupId==2)
+        m_poInfoDataLock_2->P();
+    else if(GroupId==3)
+        m_poInfoDataLock_3->P();
+    //找到清仓态日志组对应的内存块
+//    LogInfoData * poGroup = GetGroupInfoData(GroupId)+1;
+    SHMData_A<LogInfoData>::Iteration iter = m_poInfoData_1->getIteration();
+    unsigned int iOffset;
+    LogInfoData InfoData;
+    for(int j=0;j!=GROUP_FILE_CNT;j++)
+    {
+        if(strlen(p->m_File[j].m_sFileName)==0)
+            continue;
+        if(GroupId==1)
+            iter = m_poInfoData_1->getIteration();
+        else if(GroupId==2)
+            iter = m_poInfoData_2->getIteration();
+        else if(GroupId==3)
+            iter = m_poInfoData_3->getIteration();
+        else
+        {
+            if(GroupId==1)
+                m_poInfoDataLock_1->V();
+            else if(GroupId==2)
+                m_poInfoDataLock_2->V();
+            else if(GroupId==3)
+                m_poInfoDataLock_3->V();
+            return false;
+        }
+        dirp = opendir(p->m_File[j].m_sGroupPath);
+        if(dirp==NULL)
+        {
+            mkdir(p->m_File[j].m_sGroupPath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+        }
+        else
+            closedir(dirp);
+        memset(tempPath,0,sizeof(tempPath));
+        sprintf(tempPath,"%s%s",p->m_File[j].m_sGroupPath,p->m_File[j].m_sFileName);
+        if((fd=open (tempPath, O_RDWR|O_CREAT|O_APPEND, 0770)) < 0)
+        {
+//            Log::log(0,"打开日志组成员文件失败\n");
+//            ALARMLOG(0,MBC_Log_Group+7,"%s","打开日志组成员文件失败");
+            Log::LoggLog("打开日志组成员文件失败");
+            if(GroupId==1)
+                m_poInfoDataLock_1->V();
+            else if(GroupId==2)
+                m_poInfoDataLock_2->V();
+            else if(GroupId==3)
+                m_poInfoDataLock_3->V();
+            return false;
+        }
+        lCnt=0;
+        MixCnt=0;
+        while(iter.next(InfoData,iOffset))
+        {
+            lCnt++;
+            if(lCnt<=p->m_iWritSeq)
+                continue;
+            if(lCnt>m_lInfoDataSize)
+                break;
+            memset(sInfo,0,sizeof(sInfo));
+            strncpy(sInfo,InfoData.m_sInfo,DATASIZE-1);
+            if(sInfo[strlen(sInfo)-1]!='\n')
+                sprintf(sInfo,"%s\n",sInfo);
+            write (fd, sInfo, strlen (sInfo));
+        }
+        close (fd);
+        MixCnt = lCnt-p->m_iWritSeq;
+        if(MixCnt>0)
+        {
+            m_poDataLock->P();
+            p->m_File[j].m_lFileSize = p->m_lCurFileSize;
+            m_poDataLock->V();
+        }
+    }
+    if(MixCnt>0)
+    {
+        m_poDataLock->P();
+        p->m_iWritSeq+=MixCnt;
+        m_poDataLock->V();
+        Log::log(0,"日志组清仓进程写文件: %ld 条\n",MixCnt);
+    }
+    if(GroupId==1)
+        m_poInfoDataLock_1->V();
+    else if(GroupId==2)
+        m_poInfoDataLock_2->V();
+    else if(GroupId==3)
+        m_poInfoDataLock_3->V();
+    */
+    LogInfoData *pInfo = 0;
+    if(GroupId==1)
+        pInfo = (LogInfoData *)(*m_poInfoData_1);
+    else if(GroupId==2)
+        pInfo = (LogInfoData *)(*m_poInfoData_2);
+    else if(GroupId==3)
+        pInfo = (LogInfoData *)(*m_poInfoData_3);
+    if(!pInfo)
+        return false;
+    for(int j=0;j!=GROUP_FILE_CNT;j++)
+    {
+        if(strlen(p->m_File[j].m_sFileName)==0)
+            continue;
+        dirp = opendir(p->m_File[j].m_sGroupPath);
+        if(dirp==NULL)
+        {
+            mkdir(p->m_File[j].m_sGroupPath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+        }
+        else
+            closedir(dirp);
+        memset(tempPath,0,sizeof(tempPath));
+        sprintf(tempPath,"%s%s",p->m_File[j].m_sGroupPath,p->m_File[j].m_sFileName);
+        if((fd=open (tempPath, O_RDWR|O_CREAT|O_APPEND, 0770)) < 0)
+        {
+//            Log::log(0,"打开日志组成员文件失败\n");
+//            ALARMLOG(0,MBC_Log_Group+7,"%s","打开日志组成员文件失败");
+            Log::LoggLog("打开日志组成员文件失败");
+            return false;
+        }
+        lCnt=0;
+        MixCnt=0;
+        for(int i=1;i<=m_lInfoDataSize;i++)
+        {
+            if(strlen(pInfo[i].m_sInfo)==0)
+                continue;
+            lCnt++;
+            if(lCnt<=p->m_iWritSeq)
+                continue;
+            strncpy(sInfo,pInfo[i].m_sInfo,DATASIZE-1);
+            if(sInfo[strlen(sInfo)-1]!='\n')
+                sprintf(sInfo,"%s\n",sInfo);
+            write (fd, sInfo, strlen (sInfo));
+        }
+        close (fd);
+        MixCnt = lCnt-p->m_iWritSeq;
+        if(MixCnt>0)
+        {
+            m_poDataLock->P();
+            p->m_File[j].m_lFileSize = p->m_lCurFileSize;
+            m_poDataLock->V();
+        }
+    }
+    if(MixCnt>0)
+    {
+        m_poDataLock->P();
+        p->m_iWritSeq+=MixCnt;
+        m_poDataLock->V();
+        Log::log(0,"日志组清仓进程写文件: %ld 条\n",MixCnt);
+    }
+    return true;
+}
+
+
+/*
+ *	函 数 名 : CallBackInfo
+ *	函数功能 : 回收共享内存数据和索引
+ *	时    间 : 2010年9月16日
+ *	返 回 值 : bool
+ *	参数说明 : 
+*/
+bool ThreeLogGroupMgr::CallBackInfo(int GroupId)
+{
+    unsigned int iOffset=0;
+    unsigned int i;
+    int iMaxCn=0;
+  
+    if(m_iWriteMode!=WRITESHARE)
+        return true;
+    if(m_bInfoAttached==false)
+        return false;
+    if(GroupId > GROUP_LOG_NUMS || GroupId <1)
+        THROW(MBC_Log_Group+11);
+    /*
+    SHMData_A<LogInfoData>::Iteration iter = m_poInfoData_1->getIteration();
+    if(GroupId==1)
+        iter = m_poInfoData_1->getIteration();
+    else if(GroupId==2)
+        iter = m_poInfoData_2->getIteration();
+    else if(GroupId==3)
+        iter = m_poInfoData_3->getIteration();
+    else
+    {
+        if(GroupId==1)
+            m_poInfoDataLock_1->V();
+        else if(GroupId==2)
+            m_poInfoDataLock_2->V();
+        else if(GroupId==3)
+            m_poInfoDataLock_3->V();
+        return false;
+    }
+    LogInfoData InfoData;
+    while(iter.next(InfoData,iOffset))
+    {
+        iMaxCn++;
+        if(iMaxCn>=m_lInfoDataSize)
+            break;
+        if(GroupId==1)
+            m_poInfoData_1->revoke(iOffset);
+        else if(GroupId==2)
+            m_poInfoData_2->revoke(iOffset);
+        else if(GroupId==3)
+            m_poInfoData_3->revoke(iOffset);
+        else
+        {
+            if(GroupId==1)
+                m_poInfoDataLock_1->V();
+            else if(GroupId==2)
+                m_poInfoDataLock_2->V();
+            else if(GroupId==3)
+                m_poInfoDataLock_3->V();
+            return false;
+        }
+    }
+    */
+    LogInfoData *pInfo = 0;
+    if(GroupId==1)
+        pInfo = (LogInfoData *)(*m_poInfoData_1);
+    else if(GroupId==2)
+        pInfo = (LogInfoData *)(*m_poInfoData_2);
+    else if(GroupId==3)
+        pInfo = (LogInfoData *)(*m_poInfoData_3);
+    if(!pInfo)
+        return false;
+    //数据区
+    if(GroupId==1)
+        m_poInfoDataLock_1->P();
+    else if(GroupId==2)
+        m_poInfoDataLock_2->P();
+    else if(GroupId==3)
+        m_poInfoDataLock_3->P();
+    
+    for(int i=1;i<=m_lInfoDataSize;i++)
+    {
+        if(strlen(pInfo[i].m_sInfo)==0)
+            continue;
+        if(GroupId==1)
+            m_poInfoData_1->revoke(i);
+        else if(GroupId==2)
+            m_poInfoData_2->revoke(i);
+        else if(GroupId==3)
+            m_poInfoData_3->revoke(i);
+    }
+    
+    if(GroupId==1)
+        m_poInfoDataLock_1->V();
+    else if(GroupId==2)
+        m_poInfoDataLock_2->V();
+    else if(GroupId==3)
+        m_poInfoDataLock_3->V();
+    //索引区
+    m_poIndexLock->P();
+    SHMIntHashIndex_A::Iteration iterd = m_poInfoIndex_1->getIteration();
+    if(GroupId==1)
+        iterd = m_poInfoIndex_1->getIteration();
+    else if(GroupId==2)
+        iterd = m_poInfoIndex_2->getIteration();
+    else if(GroupId==3)
+        iterd = m_poInfoIndex_3->getIteration();
+    else
+    {
+        m_poIndexLock->V();
+        return false;
+    }
+    long iIndexkey=0;
+    unsigned int iIndexOffset=0;
+    while(iterd.next(iIndexkey,iIndexOffset))
+    {
+        if(iMaxCn>=m_lInfoDataSize)
+            break;            
+        if(GroupId==1)
+            m_poInfoIndex_1->revokeIdx(iIndexkey,iIndexOffset);
+        else if(GroupId==2)
+            m_poInfoIndex_2->revokeIdx(iIndexkey,iIndexOffset);
+        else if(GroupId==3)
+            m_poInfoIndex_3->revokeIdx(iIndexkey,iIndexOffset);
+        else
+        {
+            m_poIndexLock->V();
+            return false;
+        }
+        iMaxCn++;
+    }
+    m_poIndexLock->V();
+    if(!m_poLogGroupIndex->get(GroupId, &i))
+        THROW(MBC_Log_Group+4);
+    ThreeLogGoupData * p = m_poLogGroup + i;
+    m_poDataLock->P();
+    p->m_iWritSeq=0;
+    m_poDataLock->V();
+    return true;
+}
+
+
+/*
+ *	函 数 名 : AddInfoDataInfo
+ *	函数功能 : 写日志组内存数据区
+ *	时    间 : 2010年9月5日
+ *	返 回 值 : bool
+ *	参数说明 : pData-写入的数据;p-对应的日志组
+*/
+bool ThreeLogGroupMgr::AddInfoDataInfo(char* pData,ThreeLogGoupData* p,int iLogFlag)
+{
+    unsigned int i=0;
+    unsigned int m=0;
+
+    if(!m_poIndexLock || !m_poDataLock || !m_poInfoDataLock)
+        return false;
+    if(!m_poInfoGroup ||!m_poInfoData ||!m_poInfoIndex)
+        return false;
+
+    LogInfoData * pInfo = m_poInfoGroup;
+    if(!pInfo)
+    {
+        Log::LoggLog("获取日志组数据区共享内存信息失败\n");
+        return false;
+    }
+    m_poInfoDataLock->P();
+    i = m_poInfoData->malloc();
+    if(i==0)
+    {
+        Log::LoggLog("日志组内存数据区申请内存失败\n");
+        m_poInfoDataLock->V();
+        return false;
+    }
+    strncpy(pInfo[i].m_sInfo,pData,DATASIZE-1);
+    pInfo[i].m_iNextOffset = 0;
+    m_poIndexLock->P();
+    if(m_poInfoIndex->get(iLogFlag,&m))
+    {
+	    pInfo[i].m_iNextOffset = m;
+    }
+    m_poInfoIndex->add(iLogFlag,i);
+    m_poIndexLock->V();
+    m_poInfoDataLock->V();
+
+    int isize = strlen(pData);
+    long sSize = isize * sizeof(char);
+    m_poDataLock->P();
+    p->m_lCurFileSize += sSize;
+    p->m_lCurDirSize += sSize * p->m_iSeq;
+    m_poDataLock->V();
+    return true;
+}
+
+/*
+ *	函 数 名 : CommitInfoFile
+ *	函数功能 : 内存块数据落地文件
+ *	时    间 : 2010年9月6日
+ *	返 回 值 : bool
+ *	参数说明 :
+*/
+bool ThreeLogGroupMgr::CommitInfoFile()
+{
+    unsigned int i;
+    ThreeLogGoupData * p = m_poLogGroup;
+    //先检查是否连接共享内存
+    if(m_bAttached==false)
+    {
+        ALARMLOG(0,MBC_Log_Group+4,"%s","关联日志组信息区共享内存失败，请查看是否创建");
+        THROW(MBC_Log_Group+4);
+    }
+    if(m_bInfoAttached==false)
+    {
+        ALARMLOG(0,MBC_Log_Group+4,"%s","关联日志组数据区共享内存失败，请查看是否创建");
+        THROW(MBC_Log_Group+4);        
+    }
+    //检查下日志组文件状态
+    CheckLogFile();
+
+    //查找清仓态的日志组
+    for(int num=1;num<=GROUP_LOG_NUMS;++num)
+    {
+        if(!m_poLogGroupIndex->get(num,&i))
+            THROW(MBC_Log_Group+4);
+        //落地文件
+        if(!FileDownInfo(num))
+        {
+            Log::log(0,"清仓进程落地文件失败");
+            return false;
+        }
+        if(p[i].m_iState!=ACTIVE)
+            continue;
+        //落地完要回收
+        if(!CallBackInfo(num))
+        {
+            Log::log(0,"清仓进程回收共享内存失败");
+            return false;
+        }
+        //回收完了更改下状态为可用态
+        
+        m_poDataLock->P();
+        p[num].m_iState = INACTIVE;
+        if(p[num].m_bPigeonholeState!=NEEDDOWN)
+            p[num].m_bPigeonholeState = FILEDOWN;
+        p[num].m_iWritSeq = 0;
+        m_poDataLock->V();
+        //看是否需要归档
+        if(p[num].m_bPigeonhole==true && p[num].m_bPigeonholeState==NEEDDOWN)
+        {//需要归档，比如来自手动归档命令
+            bakGroupFile(p[num].m_iGoupId,m_sBakLogGroupPath);    
+            for(int fnum =0;fnum!=GROUP_FILE_CNT;++fnum)
+            {
+                if(strlen( p[num].m_File[fnum].m_sFileName)==0)
+                    continue;
+                if(ClearGroupFile( p[num].m_iGoupId, p[num].m_File[fnum].m_sFileName)==false)
+                    return false;
+            }
+            if(AddLogGroupFile(p[num].m_iGoupId,NULL)==false)
+                return false;
+            m_poDataLock->P();
+            p[num].m_iState = INACTIVE;
+            p[num].m_bPigeonholeState = ALLDOWN;
+            p[num].m_lCurDirSize = 0;
+            p[num].m_lCurFileSize = 0;
+            m_poDataLock->V();
+        }
+    }
+    return true;
+}
+
+/*
+ *	函 数 名 : LogGroupWriteFile
+ *	函数功能 : 三个日志组写文件接口
+ *	时    间 : 2010年6月26日
+ *	返 回 值 : 
+ *	参数说明 : 
+*/
+void ThreeLogGroupMgr::LogGroupWriteFile(int LogFlag,char* pData)
+{
+    struct dirent *dp=NULL;
+    struct stat statbuf;
+    DIR *dirp=NULL;
+    long tempSize=0,MaxFileSize=0,MaxGroupSize=0;
+    int fd;
+    char tempPath[500];
+    unsigned int i = 0,j=0;
+    bool bChange=false;
+    int icLastId=0,icCurId=0;
+
+    if(m_iWriteMode==-1)
+        return;
+
+    if(strlen(pData)==0)
+        return;
+
+    if(m_bAttached==false)
+    {
+        Log::LoggLog("日志组获取共享内存信息失败\n");
+        return;
+    }
+
+    ThreeLogGoupData* p;
+
+    m_poLogGroupIndex->get(m_iCurUseGroupId,&i);
+    p = m_poLogGroup + i;
+    if(!p)
+    {
+        Log::LoggLog("日志组获取共享内存信息失败\n");
+        return;
+    }
+
+    if(p->m_iState!=CURRENT)
+    {
+        if(GetUseGroup()<=0)
+        {
+            Log::LoggLog("日志组获取当前使用组失败\n");
+            return ;
+        }
+        m_poLogGroupIndex->get(m_iCurUseGroupId,&i);
+        p = m_poLogGroup + i;
+        if(!p)
+        {
+            Log::LoggLog("日志组获取共享内存信息失败\n");
+            return;
+        }
+        bindGroupData(m_iCurUseGroupId);
+        GetCurUsedInfoData(m_iCurUseGroupId);
+        GetCurUsedInfoIndex(m_iCurUseGroupId);
+        GetCurUsedInfoLock(m_iCurUseGroupId);
+    }
+
+    if(p->m_lCurDirSize > m_lMaxLogDirSize || p->m_lCurFileSize > m_lMaxLogFileSize) 
+    {//超出日志组的最大资源数，切换日志组
+        icLastId = m_iCurUseGroupId;
+        if(ChangeLogGroup(false)==false)
+        {
+            Log::LoggLog("切换日志组失败\n");
+            return;
+        }
+        bChange = true;
+        m_poLogGroupIndex->get(p->m_iNext,&i);
+        p = m_poLogGroup + i;
+        icCurId = p->m_iGoupId;
+    }
+    
+    char sTemp[1200];
+    memset(sTemp,0,sizeof(sTemp));
+    Date dt;
+    if(LogFlag==ATTEMPERLOG)
+    {//针对进程调度的专门处理
+        char sattpName[100]={0};
+        if(GetProNameByModule(Log::m_iModleId,sattpName))
+            sprintf (sTemp, "[%s]:[PRO:%s] %s", dt.toString("yyyy-mm-dd hh:mi:ss"),sattpName,pData);
+        else
+            sprintf (sTemp, "[%s]:[PRO:%d] %s", dt.toString("yyyy-mm-dd hh:mi:ss"),Log::m_iModleId,pData);
+    }
+    else
+        sprintf (sTemp, "[%s]: %s", dt.toString("yyyy-mm-dd hh:mi:ss"), pData);
+    if(m_iWriteMode==WRITESHARE)
+    {//写共享，镜像文件用一份数据
+        AddInfoDataInfo(sTemp,p,LogFlag);
+        if(bChange)
+        {
+            char schangTemp[500];
+            memset(schangTemp,0,sizeof(schangTemp));
+            Date dt;
+            sprintf (schangTemp, "[%s]:[LOGG] 日志组由组%d切换到组%d", dt.toString("yyyy-mm-dd hh:mi:ss"),icLastId,icCurId);
+            AddInfoDataInfo(schangTemp,p,SYSTEMLOG);
+        }
+        return ;
+    }
+    //后面为直接写文件模式
+    if(p->m_iSeq==0)                                   
+    {//如果当前日志组文件数为0，则默认创建两个           
+        AddLogGroupFile(p->m_iGoupId,m_sDefaultLogGroupPath,true);
+        AddLogGroupFile(p->m_iGoupId,m_sDefaultLogGroupPath,true);
+        GetGroupFilePath(p->m_iGoupId);
+    }
+    for(int j=0;j!=GROUP_FILE_CNT;j++)
+    {
+        if(strlen(p->m_File[j].m_sFileName)==0)
+            continue;
+
+        dirp = opendir(p->m_File[j].m_sGroupPath);
+        if(dirp==NULL)
+        {
+            mkdir(p->m_File[j].m_sGroupPath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+        }
+        else
+            closedir(dirp);
+        memset(tempPath,0,sizeof(tempPath));
+        sprintf(tempPath,"%s%s",p->m_File[j].m_sGroupPath,p->m_File[j].m_sFileName);
+        if((fd=open (tempPath, O_RDWR|O_CREAT|O_APPEND, 0770)) < 0)
+        {
+            Log::LoggLog("打开日志组成员文件失败\n");
+            return;
+        }
+        write (fd, sTemp, strlen (sTemp));
+        close (fd);
+        if(lstat(tempPath,&statbuf)<0)
+        {
+            Log::LoggLog("日志组成员文件状态出错\n");
+            return;
+        }
+        else
+        {
+            m_poDataLock->P();
+            tempSize = statbuf.st_size - p->m_File[j].m_lFileSize;
+            p->m_File[j].m_lFileSize = statbuf.st_size;
+            p->m_lCurFileSize = statbuf.st_size;
+            p->m_lCurDirSize += tempSize;
+            m_poDataLock->V();
+        }
+    }
+    return;
+}
+
+

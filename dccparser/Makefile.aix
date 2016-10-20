@@ -1,0 +1,5 @@
+HOST_OS=OS_AIX
+INCLUDES=-I. -I./include_aix
+CXX=xlC
+CFLAGS = $(CXXFLAGS) -q64
+AR = ar -X64 rv

@@ -1,0 +1,87 @@
+(ld): setopt 64
+(ld): halt 4
+(ld): setfflag 4
+(ld): savename abmclear
+(ld): filelist 38 1
+(ld): i /lib/crt0_64.o
+(ld): i /tmp/xlcMC--AtMd.o
+(ld): i abmclear.o
+(ld): i AutoClearABMTT.o
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/liboracleop.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libframework.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libbillcommon.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libttop.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libshmop.a
+(ld): lib /lib/libpthread.a
+(ld): lib /lib/libnsl.a
+(ld): lib /cbilling/app/petri/timesten/TimesTen/tt70abm/lib/libtten.a
+(ld): lib /cbilling/app/petri/timesten/TimesTen/tt70abm/lib/libttclasses.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libalgo.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libdccparser.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libsystem.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libpublic.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libjson.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libace.a
+(ld): lib /lib/libcurses.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libcontrols.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libliboci.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libparser.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libinit.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libmmdb.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libworkflow.a
+(ld): lib /cbilling/app/petri/ori_bak/HSS/lib/libthreelogapi.a
+(ld): lib /lib/libc.a
+(ld): lib /oracle/app/product/10.2.0/db_1/lib/libocci.a
+(ld): lib /oracle/app/product/10.2.0/db_1/lib/libclntsh.a
+(ld): lib /lib/libm.a
+(ld): lib /lib/libdl.a
+(ld): lib /lib/libodm.a
+(ld): lib /lib/libbsd_r.a
+(ld): lib /lib/libld.a
+(ld): lib /lib/libperfstat.a
+(ld): lib /lib/libxlopt.a
+(ld): lib /lib/libC.a
+LIBRARY: Shared object libpthread.a[shr_xpg5_64.o]: 332 symbols imported.
+LIBRARY: Shared object libnsl.a[shr_64.o]: 398 symbols imported.
+LIBRARY: Shared object libtten.a[libtten.so]: 823 symbols imported.
+LIBRARY: Shared object libttclasses.a[libttclasses.so]: 622 symbols imported.
+LIBRARY: Shared object libcurses.a[shr42_64.o]: 508 symbols imported.
+LIBRARY: Shared object libc.a[shr_64.o]: 2665 symbols imported.
+LIBRARY: Shared object libc.a[posix_aio_64.o]: 20 symbols imported.
+LIBRARY: Shared object libc.a[aio_64.o]: 18 symbols imported.
+LIBRARY: Shared object libc.a[pse_64.o]: 5 symbols imported.
+LIBRARY: Shared object libc.a[dl_64.o]: 4 symbols imported.
+LIBRARY: Shared object libc.a[pty_64.o]: 1 symbols imported.
+LIBRARY: Shared object libocci.a[shr.o]: 3142 symbols imported.
+LIBRARY: Shared object libclntsh.a[shr.o]: 1492 symbols imported.
+LIBRARY: Shared object libdl.a[shr_64.o]: 4 symbols imported.
+LIBRARY: Shared object libodm.a[shr_64.o]: 41 symbols imported.
+LIBRARY: Shared object libperfstat.a[shr_64.o]: 19 symbols imported.
+LIBRARY: Symbols imported from import file /lib/libC.a[shr_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[shr2_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[shr3_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[ansi_32.imp]: 0
+LIBRARY: Symbols imported from import file /lib/libC.a[shr_64.imp]: 383
+LIBRARY: Symbols imported from import file /lib/libC.a[shr2_64.imp]: 24
+LIBRARY: Symbols imported from import file /lib/libC.a[shr3_64.imp]: 27
+LIBRARY: Symbols imported from import file /lib/libC.a[ansi_64.imp]: 2448
+LIBRARY: Shared object libC.a[ansi_64.o]: 2658 symbols imported.
+FILELIST: Number of previously inserted files processed: 38
+(ld): resolve
+RESOLVE: 9727 of 92011 symbols were kept.
+(ld): addgl /usr/lib/glink64.o
+ADDGL: Glink code added for 557 symbols.
+(ld): er full
+ER: There are no unresolved symbols.
+(ld): mismatch
+MISMATCH: No type mismatches exist.
+(ld): comprld
+COMPRLD: Kept 63620 of 63620 relocation entries.
+(ld): origin page 0x100000000 0x110000000
+(ld): libpath /cbilling/app/petri/ori_bak/HSS/lib:/cbilling/app/petri/timesten/TimesTen/tt70abm/lib:/oracle/app/product/10.2.0/db_1/rdbms/lib:/oracle/app/product/10.2.0/db_1/lib:/lib:/usr/vac/lib:/usr/vacpp/lib:/usr/lib:/lib
+LIBPATH: Library path set to /cbilling/app/petri/ori_bak/HSS/lib:/cbilling/app/petri/timesten/TimesTen/tt70abm/lib:/oracle/app/product/10.2.0/db_1/rdbms/lib:/oracle/app/product/10.2.0/db_1/lib:/lib:/usr/vac/lib:/usr/vacpp/lib:/usr/lib:/lib
+(ld): save 1L .
+SAVE: Section sizes = 3775744+287488+7665 (0x399D00+0x46300+0x1DF1 hex)
+SAVE: Size of TOC: 8752 (0x2230 hex)
+(ld): rc
+RC: Highest return code was 0.

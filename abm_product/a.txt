@@ -1,0 +1,1034 @@
+./app_abmmonitor/ABM_SQL_MGR.h
+./app_abmmonitor/atmi.h
+./app_abmmonitor/button.h
+./app_abmmonitor/CommonMacro.h
+./app_abmmonitor/control.h
+./app_abmmonitor/controls.h
+./app_abmmonitor/edit.h
+./app_abmmonitor/Environment.h
+./app_abmmonitor/fml32.h
+./app_abmmonitor/FML32FUN.h
+./app_abmmonitor/GetinfoMonitor.h
+./app_abmmonitor/Guard.h
+./app_abmmonitor/GuardMain.h
+./app_abmmonitor/GuardRemote.h
+./app_abmmonitor/KeyTree.h
+./app_abmmonitor/listbox.h
+./app_abmmonitor/LocalDefine.h
+./app_abmmonitor/Log.h
+./app_abmmonitor/login.h
+./app_abmmonitor/macro.h
+./app_abmmonitor/mainmenu.h
+./app_abmmonitor/makeform.h
+./app_abmmonitor/MemInfo.h
+./app_abmmonitor/mnt.h
+./app_abmmonitor/mntapi.h
+./app_abmmonitor/msgqueue.h
+./app_abmmonitor/password.h
+./app_abmmonitor/printer.h
+./app_abmmonitor/process.h
+./app_abmmonitor/ProcessInfo.h
+./app_abmmonitor/Publicfunction.h
+./app_abmmonitor/readinfo.h
+./app_abmmonitor/sample_ubbcfg.h
+./app_abmmonitor/Server.h
+./app_abmmonitor/sharedmemory.h
+./app_abmmonitor/socketapi.h
+./app_abmmonitor/StdEvent.h
+./app_abmmonitor/ticket.h
+./app_abmmonitor/Timesten_Env.h
+./app_abmmonitor/tmenv.h
+./app_abmmonitor/userlog.h
+./app_abmmonitor/WfPublic.h
+./app_abmmonitor/WorkFlow.h
+./app_mode_old/hssmode.h
+./app_dataio/DataExportor.h
+#include "ThreeLogGroup.h"
+    ThreeLogGroup *m_poLogGroup;
+./app_dataio/DataImport.h
+#include "ThreeLogGroup.h"
+    ThreeLogGroup *m_poLogGroup;
+./app_dataio/FileMgr.h
+#include "ThreeLogGroup.h"
+    ThreeLogGroup *m_poLogGroup;
+./app_dataio/SHMInfoCtl.h
+./app_dataio/SHMSqlMgr.h
+./app_dataio/TTimport.h
+./app_dataio/DataCheckPoint.h
+#include "ThreeLogGroup.h"
+    ThreeLogGroup *m_poLogGroup;
+./app_dataio/TableStruct.h
+./app_dataio/TTTns.h
+./app_dataio/bak/ReadCfg.h
+./app_dataio/bak/TimesTenAccess.h
+./app_dataio/bak/TimesTenInterface.h
+./HSSBAK/app_asn/ASN_BaseInclude.h
+./HSSBAK/app_asn/ASN_ConditionInfo.h
+./HSSBAK/app_asn/ASN_ConstDef.h
+./HSSBAK/app_asn/ASN_DataSourceIF.h
+./HSSBAK/app_asn/ASN_FileFieldInfo.h
+./HSSBAK/app_asn/ASN_FileInfo.h
+./HSSBAK/app_asn/ASN_FileMgr.h
+./HSSBAK/app_asn/ASN_FileStructInfo.h
+./HSSBAK/app_asn/ASN_FileTypeInfo.h
+./HSSBAK/app_asn/ASN_FileTypeIns.h
+./HSSBAK/app_asn/ASN_FileUtil.h
+./HSSBAK/app_asn/ASN_FunctionInfo.h
+./HSSBAK/app_asn/interrupt.h
+./HSSBAK/app_bnftp_server/c++dcl.h
+./HSSBAK/app_bnftp_server/cmd.h
+./HSSBAK/app_bnftp_server/context.h
+./HSSBAK/app_bnftp_server/ctpdefine.h
+./HSSBAK/app_bnftp_server/ctp_logalert.h
+./HSSBAK/app_bnftp_server/ctperrno.h
+./HSSBAK/app_bnftp_server/gobal.h
+./HSSBAK/app_bnftp_server/main.h
+./HSSBAK/app_bnftp_server/net.h
+./HSSBAK/app_bnftp_server/platform.h
+./HSSBAK/app_bnftp_server/rwconfig.h
+./HSSBAK/app_encode/app.h
+./HSSBAK/app_encode/encode.h
+./HSSBAK/app_upload/UploadEdgeStationInfo.h
+./HSSBAK/app_hssaccess/checkUserInfo.h
+./HSSBAK/app_hssaccess/hbaccessAdmin.h
+./HSSBAK/app_hssaccess/hbaccessLog.h
+./HSSBAK/app_hssaccess/hbappcommand.h
+./HSSBAK/app_hssaccess/hbbilltables.h
+./HSSBAK/app_hssaccess/hbclear.h
+./HSSBAK/app_hssaccess/hbclearfile.h
+./HSSBAK/app_hssaccess/hblogin.h
+./HSSBAK/app_hssaccess/hbmainmenu.h
+./HSSBAK/app_hssaccess/hbsqlfunc.h
+./HSSBAK/app_hssaccess/hbtablescatalog.h
+./HSSBAK/app_hssaccess/hbtablesdata.h
+./HSSBAK/app_hssaccess/hbtablesmenu.h
+./HSSBAK/app_hssaccess/makeform.h
+./HSSBAK/app_hssaccess/password.h
+./HSSBAK/app_hssmode/hssmode.h
+./HSSBAK/app_abmstat/AbmStat.h
+#include "ThreeLogGroup.h"
+./HSSBAK/app_abmstat/interrupt.h
+./HSSBAK/app_abmstat/LoadNumOfTableSql.h
+./HSSBAK/app_abmstat/LoadTableSql.h
+./HSSBAK/app_abmstat/MemMgr.h
+./HSSBAK/app_abmstat/StatServer.h
+#include "ThreeLogGroup.h"
+./HSSBAK/app_abmstat/StatServerMgr.h
+./HSSBAK/app_abmstat/TTTns.h
+./app_schedule_old/bak/Channel.h
+./app_schedule_old/bak/interrupt.h
+./app_schedule_old/bak/Schedule.h
+./app_schedule_old/bak/StdAfx.h
+./app_schedule_old/bak/VirtualProcessor.h
+./app_schedule_old/Channel.h
+#include "ThreeLogGroup.h"
+		static ThreeLogGroup* m_pLog;                         //日志告警
+./app_schedule_old/interrupt.h
+./app_schedule_old/Schedule.h
+./app_schedule_old/StdAfx.h
+./app_schedule_old/VirtualProcessor.h
+		//ThreeLogGroup m_oLog;
+./app_finderr/HssProcess.h
+#include "ThreeLogGroup.h"
+		ThreeLogGroup m_oLog;
+./app_finderr/ABMFindErr.h
+./app_guard/ability.h
+./app_guard/checkpointctl.h
+./app_guard/Guard.h
+./app_guard/GuardMain.h
+./app_guard/GuardRemote.h
+./app_guard/hbmodectl.h
+./app_guard/logctl.h
+./app_guard/LogFileMgr.h
+./app_guard/login.h
+./app_guard/mainmenu.h
+./app_guard/MemInfo.h
+./app_guard/ProcessInfo.h
+./app_guard/Server.h
+./app_guard/ShroudCurseDefine.h
+./app_guard/WfPublic.h
+./app_guard/WfStatLogMgr.h
+./app_guard/WorkFlow.h
+./app_guard/makeform.h
+./app_guard/mnt.h
+./app_guard/mntapi.h
+./app_guard/msgqueue.h
+./app_guard/paramset.h
+./app_guard/password.h
+./app_guard/process.h
+./app_guard/sample_ubbcfg.h
+./app_guard/sharedmemory.h
+./app_guard/socketapi.h
+./app_guard/sysinfo.h
+./app_guard/ticket.h
+./app_statbase/StatFormBase.h
+./app_statbase/StatBaseMgr.h
+./app_statbase/UserLogin.h
+./app_statbase/OnlineTime.h
+./app_statbase/CommandBase.h
+./app_statbase/LoggInfo.h
+./app_hbinstalltest/Hbcleantest.h
+./app_hbinstalltest/Hbinstalltest.h
+./app_help/help.h
+./app_help/Markup.h
+./app_help/Xml.h
+./app_mode/mode.h
+		ThreeLogGroup m_oLog;
+./app_abmstat/AbmStat.h
+#include "ThreeLogGroup.h"
+./app_abmstat/LoadTableSql.h
+./app_abmstat/MemMgr.h
+./app_abmstat/StatServer.h
+#include "ThreeLogGroup.h"
+./app_abmstat/StatServerMgr.h
+./app_abmstat/TTTns.h
+./app_init_bak/AssistProcess.h
+./app_init_bak/BaseFunc.h
+./app_init_bak/BaseRuleMgr.h
+./app_init_bak/BaseStationMgr.h
+./app_init_bak/CDBAccessIF.h
+./app_init_bak/CheckPoint.h
+./app_init_bak/CheckPointInfo.h
+./app_init_bak/CheckPointMgr.h
+class ThreeLogGroup;
+class ThreeLogGroupMgr;
+            ThreeLogGroupMgr *m_poLogGroup;
+			ThreeLogGroup *m_poLog;
+./app_init_bak/CHssFileSystemTask.h
+./app_init_bak/CHssMemMgrTask.h
+./app_init_bak/CHssParamMgrTask.h
+./app_init_bak/CHssProcessMgrTask.h
+./app_init_bak/CmdCommonFactory.h
+./app_init_bak/CmdMsg.h
+./app_init_bak/CmdMsgQueue.h
+./app_init_bak/CmdParserPoolMgr.h
+./app_init_bak/CmdParserProc.h
+./app_init_bak/CmdReceiver.h
+./app_init_bak/CmdSender.h
+./app_init_bak/CmdSendRecv.h
+./app_init_bak/CommandCom.h
+#include "../threelogapi/ThreeLogGroup.h"
+class ThreeLogGroup ;
+	static ThreeLogGroup *m_poLogg;
+	//static ThreeLogGroup *m_poLogg;
+./app_init_bak/CommandComHss.h
+./app_init_bak/DebugTools.h
+./app_init_bak/GroupDroitMgr.h
+./app_init_bak/HssInit.h
+./app_init_bak/HssParamMonitor.h
+./app_init_bak/HssProcessInit.h
+./app_init_bak/HssShutDown.h
+./app_init_bak/HssTask.h
+./app_init_bak/InDependProcess.h
+./app_init_bak/IniFileMgr.h
+#include "../threelogapi/ThreeLogGroup.h"
+	static ThreeLogGroup *m_pLogg;
+./app_init_bak/IniFileMgrEx.h
+./app_init_bak/IniFileMgrHss.h
+./app_init_bak/InitServer.h
+	//ThreeLogGroupMgr * m_poLoggMgr;	
+	ThreeLogGroup *m_pLogg;
+./app_init_bak/InstallCheck.h
+./app_init_bak/MessageQueueEx.h
+./app_init_bak/MsgDefineClient.h
+./app_init_bak/MsgDefineServer.h
+./app_init_bak/ParamAccessor.h
+./app_init_bak/ProcessControler.h
+./app_init_bak/ProcessEx.h
+./app_init_bak/SysParamClient.h
+			 //ThreeLogGroup TLog;
+./app_init_bak/SysParamDefine.h
+./app_init_bak/SysParamInfo.h
+./app_init_bak/Variant.h
+./app_init_bak/WriteIni.h
+./app_init_bak/hbCheckPoint.h
+./app_init_bak/hbcfg.h
+./app_init_bak/interrupt.h
+./app_init_bak/jiangt/AssistProcess.h
+./app_init_bak/jiangt/BaseFunc.h
+./app_init_bak/jiangt/BaseRuleMgr.h
+./app_init_bak/jiangt/BaseStationMgr.h
+./app_init_bak/jiangt/CDBAccessIF.h
+./app_init_bak/jiangt/CHssFileSystemTask.h
+./app_init_bak/jiangt/CHssMemMgrTask.h
+./app_init_bak/jiangt/CHssParamMgrTask.h
+./app_init_bak/jiangt/CHssProcessMgrTask.h
+./app_init_bak/jiangt/CmdCommonFactory.h
+./app_init_bak/jiangt/CmdMsg.h
+./app_init_bak/jiangt/CmdMsgQueue.h
+./app_init_bak/jiangt/CmdParserPoolMgr.h
+./app_init_bak/jiangt/CmdParserProc.h
+./app_init_bak/jiangt/CmdReceiver.h
+./app_init_bak/jiangt/CmdSender.h
+./app_init_bak/jiangt/CmdSendRecv.h
+./app_init_bak/jiangt/CommandCom.h
+./app_init_bak/jiangt/DebugTools.h
+./app_init_bak/jiangt/GroupDroitMgr.h
+./app_init_bak/jiangt/hbcfg.h
+./app_init_bak/jiangt/HssInit.h
+./app_init_bak/jiangt/HssParamMonitor.h
+./app_init_bak/jiangt/HssShutDown.h
+./app_init_bak/jiangt/HssTask.h
+./app_init_bak/jiangt/InDependProcess.h
+./app_init_bak/jiangt/IniFileMgr.h
+./app_init_bak/jiangt/IniFileMgrEx.h
+./app_init_bak/jiangt/InitServer.h
+./app_init_bak/jiangt/InstallCheck.h
+./app_init_bak/jiangt/interrupt.h
+./app_init_bak/jiangt/MessageQueueEx.h
+./app_init_bak/jiangt/MsgDefineClient.h
+./app_init_bak/jiangt/MsgDefineServer.h
+./app_init_bak/jiangt/ParamAccessor.h
+./app_init_bak/jiangt/ProcessEx.h
+./app_init_bak/jiangt/SysParamClient.h
+./app_init_bak/jiangt/SysParamDefine.h
+./app_init_bak/jiangt/SysParamInfo.h
+./app_init_bak/jiangt/Variant.h
+./app_init_bak/jiangt/WriteIni.h
+./app_init_bak/ztl/InitServer.h
+./app_hsstools/ABMIntfMgr.h
+./app_hsstools/ABMIntfSynMgr.h
+./app_hsstools/AccuReceiver.h
+./app_hsstools/AccuSender.h
+./app_hsstools/DataMaker.h
+./app_hsstools/DBManager.h
+./app_hsstools/GetAcctAggrForYear.h
+./app_hsstools/interrupt.h
+./app_hsstools/LastEventClear.h
+./app_hsstools/LocalCacheCtl.h
+./app_hsstools/LogGroup.h
+#include "ThreeLogGroup.h"
+    ThreeLogGroupMgr * m_poLogGroup;
+./app_hsstools/OverTimeMgr.h
+./app_hsstools/PrepLog.h
+./app_hsstools/ReloadUserInfo.h
+./app_hsstools/RunProcessTask.h
+./app_hsstools/SetBillingCycle.h
+./app_infocheck/ABMException.h
+./app_infocheck/CheckDailyAcctItemAggr.h
+./app_infocheck/CheckInformation.h
+./app_infocheck/CheckStatInfo.h
+//#include "ThreeLogGroup.h"
+class ThreeLogGroupMgr
+//     m_pThreeLog = new ThreeLogGroupMgr();
+ //     m_pThreeLog = new ThreeLogGroupMgr();      
+      //ThreeLogGroupMgr *m_pThreeLog;
+./app_infocheck/CheckStatInterface.h
+./app_infocheck/CheckStatPlan.h
+./app_infocheck/FileLog.h
+./app_infocheck/HssNmpInfoCollect.h
+./app_infocheck/interrupt.h
+./app_infocheck/LogManage.h
+./app_infocheck/MutexLock.h
+./app_infocheck/nmpInfo.h
+./app_infocheck/NmpSysParam.h
+./app_infocheck/PubFun.h
+./app_infocheck/TypeDef.h
+./app_infomonitor/InfoMonitor.h
+#include "ThreeLogGroup.h"
+	ThreeLogGroup m_oLog;
+./app_infomonitor/interrupt.h
+./app_init/AssistProcess.h
+./app_init/BaseFunc.h
+./app_init/BaseRuleMgr.h
+./app_init/BaseStationMgr.h
+./app_init/CDBAccessIF.h
+./app_init/CHssFileSystemTask.h
+./app_init/CHssMemMgrTask.h
+./app_init/CHssParamMgrTask.h
+./app_init/CHssProcessMgrTask.h
+./app_init/CheckPoint.h
+./app_init/CheckPointInfo.h
+./app_init/CheckPointMgr.h
+class ThreeLogGroup;
+class ThreeLogGroupMgr;
+            ThreeLogGroupMgr *m_poLogGroup;
+			ThreeLogGroup *m_poLog;
+./app_init/CmdCommonFactory.h
+./app_init/CmdMsg.h
+./app_init/CmdMsgQueue.h
+./app_init/CmdParserPoolMgr.h
+./app_init/CmdParserProc.h
+./app_init/CmdReceiver.h
+./app_init/CmdSendRecv.h
+./app_init/CmdSender.h
+./app_init/CommandCom.h
+#include "../threelogapi/ThreeLogGroup.h"
+class ThreeLogGroup ;
+	static ThreeLogGroup *m_poLogg;
+	//static ThreeLogGroup *m_poLogg;
+./app_init/CommandComHss.h
+./app_init/DebugTools.h
+./app_init/GroupDroitMgr.h
+./app_init/HbShutDown.h
+./app_init/HssInit.h
+./app_init/HssParamMonitor.h
+./app_init/HssProcessInit.h
+./app_init/HssShutDown.h
+./app_init/HssTask.h
+./app_init/InDependProcess.h
+./app_init/IniFileMgr.h
+#include "../threelogapi/ThreeLogGroup.h"
+	static ThreeLogGroup *m_pLogg;
+./app_init/IniFileMgrEx.h
+./app_init/IniFileMgrHss.h
+./app_init/InitServer.h
+	//ThreeLogGroupMgr * m_poLoggMgr;	
+	ThreeLogGroup *m_pLogg;
+./app_init/InstallCheck.h
+./app_init/MessageQueueEx.h
+./app_init/MsgDefineClient.h
+./app_init/MsgDefineServer.h
+./app_init/ParamAccessor.h
+./app_init/ParamMgr.h
+#include "ThreeLogGroup.h"
+./app_init/ProcessControler.h
+./app_init/ProcessEx.h
+./app_init/SgwParam.h
+#include "ThreeLogGroup.h"
+./app_init/SgwShutDown.h
+./app_init/SysParamClient.h
+			 //ThreeLogGroup TLog;
+./app_init/SysParamDefine.h
+./app_init/SysParamInfo.h
+./app_init/SysParamMonitor.h
+./app_init/Variant.h
+./app_init/WriteIni.h
+./app_init/hbCheckPoint.h
+./app_init/hbcfg.h
+./app_init/interrupt.h
+./app_init/sgwInit.h
+#include "../threelogapi/ThreeLogGroupMgr.h"
+  ThreeLogGroupMgr * m_poLoggMgr;	
+  ThreeLogGroup *m_pLogg;
+./app_init/syscfg.h
+./app_init/Log.h
+class ThreeLogGroupBase;
+class ThreeLogGroupMgr; 
+	static ThreeLogGroupMgr * m_pologg;		//日志组接口
+					Log::m_pologg = new ThreeLogGroupMgr();\
+./app_json/json/autolink.h
+./app_json/json/config.h
+./app_json/json/features.h
+./app_json/json/forwards.h
+./app_json/json/json.h
+./app_json/json/reader.h
+./app_json/json/value.h
+./app_json/json/writer.h
+./app_json/json_batchallocator.h
+./app_json/JsonMgr.h
+./app_logg/Logg.h
+#include "ThreeLogGroupDefine.h"
+#include "ThreeLogGroup.h"
+#include "ThreeLogGroupMgr.h"
+    ThreeLogGroup * m_poLogg;               //日志组实现
+    ThreeLogGroupMgr * m_poLoggMgr;         //日志组管理
+./app_logg/LoggDis.h
+#include "ThreeLogGroup.h"
+    static void LoggProcessMain(ThreeLogGroup *pLogg,int flag,char* sParam);
+    static ThreeLogGroup *m_poLogg ;
+./app_logg/ThreeLogGroup.h
+#include "ThreeLogGroupBase.h"
+#include "ThreeLogGroupDefine.h"
+class ThreeLogGroup : public ThreeLogGroupBase
+    ThreeLogGroup(bool bGreat = false);
+    ~ThreeLogGroup();
+   bool ThreeLogGroup::GetInfoFromMem(vector<string> &v_list,
+./app_onlineup/onlineUpdate.h
+./app_petri/p_cmd.h
+./app_petri/P_messageSend.h
+./app_petri/p_MQ.h
+./app_petri/p_ParseBuff.h
+./app_petri/p_schd.h
+./app_petri/petri.h
+#include "ThreeLogGroup.h"
+./app_petri/petri_process.h
+./app_petri/tblflds.h
+./app_power/common.h
+./app_power/ParserXml.h
+./app_power/power_comm.h
+./app_power/power_struct.h
+./app_power/PowerFile.h
+./app_power/PowerQuery.h
+./app_power/PowerXml.h
+./app_power/soapH.h
+./app_power/soapStub.h
+./app_power/stdsoap2.h
+./app_power/tblflds.h
+./app_power/WebService.h
+./app_schedule/Channel.h
+#include "ThreeLogGroup.h"
+		static ThreeLogGroup* m_pLog;                         //日志告警
+./app_schedule/interrupt.h
+./app_schedule/Schedule.h
+./app_schedule/StdAfx.h
+./app_schedule/VirtualProcessor.h
+./app_shm/LruAggrData.h
+./app_shm/ShowMemData.h
+#include "ThreeLogGroup.h"
+//ThreeLogGroup LOG;
+./app_stat/BssOrgMgr.h
+./app_stat/DynCreate.h
+./app_stat/ExtractFileName.h
+./app_stat/StatAcctBalance.h
+./app_stat/StatAcctItem.h
+./app_stat/StatAcctItemAggr.h
+./app_stat/StatARefundLog.h
+./app_stat/StatBalancePayout.h
+./app_stat/StatBalanceSource.h
+./app_stat/StatBill.h
+./app_stat/StatCallEvent.h
+./app_stat/StatCycleFeeEvent.h
+./app_stat/StatDataEvent.h
+./app_stat/StatErrorEvent.h
+./app_stat/StatOneTwoGroup.h
+./app_stat/StatOtherEvent.h
+./app_stat/StatPayment.h
+./app_stat/StatRedoEvent.h
+./app_stat/StatServ.h
+./app_stat/StatServAcct.h
+./app_stat/StatValueAddedEvent.h
+./app_stat/TBL_A_REFUND_LOG_CLASS.h
+./app_stat/TBL_ACCT_BALANCE_CLASS.h
+./app_stat/TBL_ACCT_ITEM_AGGR_CLASS.h
+./app_stat/TBL_ACCT_ITEM_CLASS.h
+./app_stat/TBL_ACCT_ITEM_SOURCE_CLASS.h
+./app_stat/TBL_BALANCE_PAYOUT_CLASS.h
+./app_stat/TBL_BALANCE_SOURCE_CLASS.h
+./app_stat/TBL_BILL_CLASS.h
+./app_stat/TBL_CYCLE_FEE_EVENT_CLASS.h
+./app_stat/TBL_DATA_EVENT_CLASS.h
+./app_stat/TBL_ERROR_EVENT_CLASS.h
+./app_stat/TBL_OTHER_EVENT_CLASS.h
+./app_stat/TBL_PAYMENT_CLASS.h
+./app_stat/TBL_REDO_EVENT_CLASS.h
+./app_stat/TBL_SERV_ACCT_CLASS.h
+./app_stat/TBL_STAFF_CLASS.h
+./app_stat/TBL_VALUE_ADDED_EVENT_CLASS.h
+./app_stat/TStatTask.h
+./app_stat/list_index.h
+./app_stat/stat/stat/BssOrgMgr.h
+./app_stat/stat/stat/DynCreate.h
+./app_stat/stat/stat/list_index.h
+./app_stat/stat/stat/stat_public.h
+./app_stat/stat/stat/StatAcctBalance.h
+./app_stat/stat/stat/StatAcctItem.h
+./app_stat/stat/stat/StatBalancePayout.h
+./app_stat/stat/stat/StatBalanceSource.h
+./app_stat/stat/stat/StatBill.h
+./app_stat/stat/stat/StatCallEvent.h
+./app_stat/stat/stat/StatPayment.h
+./app_stat/stat/stat/StatServ.h
+./app_stat/stat/stat/TBL_ACCT_BALANCE_CLASS.h
+./app_stat/stat/stat/TBL_ACCT_ITEM_CLASS.h
+./app_stat/stat/stat/TBL_ACCT_ITEM_SOURCE_CLASS.h
+./app_stat/stat/stat/TBL_BALANCE_PAYOUT_CLASS.h
+./app_stat/stat/stat/TBL_BALANCE_SOURCE_CLASS.h
+./app_stat/stat/stat/TBL_BILL_CLASS.h
+./app_stat/stat/stat/TBL_CALL_EVENT_CLASS.h
+./app_stat/stat/stat/TBL_PAYMENT_CLASS.h
+./app_stat/stat/stat/TBL_SERV_CLASS.h
+./app_stat/stat/stat/TBL_STAFF_CLASS.h
+./app_stat/stat/stat/trie_list_index.h
+./app_stat/stat/stat/TStatTask.h
+./app_stat/stat_public.h
+./app_stat/trie_list_index.h
+./app_trans/Apibnftp.h
+./app_trans/CAsnTransPtl.h
+./app_trans/CBnFtpTransPtl.h
+./app_trans/CBnFtpTransPtlExp.h
+./app_trans/CDiskFileTransPtl.h
+./app_trans/CFtpPtl.h
+./app_trans/CFtpTransPtl.h
+./app_trans/CIniFile.h
+./app_trans/CLogFileTransPtl.h
+./app_trans/CMetaData.h
+./app_trans/CProtocol.h
+./app_trans/CTrans.h
+./app_trans/CTransPeerParam.h
+./app_trans/CTransPtl.h
+#include "ThreeLogGroup.h"
+        ThreeLogGroup ThreeLog;
+./app_trans/CVarCheck.h
+./app_trans/FtpTrans.h
+./app_trans/interrupt.h
+./app_trans/ListNode.h
+./app_trans/Trans.h
+./app_trans/TransStructs.h
+./app_access/checkUserInfo.h
+./app_access/abmaccessLog.h
+./app_access/abmappcommand.h
+./app_access/abmclear.h
+./app_access/abmmainmenu.h
+./app_access/abmtablesmenu.h
+./app_access/abmsqlfunc.h
+./app_access/abmtablescatalog.h
+./app_access/abmtablesdata.h
+./app_access/makeform.h
+./app_access/password.h
+./app_access/abmlogin.h
+./app_access/accessconfig.h
+./app_access/abmbilltables.h
+./app_access/abmclearfile.h
+./app_access/abmaccessAdmin.h
+./bak_app_backup/TAcctItemAggr.h
+./bak_app_backup/TCallEvent.h
+./bak_app_backup/TCycleFeeEvent.h
+./bak_app_backup/TDataEvent.h
+./bak_app_backup/TEventAggr.h
+./bak_app_backup/TRebillTask.h
+./bak_app_backup/TRebillTaskServ.h
+./bak_app_backup/TSetFeeEvent.h
+./bak_app_backup/TValueAddedEvent.h
+./bak_app_mgr/ControlAggr.h
+./bak_app_mgr/DisctEventMaker.h
+./bak_app_mgr/DisctEventMaker_old.h
+./bak_app_mgr/DisctPresentMaker.h
+./bak_app_mgr/DoCheck.h
+./bak_app_mgr/LoadParamMgr.h
+./bak_app_mgr/ProcessCtl.h
+./bak_app_mgr/ProcessMgr.h
+./bak_app_mgr/provpnindb.h
+./bak_app_mgr/SynAggr.h
+./bak_app_stop/DataRtMakeStop.h
+./bak_app_stop/DataStopFilterBuf.h
+./bak_app_stop/FeeBufMaker.h
+./bak_app_stop/HighFeeStop.h
+./bak_app_stop/interrupt.h
+./bak_app_stop/rt_make_stop_main.h
+./bak_app_stop/RtHighFeeStop.h
+./bak_app_stop/StopFilterBuf.h
+./bak_app_stop/StopMaker.h
+./bak_app_stop/stopUnionOrg.h
+./bak_app_stop/TestAcctItemGroup.h
+./bak_app_stop/TransFee.h
+./bak_app_stop/TransFeeBuf.h
+./bak_app_transservinfo/TransServInfoFile.h
+./bak_app_transzte/FileInfoMgr.h
+./bak_app_transzte/TransZTE.h
+./bak_app_usage/UsageInfo.h
+./bak_app_usage/UsageInfoCtl.h
+./bak_app_usage/UsageInfoMgr.h
+./bak_app_userinfo/SHMFileInfoMgr.h
+./cparser/source/wwLex.h
+./cparser/source/wwParser.h
+./cparser/exception.h
+./cparser/TScriptParser.h
+./cparser/wwInterpreter.h
+./cparser/wwLex.h
+./cparser/wwParser.h
+./hb_app_dcc/dcc_ConstDef.h
+./hb_app_dcc/dcc_FileInfo.h
+./hb_app_dcc/dcc_FileMgr.h
+./hb_app_dcc/dcc_ParamsMgr.h
+./hb_app_dcc/DccCheckRecord.h
+./hb_app_dcc/DccLog.h
+./hb_app_dcc/DccPack.h
+./hb_app_dcc/DccTran.h
+./hb_app_dcc/DccUnPack.h
+./hb_app_dcc/interrupt.h
+./hb_app_dcc/msg.h
+./hb_app_dcc/OcpMsgParser.h
+./hb_app_dcc/sendDcrFromFile.h
+./hb_app_dcc/TAvpParser.h
+./hb_app_dcc/TestQueryDcc.h
+./lib/bak/Log.h
+class ThreeLogGroupBase;
+class ThreeLogGroupMgr; 
+	static ThreeLogGroupMgr * m_pologg;		//日志组接口
+					Log::m_pologg = new ThreeLogGroupMgr();\
+./lib/AvlTree.h
+./lib/Calculator.h
+./lib/CommonMacro.h
+./lib/Compress.h
+./lib/CRWLock.h
+./lib/CSemaphore.h
+./lib/Date.h
+./lib/Directory.h
+./lib/Encrypt.h
+./lib/Exception.h
+./lib/fee_shm.h
+./lib/File.h
+./lib/FTPClient.h
+./lib/FtpClient_sys.h
+./lib/h_list.h
+./lib/hash_list.h
+./lib/HashList.h
+./lib/HBECodeParse.h
+./lib/KeyList.h
+./lib/KeyTree.h
+./lib/Log.h
+class ThreeLogGroupBase;
+class ThreeLogGroupMgr; 
+	static ThreeLogGroupMgr * m_pologg;		//日志组接口
+					Log::m_pologg = new ThreeLogGroupMgr();\
+./lib/MBC.h
+./lib/MBC_28.h
+./lib/MBC_HSS_bak.h
+./lib/MessageQueue.h
+./lib/Precision.h
+./lib/Queue.h
+./lib/ReadIni.h
+./lib/Semaphore.h
+./lib/SimpleMatrix.h
+./lib/SimpleSHM.h
+./lib/Socket.h
+./lib/Stack.h
+./lib/trie.h
+./lib/Vector.h
+./lib/DateTime.h
+./lib/MBC_SGW.h
+./libbnftp/ctpbuf.h
+./libbnftp/ctpconf.h
+./libbnftp/ctplib.h
+./libbnftp/ctpnet.h
+./liboci/exception.h
+./liboci/strcasecmp.h
+./liboci/TBatchInsert.h
+./liboci/TOCI.h
+./liboci/TOCIDirPath.h
+./liboci/TOCIQuery.h
+./mmdb/ABMInterfaceAdmin.h
+./mmdb/AcctFeeGetter.h
+./mmdb/AcctItemAccu.h
+./mmdb/AcctItemLoad.h
+./mmdb/AcctItemOweMgr.h
+./mmdb/AttrValueCalc.h
+./mmdb/BalanceMgr.h
+./mmdb/DataEventMem.h
+./mmdb/DisctQuery.h
+./mmdb/E8_User.h
+./mmdb/ext_serv.h
+./mmdb/FilterSimple.h
+./mmdb/FreeAccuQuery.h
+./mmdb/GatherTaskInfo.h
+./mmdb/HostInfo.h
+./mmdb/InstTableListMgrKerEx.h
+./mmdb/interfaceowe.h
+./mmdb/LoadThreadMgr.h
+./mmdb/LoadUserInfoMgr.h
+./mmdb/LocalCacheInfo.h
+./mmdb/LocalCacheMgr.h
+./mmdb/NetworkMgr.h
+./mmdb/ParamInfo.h
+./mmdb/ParamInfoInterface.h
+./mmdb/ParamInfoMgr.h
+./mmdb/ParamShmMgr.h
+./mmdb/ProdOfferAggr.h
+./mmdb/rt_make_stop.h
+./mmdb/ServIdenMgr.h
+./mmdb/SHMFileInfo.h
+./mmdb/SHMFileMgr.h
+#include "ThreeLogGroup.h"
+    ThreeLogGroup *m_poLogGroup;
+./mmdb/SHMStatLog.h
+./mmdb/SHMStructType.h
+./mmdb/stopBalanceMgr.h
+./mmdb/stopChargeMgr.h
+./mmdb/TempAccuMgr.h
+./mmdb/TransactionMgr.h
+./mmdb/UserInfo.h
+./mmdb/UserInfoCtl.h
+./mmdb/UserInfoMap.h
+./mmdb/UserInfoReader.h
+./mmdb/UserInfoSHMFileCtl.h
+./newace/ACE.h
+./newace/ACE_export.h
+./newace/Addr.h
+./newace/Auto_Ptr.h
+./newace/Basic_Types.h
+./newace/config-aix-4.x.h
+./newace/config.h
+./newace/config-aix-5.x.h
+./newace/config-g++-common.h
+./newace/config-linux-common.h
+./newace/config-posix.h
+./newace/Default_Constants.h
+./newace/Flag_Manip.h
+./newace/Free_List.h
+./newace/Handle_Ops.h
+./newace/Handle_Set.h
+./newace/INET_Addr.h
+./newace/IPC_SAP.h
+./newace/Local_Memory_Pool.h
+./newace/Log_Msg.h
+./newace/Log_Msg_Backend.h
+./newace/Log_Msg_Callback.h
+./newace/Log_Msg_IPC.h
+./newace/Log_Msg_NT_Event_Log.h
+./newace/Log_Msg_UNIX_Syslog.h
+./newace/Log_Priority.h
+./newace/Log_Record.h
+./newace/macros.h
+./newace/Malloc.h
+./newace/Malloc_Allocator.h
+./newace/Malloc_Base.h
+./newace/Malloc_T.h
+./newace/Message_Block.h
+./newace/Node.h
+./newace/OS_Log_Msg_Attributes.h
+./newace/OS_Memory.h
+./newace/OS_NS_string.h
+./newace/OS_NS_sys_select.h
+./newace/OS_NS_sys_socket.h
+./newace/SOCK.h
+./newace/SOCK_Acceptor.h
+./newace/Sock_Connect.h
+./newace/SOCK_Connector.h
+./newace/SOCK_IO.h
+./newace/SOCK_Stream.h
+./newace/Time_Value.h
+./newace/Trace.h
+./newace/Unbounded_Set.h
+./petri_portability/Date.h
+./petri_portability/encode.h
+./petri_portability/exception.h
+./petri_portability/p_cmd.h
+./petri_portability/P_messageSend.h
+./petri_portability/p_MQ.h
+./petri_portability/p_ParseBuff.h
+./petri_portability/p_schd.h
+./petri_portability/petri.h
+#include "ThreeLogGroup.h"
+./petri_portability/petri_process.h
+./petri_portability/ReadIni.h
+./petri_portability/tblflds.h
+./petri_portability/TOCIQuery.h
+./public_befor/AcctItemGroupMemberMgr.h
+./public_befor/AcctItemMgr.h
+./public_befor/AcctItemOweMgr_bk.h
+./public_befor/AttrTransMgr.h
+./public_befor/BaseStationMgr.h
+./public_befor/BillingCycle.h
+./public_befor/BillingCycleAdmin.h
+./public_befor/BillingCycleBase.h
+./public_befor/BillingCycleCfg.h
+./public_befor/BillingCycleMgr.h
+./public_befor/BillingCycleSchedule.h
+./public_befor/BillingNodeInfoMgr.h
+./public_befor/CheckFunction.h
+./public_befor/ConvertCityCodeMgr.h
+./public_befor/ConvertFunc.h
+./public_befor/CRMControl.h
+./public_befor/CustomFilter.h
+./public_befor/DataOfferMgr.h
+./public_befor/DBTableCheck.h
+./public_befor/DistanceMgr.h
+./public_befor/EdgeRoamMgr.h
+./public_befor/EventIDMaker.h
+./public_befor/EventSection.h
+./public_befor/EventSectionUnioner.h
+./public_befor/EventToolKits.h
+./public_befor/EventType.h
+./public_befor/EventTypeMgr.h
+./public_befor/EventTypeMgrEx.h
+./public_befor/ExtEventTypeRule.h
+./public_befor/FilterByAcctMgr.h
+./public_befor/FilterRule.h
+./public_befor/FormatMethod.h
+./public_befor/GroupInstMgr.h
+./public_befor/HbAdminMgr.h
+./public_befor/Head2OrgIDMgr.h
+./public_befor/HighFee.h
+./public_befor/InstTableListMgr.h
+./public_befor/IpcKey.h
+./public_befor/LifeCycleMgr.h
+./public_befor/LocalEventTypeRule.h
+./public_befor/LocalHead.h
+./public_befor/LogDB.h
+./public_befor/LogDBBuf.h
+./public_befor/LongEventTypeRule.h
+./public_befor/LongEventTypeRuleEx.h
+./public_befor/LongTypeMgr.h
+./public_befor/MEMControl.h
+./public_befor/MonitorFlow.h
+./public_befor/NbrMapMgr.h
+./public_befor/NbrTypeMgr.h
+./public_befor/OfferMgr.h
+./public_befor/OrgLongTypeMgr.h
+./public_befor/OrgMgr.h
+./public_befor/OrgMgrEx.h
+./public_befor/PageID_OrgID_Relation.h
+./public_befor/ParamDefineMgr.h
+./public_befor/PlanType.h
+./public_befor/ProductAcctItem.h
+./public_befor/PublicAttrMgr.h
+./public_befor/QueueInDb.h
+./public_befor/RecordCheck.h
+./public_befor/RegionBilling.h
+./public_befor/RoamTariff.h
+./public_befor/Rollback.h
+./public_befor/SHMAccess.h
+./public_befor/SHMData.h
+./public_befor/SHMData_A.h
+./public_befor/SHMData_B.h
+./public_befor/SHMIntHashIndex.h
+./public_befor/SHMIntHashIndex_A.h
+./public_befor/SHMIntHashIndex_AX.h
+./public_befor/SHMIntHashIndex_KR.h
+./public_befor/SHMLruData.h
+./public_befor/SHMStringTreeIndex.h
+./public_befor/SHMStringTreeIndexEx.h
+./public_befor/SHMStringTreeIndex_A.h
+./public_befor/SHMStringTreeIndex_AX.h
+./public_befor/SegmentMgr.h
+./public_befor/SeqMgr.h
+./public_befor/SeqMgrExt.h
+./public_befor/SpInfoSeekMgr.h
+./public_befor/SpecialNbrStrategyMgr.h
+./public_befor/SpecialTariffMgr.h
+./public_befor/SplitMgr.h
+./public_befor/SplitTicketCfg.h
+./public_befor/StateConvertMgr.h
+./public_befor/StdEvent.h
+./public_befor/encode.h
+./public_befor/petri_state.h
+./public_befor/ThresholdAlarm.h
+./public_befor/TicketTlv.h
+./public_befor/TrunkSegBilling.h
+./public_befor/UsageTypeMgr.h
+./public_befor/ValueMapMgr.h
+./public_befor/VirtualFileMaker.h
+./public_befor/VpnCheckEx.h
+./public_befor/VpnInfo.h
+./public_befor/VpnInfoReader.h
+./public_befor/ZoneMgr.h
+./terminal_control/button.h
+./terminal_control/control.h
+./terminal_control/controls.h
+./terminal_control/edit.h
+./terminal_control/listbox.h
+./terminal_control/login.h
+./terminal_control/macro.h
+./terminal_control/makeform.h
+./terminal_control/printer.h
+./terminal_control/readinfo.h
+./threelogapi/ThreeLogGroup.h
+#include "ThreeLogGroupBase.h"
+#include "ThreeLogGroupDefine.h"
+class ThreeLogGroup : public ThreeLogGroupBase
+    ThreeLogGroup(bool bGreat = false);
+    ~ThreeLogGroup();
+./threelogapi/ThreeLogGroupBase.h
+class ThreeLogGroupBase
+    ThreeLogGroupBase();
+    ~ThreeLogGroupBase();
+./threelogapi/ThreeLogGroupDefine.h
+./threelogapi/ThreeLogGroupMgr.h
+#include "ThreeLogGroupBase.h"
+class ThreeLogGroupMgr : public ThreeLogGroupBase
+    ThreeLogGroupMgr();
+    ~ThreeLogGroupMgr();
+./ztl/test.h
+./framework/DistributeRule.h
+./framework/Environment.h
+./framework/EventReceiver.h
+./framework/EventSender.h
+./framework/GlobalTools.h
+./framework/Process.h
+#include "ThreeLogGroup.h"
+	static ThreeLogGroup *m_pLogObj;
+./framework/QueryData.h
+./framework/SendRecord.h
+./framework/BaseProcess.h
+./public/AcctItemGroupMemberMgr.h
+./public/AcctItemMgr.h
+./public/AttrTransMgr.h
+./public/BaseStationMgr.h
+./public/BillingCycle.h
+./public/BillingCycleAdmin.h
+./public/BillingCycleBase.h
+./public/BillingCycleCfg.h
+./public/BillingCycleMgr.h
+./public/BillingCycleSchedule.h
+./public/BillingNodeInfoMgr.h
+./public/CheckFunction.h
+./public/ConvertCityCodeMgr.h
+./public/ConvertFunc.h
+./public/CRMControl.h
+./public/CustomFilter.h
+./public/DataOfferMgr.h
+./public/DBTableCheck.h
+./public/DistanceMgr.h
+./public/EdgeRoamMgr.h
+./public/EventIDMaker.h
+./public/EventSection.h
+./public/EventSectionUnioner.h
+./public/EventToolKits.h
+./public/EventType.h
+./public/EventTypeMgr.h
+./public/EventTypeMgrEx.h
+./public/ExtEventTypeRule.h
+./public/FilterByAcctMgr.h
+./public/FilterRule.h
+./public/FormatMethod.h
+./public/GroupInstMgr.h
+./public/HbAdminMgr.h
+./public/Head2OrgIDMgr.h
+./public/HighFee.h
+./public/InstTableListMgr.h
+./public/IpcKey.h
+./public/LifeCycleMgr.h
+./public/LocalEventTypeRule.h
+./public/LocalHead.h
+./public/LogDB.h
+./public/LogDBBuf.h
+./public/LongEventTypeRule.h
+./public/LongEventTypeRuleEx.h
+./public/LongTypeMgr.h
+./public/LruAggrData.h
+./public/MEMControl.h
+./public/MonitorFlow.h
+./public/NbrMapMgr.h
+./public/NbrTypeMgr.h
+./public/OfferMgr.h
+./public/OrgLongTypeMgr.h
+./public/OrgMgr.h
+./public/OrgMgrEx.h
+./public/PageID_OrgID_Relation.h
+./public/ParamDefineMgr.h
+./public/PlanType.h
+./public/ProductAcctItem.h
+./public/PublicAttrMgr.h
+./public/QueueInDb.h
+./public/RecordCheck.h
+./public/RegionBilling.h
+./public/RoamTariff.h
+./public/Rollback.h
+./public/SHMAccess.h
+./public/SHMData.h
+./public/SHMData_A.h
+./public/SHMData_B.h
+./public/SHMIntHashIndex.h
+./public/SHMIntHashIndex_A.h
+./public/SHMIntHashIndex_AX.h
+./public/SHMIntHashIndex_KR.h
+./public/SHMLruData.h
+./public/SHMMapFile.h
+./public/SHMMixHashIndex.h
+./public/SHMStringTreeIndex.h
+./public/SHMStringTreeIndexEx.h
+./public/SHMStringTreeIndex_A.h
+./public/SHMStringTreeIndex_AX.h
+./public/SegmentMgr.h
+./public/SeqMgr.h
+./public/SeqMgrExt.h
+./public/SpInfoSeekMgr.h
+./public/SpecialNbrStrategyMgr.h
+./public/SpecialTariffMgr.h
+./public/SplitMgr.h
+./public/SplitTicketCfg.h
+./public/StateConvertMgr.h
+./public/encode.h
+./public/petri_state.h
+./public/StdEvent.h
+./public/ThresholdAlarm.h
+./public/TicketTlv.h
+./public/TrunkSegBilling.h
+./public/UsageTypeMgr.h
+./public/ValueMapMgr.h
+./public/VirtualFileMaker.h
+./public/VpnCheckEx.h
+./public/VpnInfo.h
+./public/VpnInfoReader.h
+./public/ZoneMgr.h

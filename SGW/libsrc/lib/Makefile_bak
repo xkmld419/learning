@@ -1,0 +1,59 @@
+include ../../Make.defines
+
+##### self define #####
+TARGETS=
+ALL_OBJS= Compress.o Date.o DateTime.o Directory.o Encrypt.o Exception.o File.o FtpClient.o  \
+        MessageQueue.o SimpleSHM.o SHMAccess.o SHMIntHashIndex.o SHMIntHashIndex_A.o  SHMStringTreeIndex.o \
+        Socket.o SimpleMatrix.o Precision.o Log.o h_list.o hash_list.o \
+        fee_shm.o trie.o ReadIni.o Calculator.o CSemaphore.o CRWLock.o Publicfunction.o encode.o SemOp.o 
+
+CURENT_LIBS=$(SGWLIB_LIBS)
+
+##### create curent libs #####
+$(CURENT_LIBS): $(ALL_OBJS)
+	@echo "=======[ $(CURENT_LIBS) ]======="
+	$(AR) $(CURENT_LIBS) $(ALL_OBJS)
+
+all: $(CURENT_LIBS) $(TARGETS)
+
+##### create executed files #####
+#test: test1.o test2.o
+#	make -f ./Makefile OBJS="test1.o test2.o" EXE=$@ build_simple
+
+testkeytree: testkeytree.o $(ALL_OBJS) Exception.o
+	make -f ./Makefile OBJS="testkeytree.o Exception.o" EXE=$@ build_simple
+
+testhashkey: testhashkey.o $(ALL_OBJ) Exception.o
+	make -f ./Makefile OBJS="testhashkey.o Exception.o" EXE=$@ build_simple
+
+testdate: testdate.o Date.o Exception.o Precision.o
+	make -f ./Makefile OBJS="testdate.o Exception.o Date.o Precision.o" EXE=$@ build_simple
+
+testqueue: testqueue.o
+	make -f ./Makefile OBJS="testqueue.o Exception.o" EXE=$@ build_simple
+
+testshm: testshm.o SimpleSHM.o
+	make -f ./Makefile OBJS="testshm.o Exception.o SimpleSHM.o" EXE=$@ build_simple
+
+testshm1: testshm1.o SimpleSHM.o
+	make -f ./Makefile OBJS="testshm1.o Exception.o SimpleSHM.o" EXE=$@ build_simple
+
+testshm2: testshm2.o SimpleSHM.o
+	make -f ./Makefile OBJS="testshm2.o Exception.o SimpleSHM.o" EXE=$@ build_simple
+
+testmq: testmq.o MessageQueue.o
+	make -f ./Makefile OBJS="testmq.o Exception.o MessageQueue.o" EXE=$@ build_main
+
+testq: testq.o MessageQueue.o
+	make -f ./Makefile OBJS="testq.o Exception.o MessageQueue.o" EXE=$@ build_main
+
+testcli: testcli.o Socket.o
+	make -f ./Makefile OBJS="testcli.o Exception.o Socket.o" EXE=$@ build_main
+
+testserv: testserv.o Socket.o
+	make -f ./Makefile OBJS="testserv.o Exception.o Socket.o" EXE=$@ build_main
+
+clean:
+	rm -f *.o $(CURENT_LIBS) $(CLEANFILES) $(TARGETS)
+
+

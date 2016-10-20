@@ -1,0 +1,220 @@
+#ifndef __MBC_H__
+#define __MBC_H__
+
+//#
+//# 基本编码规则: 2位目录编号+3位模块编号+4位信息编号
+//#
+#define MBC				999990000
+
+//#
+//# MBC_LIB
+//#
+#define MBC_LIB				100000000
+#define MBC_AvlTree			100010000
+#define MBC_Compress			100020000
+#define MBC_Date			100030000
+#define MBC_Directory			100040000
+#define MBC_Encrypt			100050000
+#define MBC_Exception			100060000
+#define MBC_File			100070000
+#define MBC_FtpClient			100080000
+#define MBC_HashList			100090000
+#define MBC_KeyList			100100000
+#define MBC_KeyTree			100110000
+#define MBC_MessageQueue		100120000
+#define MBC_Precision			100130000
+#define MBC_Queue			100140000
+#define MBC_Semaphore			100150000
+#define MBC_SimpleMatrix		100160000
+#define MBC_SimpleSHM			100170000
+#define MBC_Socket			100180000
+
+//#
+//# MBC_PUBLIC
+//#
+#define MBC_PUBLIC			110000000
+#define MBC_AcctItemMgr			110010000
+#define MBC_AssignStatement		110020000
+#define MBC_BillConditionMgr		110030000
+#define MBC_BillOperationMgr		110040000
+#define MBC_BillingCycle		110050000
+#define MBC_BillingCycleMgr		110060000
+#define MBC_EventSection		110070000
+#define MBC_EventType			110080000
+#define MBC_EventTypeMgr		110090000
+#define MBC_ExtendFunctions		110100000
+#define MBC_IDParser			110110000
+#define MBC_LifeCycle			110120000
+#define MBC_LifeCycleMgr		110130000
+#define MBC_LogicStatement		110140000
+#define MBC_OrgMgr			110150000
+#define MBC_SHMAccess			110160000
+#define MBC_SHMData			110170000
+#define MBC_SHMIntHashIndex		110180000
+#define MBC_SHMStringTreeIndex		110190000
+#define MBC_Statement			110200000
+#define MBC_StdEvent			110210000
+#define MBC_TransactionMgr		110220000
+#define MBC_UserInfo			110230000
+#define MBC_UserInfoCtl			110240000
+#define MBC_UserInfoReader		110250000
+#define MBC_Value			110260000
+#define MBC_ZoneMgr			110270000
+#define MBC_EventSectionUnioner		110280000
+
+
+//#
+//# MBC_LIBOCI
+//#
+#define MBC_LIBOCI			120000000
+#define MBC_TOCIDirPath			120010000
+#define MBC_exception			120020000
+#define MBC_TOCIQuery			120030000
+#define MBC_TBatchInsert		120040000
+
+//#
+//# MBC_CPARSER
+//#
+#define MBC_CPARSER			130000000
+#define MBC_TScriptParser		130010000
+#define MBC_wwInterpreter		130020000
+#define MBC_wwLex			130030000
+#define MBC_wwParser			130040000
+#define MBC_exception			130050000
+
+//#
+//# MBC_FRAMEWORK
+//#
+#define MBC_FRAMEWORK			140000000
+#define MBC_DistributeRule		140010000
+#define MBC_Environment			140020000
+#define MBC_EventReceiver		140030000
+#define MBC_EventSender			140040000
+#define MBC_Process			140050000
+//@@ 140050000	应用程序收到退出信号异常退出		检查SIGQUIT,SIGTERM,SIGINT信号的来源
+//@@ 140050001	应用程序收到前台调度指令正常退出	---
+//@@ 140050002	取不到环境变量PROCESS_ID		请设置环境变量PROCESS_ID,例:export PROCESS_ID=123
+//@@ 140050003	取不到APP_ID,BILLFLOW_ID		请检查wf_process表,是否存在该process_id
+//@@ 140050004	捕获SIGQUIT信号失败			---
+//@@ 140050005	捕获SIGTERM信号失败			---
+//@@ 140050006	捕获SIGINT信号失败			---
+//@@ 140050007	捕获SIGUSR1信号失败			---
+
+//#
+//# MBC_MIDWARE_ACCESS
+//#
+#define MBC_MIDWARE_ACCESS		150000000
+
+//#
+//# MBC_MEMORY_MANAGER
+//#
+#define MBC_MEMORY_MANAGER		160000000
+
+//#
+//# MBC_TERMINAL_CONTROL
+//#
+#define MBC_TERMINAL_CONTROL		170000000
+#define MBC_control			170010000
+#define MBC_edit			170020000
+#define MBC_button			170030000
+#define MBC_listbox			170040000
+#define MBC_readinfo			170050000
+
+//#
+//# MBC_APP_PRICING
+//#
+#define MBC_APP_PRICING			180000000
+#define MBC_PricingMeasure		180010000
+#define MBC_Tariff			180020000
+#define MBC_Discount			180030000
+#define MBC_PricingInfoMgr		180040000
+#define MBC_PricingInfo			180050000
+#define MBC_BillObject			180060000
+#define MBC_PricingCombine		180070000
+#define MBC_Pricing			180080000
+
+//#
+//# MBC_APP_MONITOR
+//#
+#define MBC_APP_MONITOR			190000000
+#define MBC_monitor			190010000
+#define MBC_ipc_op			190020000
+#define MBC_login_f			190030000
+#define MBC_login_j			190040000
+#define MBC_password_f			190050000
+#define MBC_password_j			190060000
+#define MBC_mainmenu_j			190070000
+#define MBC_mainmenu_f			190080000
+#define MBC_process_f			190090000
+#define MBC_process_j			190100000
+#define MBC_ticket_f			190110000
+#define MBC_ticket_j			190120000
+#define MBC_mnt				190130000
+#define MBC_mnt_interface		190140000
+#define MBC_socketapi			190150000
+
+//#
+//# MBC_APP_CYCLEFEE
+//#
+#define MBC_APP_CYCLEFEE		200000000
+#define MBC_CycleFeeEvent		200010000
+#define MBC_CycleFeeEventCreaterMgr	200020000
+#define MBC_CycleFeeEventMgr		200030000
+#define MBC_CycleInfo			200040000
+#define MBC_FileInfo			200050000
+
+//#
+//# MBC_APP_PREPROCESS
+//#
+#define MBC_APP_PREPROCESS		210000000
+#define MBC_AsciiEventOwner		210010000
+#define MBC_FileEventOwner		210020000
+#define MBC_OneEvent			210030000
+#define MBC_TailBlock			210040000
+#define MBC_AsnBinaryEventOwner		210050000
+#define MBC_DescAsciiEventOwner		210060000
+#define MBC_FixAsciiEventOwner		210070000
+#define MBC_ParamMgr			210080000
+#define MBC_UselessBlock		210090000
+#define MBC_AsnField			210100000
+#define MBC_EventBlock			210110000
+#define MBC_FixBinaryEventOwner		210120000
+#define MBC_PpConvertUtility		210130000
+#define MBC_BinaryEventOwner		210140000
+#define MBC_EventExtractor		210150000
+#define MBC_FixField			210160000
+#define MBC_SepAsciiEventOwner		210170000
+#define MBC_Block			210180000
+#define MBC_EventHeadBlock		210190000
+#define MBC_HeadBlock			210200000
+#define MBC_ChildEventBlock		210210000
+#define MBC_Field			210220000
+#define MBC_SepField			210230000
+
+//#
+//# MBC_APP_PUTINDB
+//#
+#define MBC_APP_PUTINDB			220000000
+
+//#
+//# MBC_APP_WORKFLOW
+//#
+#define MBC_APP_WORKFLOW		230000000
+#define MBC_guard			230010000
+#define MBC_guard_main			230020000
+#define MBC_guard_remote		230030000
+#define MBC_public			230040000
+#define MBC_server			230050000
+#define MBC_server_client		230060000
+#define MBC_server_monitor		230070000
+#define MBC_workflow			230080000
+
+//#
+//# MBC_APP_STAT
+//#
+#define MBC_APP_STAT			240000000
+
+#endif
+
+
+

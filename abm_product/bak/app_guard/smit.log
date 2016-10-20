@@ -1,0 +1,368 @@
+
+[Jul 04 2011, 14:32:32]
+    Starting SMIT
+
+(Menu screen selected,
+	FastPath    = "top_menu",
+	id_seq_num  = "0",
+	next_id     = "top_menu",
+	title       = "System Management".)
+
+(Menu screen selected,
+	FastPath    = "system",
+	id_seq_num  = "090",
+	next_id     = "system",
+	title       = "System Environments".)
+
+(Menu screen selected,
+	FastPath    = "mlang",
+	id_seq_num  = "052",
+	next_id     = "mlang",
+	title       = "Manage Language Environment".)
+
+(Dialogue screen selected,
+	FastPath    = "mle_add_lang",
+	id          = "mle_add_lang",
+	title       = "Add Additional Language Environments".)
+
+
+[Jul 04 2011, 14:33:40]
+
+    Command_to_Execute follows below:
+>> add_lang_environment () {
+	## Check for RBAC enabled status. If disabled, check if root
+	## else check for authorization aix.system.install
+	/usr/sbin/lsattr -El sys0 -a enhanced_RBAC |grep true  > /dev/null
+	if [[ $? -ne 0 ]]
+		then
+			if [[ `whoami` != root ]]
+				then
+					dspmsg -s 53 smit.cat 75 'Error:  You must be logged in as root to run this command.
+' >&2
+					exit 1
+			fi
+	else
+		/usr/bin/ckauth aix.system.install
+		if [[ $? -ne 0 ]]
+		then
+			dspmsg -s 53 smit.cat 76 'Error:  You must be logged in as an authorized user to run this command.
+' >&2
+			exit 1
+
+		fi
+	fi
+while getopts c:l:d:XMIk:DK: Option "$@"
+do
+   case $Option in
+      c) locale=$OPTARG;;
+      l) language=$OPTARG;;
+      d) device=$OPTARG;;
+      X) extend_fs=-X;;
+      M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+      I) INUWPAR_ENABLED="1";;
+      k) INUWPAR_FILE=$OPTARG;;
+      D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+      K) INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $OPTARG";;
+   esac
+done
+
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+
+rm -f /tmp/.patternlist.$$
+
+## Grab just the values inside the brackets
+locale=`echo "$locale" | sed 's/][^\[]*\[/ /g' | cut -f2 -d'[' | cut -f1 -d']'`
+rm -f /tmp/localelist.$$
+touch /tmp/localelist.$$
+for loc in $locale
+do
+   echo $loc >> /tmp/localelist.$$
+done
+locale=`cat /tmp/localelist.$$ | cut -f1 -d'.' | sort -u`
+
+for i in $locale
+do
+   echo '.loc.*'${i} >> /tmp/.patternlist.$$
+done
+
+## Grab just the values inside the brackets
+language=`echo "$language" | sed 's/][^\[]*\[/ /g' | cut -f2 -d'[' | cut -f1 -d']'`
+rm -f /tmp/langlist.$$
+touch /tmp/langlist.$$
+for lang in $language
+do
+   echo $lang >> /tmp/langlist.$$
+done
+language=`cat /tmp/langlist.$$ | cut -f1 -d'.' | sort -u`
+
+for i in $language
+do
+   echo '.msg.'${i} >> /tmp/.patternlist.$$
+done
+
+if [[ -s /tmp/.patternlist.$$ ]]
+then
+   install_device=$device
+
+   lslpp -Lqc | grep -f /tmp/.patternlist.$$ | cut -f2,3 -d':' > /tmp/.installed_options.$$
+   if [[ ! -s /tmp/.installed_options.$$ ]]
+   then
+      echo '^$' >> /tmp/.installed_options.$$
+   fi
+   installp -qd $install_device -L | grep -f /tmp/.patternlist.$$ | grep -vf /tmp/.installed_options.$$ | cut -f2,3 -d':' | tr ':' ' ' >> /tmp/install_list.$$
+   if [[ -s /tmp/install_list.$$ ]]
+   then
+      if [[ $INUWPAR_ENABLED == '1' ]]; then 
+        inuwpar ${INUWPAR:+$INUWPAR} installp -qQacNg $extend_fs -d $install_device -f /tmp/install_list.$$
+      else
+        installp -qQacNg $extend_fs -d $install_device -f /tmp/install_list.$$
+      fi
+      RC=$?
+   else
+      dspmsg -s 53 smit.cat 71 'Error:  The selected CULTURAL convention and LANGUAGE translation
+        require the installation of filesets which could not be found
+        in the current input device or directory.
+
+' >&2
+      rm -f /tmp/.patternlist.$$ /tmp/.installed_options.$$ /tmp/.install_list.$$
+      exit 1
+   fi
+
+fi
+rm -f /tmp/.patternlist.$$ /tmp/.installed_options.$$ /tmp/.install_list.$$ /tmp/install_list.$$ /tmp/langlist.$$  /tmp/localelist.$$
+exit $RC
+
+}
+add_lang_environment -c '' -l '' -d '/dev/cd0' '-X' '-M'  -k '_all_wpars' 
+
+
+    Output from Command_to_Execute follows below:
+
+---- start ----
+
+Error:  You must be logged in as an authorized user to run this command.
+
+---- end ----
+
+1800-035 Exit status (1) returned by command.
+(Command process used stdout and stderr file
+descriptors connected to SMIT via pipes.)
+
+[Jul 04 2011, 14:33:41]
+
+
+
+[Jul 04 2011, 14:34:23]
+    Exiting SMIT
+
+
+[Jul 04 2011, 14:37:53]
+    Starting SMIT
+
+(Menu screen selected,
+	FastPath    = "top_menu",
+	id_seq_num  = "0",
+	next_id     = "top_menu",
+	title       = "System Management".)
+
+(Menu screen selected,
+	FastPath    = "system",
+	id_seq_num  = "090",
+	next_id     = "system",
+	title       = "System Environments".)
+
+(Menu screen selected,
+	FastPath    = "mlang",
+	id_seq_num  = "052",
+	next_id     = "mlang",
+	title       = "Manage Language Environment".)
+
+(Menu screen selected,
+	FastPath    = "chlang",
+	id_seq_num  = "010",
+	next_id     = "chlang",
+	title       = "Change/Show Primary Language Environment".)
+
+(Dialogue screen selected,
+	FastPath    = "mle_cc_cust_hdr",
+	id          = "mle_cc_cust_hdr",
+	title       = "Change/Show Cultural Convention, Language, or Keyboard".)
+
+
+(Selector screen selected,
+	FastPath  = "mle_cc_set_hdr",
+	id        = "mle_cc_set_hdr",
+	next_id   = "mle_hdr_select_lang",
+	title     = "Select Set of Cultural Convention, Language, and Keyboard".)
+
+(Dialogue screen selected,
+	FastPath    = "mle_add_lang",
+	id          = "mle_add_lang",
+	title       = "Add Additional Language Environments".)
+
+
+[Jul 04 2011, 14:38:32]
+
+    Command_to_Execute follows below:
+>> add_lang_environment () {
+	## Check for RBAC enabled status. If disabled, check if root
+	## else check for authorization aix.system.install
+	/usr/sbin/lsattr -El sys0 -a enhanced_RBAC |grep true  > /dev/null
+	if [[ $? -ne 0 ]]
+		then
+			if [[ `whoami` != root ]]
+				then
+					dspmsg -s 53 smit.cat 75 'Error:  You must be logged in as root to run this command.
+' >&2
+					exit 1
+			fi
+	else
+		/usr/bin/ckauth aix.system.install
+		if [[ $? -ne 0 ]]
+		then
+			dspmsg -s 53 smit.cat 76 'Error:  You must be logged in as an authorized user to run this command.
+' >&2
+			exit 1
+
+		fi
+	fi
+while getopts c:l:d:XMIk:DK: Option "$@"
+do
+   case $Option in
+      c) locale=$OPTARG;;
+      l) language=$OPTARG;;
+      d) device=$OPTARG;;
+      X) extend_fs=-X;;
+      M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+      I) INUWPAR_ENABLED="1";;
+      k) INUWPAR_FILE=$OPTARG;;
+      D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+      K) INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $OPTARG";;
+   esac
+done
+
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+
+rm -f /tmp/.patternlist.$$
+
+## Grab just the values inside the brackets
+locale=`echo "$locale" | sed 's/][^\[]*\[/ /g' | cut -f2 -d'[' | cut -f1 -d']'`
+rm -f /tmp/localelist.$$
+touch /tmp/localelist.$$
+for loc in $locale
+do
+   echo $loc >> /tmp/localelist.$$
+done
+locale=`cat /tmp/localelist.$$ | cut -f1 -d'.' | sort -u`
+
+for i in $locale
+do
+   echo '.loc.*'${i} >> /tmp/.patternlist.$$
+done
+
+## Grab just the values inside the brackets
+language=`echo "$language" | sed 's/][^\[]*\[/ /g' | cut -f2 -d'[' | cut -f1 -d']'`
+rm -f /tmp/langlist.$$
+touch /tmp/langlist.$$
+for lang in $language
+do
+   echo $lang >> /tmp/langlist.$$
+done
+language=`cat /tmp/langlist.$$ | cut -f1 -d'.' | sort -u`
+
+for i in $language
+do
+   echo '.msg.'${i} >> /tmp/.patternlist.$$
+done
+
+if [[ -s /tmp/.patternlist.$$ ]]
+then
+   install_device=$device
+
+   lslpp -Lqc | grep -f /tmp/.patternlist.$$ | cut -f2,3 -d':' > /tmp/.installed_options.$$
+   if [[ ! -s /tmp/.installed_options.$$ ]]
+   then
+      echo '^$' >> /tmp/.installed_options.$$
+   fi
+   installp -qd $install_device -L | grep -f /tmp/.patternlist.$$ | grep -vf /tmp/.installed_options.$$ | cut -f2,3 -d':' | tr ':' ' ' >> /tmp/install_list.$$
+   if [[ -s /tmp/install_list.$$ ]]
+   then
+      if [[ $INUWPAR_ENABLED == '1' ]]; then 
+        inuwpar ${INUWPAR:+$INUWPAR} installp -qQacNg $extend_fs -d $install_device -f /tmp/install_list.$$
+      else
+        installp -qQacNg $extend_fs -d $install_device -f /tmp/install_list.$$
+      fi
+      RC=$?
+   else
+      dspmsg -s 53 smit.cat 71 'Error:  The selected CULTURAL convention and LANGUAGE translation
+        require the installation of filesets which could not be found
+        in the current input device or directory.
+
+' >&2
+      rm -f /tmp/.patternlist.$$ /tmp/.installed_options.$$ /tmp/.install_list.$$
+      exit 1
+   fi
+
+fi
+rm -f /tmp/.patternlist.$$ /tmp/.installed_options.$$ /tmp/.install_list.$$ /tmp/install_list.$$ /tmp/langlist.$$  /tmp/localelist.$$
+exit $RC
+
+}
+add_lang_environment -c '' -l '' -d '/dev/cd0' '-X' '-M'  -k '_all_wpars' 
+
+
+    Output from Command_to_Execute follows below:
+
+---- start ----
+
+Error:  You must be logged in as an authorized user to run this command.
+
+---- end ----
+
+1800-035 Exit status (1) returned by command.
+(Command process used stdout and stderr file
+descriptors connected to SMIT via pipes.)
+
+[Jul 04 2011, 14:38:32]
+
+
+
+[Jul 04 2011, 14:38:37]
+    Exiting SMIT
+
+
+[Jul 06 2011, 14:59:53]
+    Starting SMIT
+
+(Menu screen selected as FastPath,
+	id          = "performance",
+	id_seq_num  = "100",
+	next_id     = "topas",
+	title       = "Topas".)
+
+(Menu screen selected,
+	FastPath    = "topas",
+	id_seq_num  = "100",
+	next_id     = "topas",
+	title       = "Topas".)
+
+
+[Jul 06 2011, 14:59:56]
+    Exiting SMIT
+

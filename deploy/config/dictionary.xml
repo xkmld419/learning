@@ -1,0 +1,2240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "dictionary.dtd">
+<!--
+  $Log: dictionary.xml,v $
+  Revision 1.20  2004/06/17 04:39:24  yohba
+  *** empty log message ***
+
+  Revision 1.19  2004/05/18 01:22:30  yohba
+  *** empty log message ***
+
+  Revision 1.17  2004/04/20 01:45:22  vfajardo
+  diameter_address_t changes
+
+  Revision 1.16  2004/04/08 14:19:53  vfajardo
+  Added protocol id parser to header
+
+  Revision 1.15  2004/01/04 12:01:55  yohba
+  added IPFilter-Rule type parser
+
+  Revision 1.14  2003/12/16 02:39:12  yohba
+  Bug fix to 858312.
+
+  Revision 1.13  2003/12/09 03:48:10  yohba
+  Minor change.
+
+  Revision 1.12  2003/12/04 21:20:28  yohba
+  *** empty log message ***
+
+  Revision 1.11  2003/12/04 20:10:28  yohba
+  *** empty log message ***
+
+  Revision 1.10  2003/11/27 00:03:46  vfajardo
+  Added test for multiple instance grouped AVP
+
+  Revision 1.9  2003/11/25 21:13:46  vfajardo
+  Added multiple proxy-info instance
+
+  Revision 1.8  2003/11/25 05:28:32  yohba
+  *** empty log message ***
+
+  Revision 1.6  2003/10/01 01:35:13  yohba
+  Added NASREQ dictionary.
+
+  Revision 1.5  2003/09/30 23:37:42  yohba
+  Added Mobile IPv4 Application dictionary.
+
+  Revision 1.4  2003/08/05 16:32:08  yohba
+  More efficient AAAMessageBlock management.
+
+  Revision 1.3  2003/07/09 17:58:40  vfajardo
+  Fixed accounting commands and AVP's, added Event-timestamp and removed RADUIS session
+
+  Revision 1.3  2003/07/09 17:57:48  vfajardo
+  Fixed accounting commands and AVP's, added Event-timestamp and removed RADUIS session
+
+  Revision 1.2  2003/03/13 21:01:12  vfajardo
+  Formalize dictionary XML files into one
+
+  Revision 1.1.1.1  2002/11/06 21:19:49  frascone
+  Imported sources
+
+  Revision 1.1.1.1  2002/09/19 00:57:42  ohba
+  no message
+
+  Revision 1.1.1.1  2002/09/18 13:51:53  ohba
+  no message
+
+  Revision 1.7  2002/09/17 14:03:13  ohba
+  no message
+
+  Revision 1.6  2002/08/02 18:41:07  victorf
+  spelling
+
+  Revision 1.5  2002/06/28 21:01:02  ohba
+  *** empty log message ***
+
+  Revision 1.4  2002/05/24 15:25:50  ohba
+  no message
+
+  Revision 1.3  2002/05/10 15:23:45  ohba
+  no message
+
+  Revision 1.2  2002/05/03 14:45:49  ohba
+  no message
+
+  Revision 1.1  2002/04/30 21:23:40  ohba
+  no message
+
+  Revision 1.15  2001/12/13 23:07:26  dave
+  Updated DTD and dictionary files with new changes.  Please review
+  and send me e-mail with any comments.
+
+  Revision 1.14  2001/09/26 19:55:21  mjones
+  Added type-parent for Time.
+  Moved User-Name, Class and Session-Timeout AVPs from nasreq.xml to dictionary.xml
+  Corrected Proxy-Info to be Grouped instead of OctetString.
+  Corrected data types for Accounting-Multi-Session-Id and Accounting-Session-Id from Unsigned32 to UTF8String.
+  Corrected data type for Authorization-Lifetime from Integer32 to Unsigned32.
+  Corrected numerous data types from Integer32 to Unsigned32 in nasreq.xml
+
+  Revision 1.13  2001/09/26 13:58:56  mjones
+  Typo vendir instead of vendor in AVP 266.
+
+  Revision 1.12  2001/09/21 01:13:16  mjones
+  Corrected replacement of vendor-id with vendor-label in some AVPs
+
+  Revision 1.11  2001/09/20 18:27:58  mjones
+  Removed vendor-bit attribute from elements.
+
+  Revision 1.10  2001/09/19 21:38:57  mjones
+  Removed #PCDATA from command element.
+
+  Revision 1.9  2001/09/19 19:46:38  mjones
+  Moved the vendor element to be the same level as base and application.
+  Modified vendor-id to be SMI Private Enterprise Code instead of a label.
+  Removed vendor-id="None" since vendor-id was IMPLIED.
+  Added type attribute to command (request or answer).
+  Removed duplicate AVPs from nasreq.xml (Acct-Session-Id, Acct-Multi-Session-Id)
+  Corrected typos in enum codes for Auth-Session-State and Disconnect-Cause.
+
+  Revision 1.4  2001/09/19 00:49:48  mjones
+  Removed vendor-label.
+
+  Revision 1.3  2001/09/18 00:08:02  mjones
+  Fixed command parsing and moved some parsing logic around.
+
+  Revision 1.2  2001/09/14 00:40:35  mjones
+  Moved Vendor to root in DTD
+
+  Revision 1.1  2001/09/08 23:46:45  mjones
+  Initial commit of renamed dictionary classes.
+
+  Revision 1.2  2001/09/07 23:59:54  mjones
+  Daily commit: added test harness
+
+  Revision 1.1  2001/09/07 13:15:48  mjones
+  Complete remaining classes and add dictionary files.
+
+  Revision 1.8  2001/08/28 21:33:56  chaos
+  Added a couple of AVPs, and fixed a typo
+
+  Revision 1.7  2001/08/24 18:03:24  chaos
+  Mark's Changes
+
+  Revision 1.6  2001/07/31 19:13:55  chaos
+  Missed a couple of MIP AVPs
+
+  Revision 1.5  2001/07/31 19:09:22  chaos
+  Added Mobile-Ip and Sun Ping Extension
+
+  Revision 1.4  2001/07/31 17:43:25  chaos
+  Oops, forgot to turn on validity checking.  Fixed some errors found with validity checking turned on
+
+  Revision 1.3  2001/07/31 16:56:31  chaos
+  Added commands, and validated with xmllint
+
+  Revision 1.2  2001/07/31 16:29:34  chaos
+  Checking in some changes to verify log and ident strings
+
+-->
+<dictionary protocol="0">
+	<!-- ************************* Vendors **************************** -->
+	<vendor id="61" name="Merit Networks"/>
+	<vendor id="42" name="Sun Microsystems, Inc."/>
+	<vendor id="429" name="US Robotics Corp."/>
+	<vendor id="12645" name="Vodafone"/>
+	<!-- *********************** End Vendors ************************** -->
+	<!-- ***************** Base Protocol Definition ******************* -->
+	<base uri="ftp://ftp.ietf.org/internet-drafts/draft-ietf-aaa-diameter-08.txt">
+		<!-- ********************** End Commands ************************ -->
+		<!-- ************************ typedefn's ************************ -->
+		<typedefn type-name="Any"/>
+		<!-- Added by Ohba-->
+		<typedefn type-name="OctetString"/>
+		<typedefn type-name="UTF8String" type-parent="OctetString"/>
+		<typedefn type-name="Address" type-parent="OctetString"/>
+		<typedefn type-name="DiameterIdentity" type-parent="OctetString"/>
+		<typedefn type-name="DiameterURI" type-parent="UTF8String"/>
+		<typedefn type-name="IPFilterRule" type-parent="OctetString"/>
+		<typedefn type-name="QOSFilterRule" type-parent="OctetString"/>
+		<typedefn type-name="Integer32"/>
+		<typedefn type-name="Integer64"/>
+		<typedefn type-name="Unsigned32"/>
+		<typedefn type-name="Time" type-parent="Unsigned32"/>
+		<typedefn type-name="Enumerated" type-parent="Unsigned32"/>
+		<typedefn type-name="Unsigned64"/>
+		<!-- *********************** End Typedefns ********************** -->
+		<!-- ***************** DIAMETER BASE PROTOCOL AVPS ************** -->
+		<!--    <avp name="AVP" code="0"> 
+      <type type-name="Any"/>
+    </avp>
+-->
+		<avp name="AVP" code="0">
+			<type type-name="Any"/>
+		</avp>
+		<avp name="Session-Id" code="263" mandatory="must" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Origin-Host" code="264" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Origin-Realm" code="296" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Destination-Realm" code="283" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Auth-Application-Id" code="258" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Service-Context-Id" code="461" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Priority" code="80037" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Update-Action" code="80036" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="CC-Request-Type" code="416" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="INITIAL_REQUEST" code="1"/>
+			<enum name="UPDATE_REQUEST" code="2"/>
+			<enum name="TERMINATION_REQUEST" code="3"/>
+			<enum name="EVENT_REQUEST" code="4"/>
+		</avp>
+		<avp name="CC-Request-Number" code="415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Re-Auth-Request-Type" code="285" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="REAUTH_AUTHORIZE_ONLY" code="1"/>
+			<enum name="UPDATE_REQUEST" code="2"/>
+			<enum name="TERMINATION_REQUEST" code="3"/>
+			<enum name="EVENT_REQUEST" code="4"/>
+		</avp>
+		<avp name="Destination-Host" code="293" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="User-Name" code="1">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Origin-State-Id" code="278" mandatory="must" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Event-Timestamp" code="55" mandatory="must" protected="may" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Subscription-ID" code="443" mandatory="must" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<required>
+					<avprule name="Subscription-Id-Type" minimum="1"/>
+					<avprule name="Subscription-Id-Data" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="Subscription-Id-Type" code="450" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Enumerated"/>
+			<enum name="END_USER_E164" code="0"/>
+			<enum name="END_USER_IMSI" code="1"/>
+			<enum name="END_USER_SIP_URI" code="2"/>
+			<enum name="END_USER_NAI" code="3"/>
+			<enum name="END_USER_PRIVATE" code="4"/>
+		</avp>
+		<avp name="Subscription-Id-Data" code="444" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Service-Identifier" code="439" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Termination-Cause" code="295" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="Logout" code="1"/>
+			<enum name="Service Not Provided" code="2"/>
+			<enum name="Bad Answer" code="3"/>
+			<enum name="Administrative" code="4"/>
+			<enum name="Link Broken" code="5"/>
+			<enum name="Auth Expired" code="6"/>
+			<enum name="User Moved" code="7"/>
+			<enum name="Session Timeout" code="8"/>
+		</avp>
+		<avp name="Route-Record" code="282" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Requested-Action" code="436" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="DIRECT_DEBITING" code="113"/>
+			<enum name="REFUND_ACCOUNT" code="114"/>
+			<enum name="CHECK_BALANCE" code="115"/>
+		</avp>
+		<avp name="Error-Message" code="281" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Error-Reporting-Host" code="294" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Inband-Security-Id" code="299" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Firmware-Revision" code="267" mandatory="mustnot" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Host-IP-Address" code="257" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="Product-Name" code="269" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Redirect-Host" code="292" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Redirect-Host-Usage" code="261" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+			<enum name="Don't Care" code="0"/>
+			<enum name="All Session" code="1"/>
+			<enum name="All Realm" code="2"/>
+			<enum name="Realm and Application" code="3"/>
+			<enum name="All Application" code="4"/>
+			<enum name="All Host" code="5"/>
+		</avp>
+		<avp name="Redirect-Max-Cache-Time" code="262" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Supported-Vendor-Id" code="265" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Vendor-Id" code="266" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Vendor-Specific-Application-Id" code="260" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<fixed>
+					<avprule name="Vendor-Id" minimum="1"/>
+				</fixed>
+				<required>
+					<avprule name="Auth-Application-Id" maximum="1"/>
+					<avprule name="Acct-Application-Id" maximum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="Forward-Info" code="80047" mandatory="must" may-encrypt="no" protected="mustnot">
+			<optional>
+					<avprule name="Self-Host" minimum="1"/>
+					<avprule name="Downstream-Host" minimum="1"/>
+					<avprule name="Response-Time-HEAD" minimum="1"/>
+				</optional>
+		</avp>
+		<avp name="Self-Host" code="80048" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Downstream-Host" code="80049" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Response-Time-HEAD" code="80050" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Class" code="25">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Acct-Application-Id" code="259" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Auth-Request-Type" code="274" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="AUTHENTICATE_ONLY" code="1"/>
+			<enum name="AUTHORIZE_ONLY" code="2"/>
+			<enum name="AUTHORIZE_AUTHENTICATE" code="3"/>
+		</avp>
+		<avp name="Disconnect-Cause" code="273" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+			<enum name="Rebooting" code="1"/>
+			<enum name="Busy" code="2"/>
+			<enum name="Do not want to talk to you" code="3"/>
+		</avp>
+		<avp name="Requested-Service-Unit" code="437" mandatory="must" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Total-Octets" minimum="1"/>
+					<avprule name="CC-Input-Octets" minimum="1"/>
+					<avprule name="CC-Output-Octets" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<!--avp name="Requested-Service-Unit" code="437" mandatory="must" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="AVP"/>
+				</optional>
+			</grouped>
+		</avp -->
+		<avp name="Requested-Service-Unit_PS_I_R" code="437" mandatory="must" scenario-id="2" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="AVP"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Requested-Service-Unit_PS_U_R" code="437" mandatory="must" scenario-id="3" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="AVP"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="CC-Time" code="420" mandatory="must" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="CC-Money" code="413" mandatory="must" may-encrypt="no">
+			<grouped>
+				<required>
+					<avprule name="Unit-Value" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Currency-Code" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Unit-Value" code="445" mandatory="must" may-encrypt="no">
+			<grouped>
+				<required>
+					<avprule name="Value-Digits" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Exponent" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Value-Digits" code="447" mandatory="must" may-encrypt="no">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Exponent" code="429" mandatory="must" may-encrypt="no">
+			<type type-name="Integer32"/>
+		</avp>
+		<avp name="Currency-Code" code="425" mandatory="must" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="CC-Total-Octets" code="421" mandatory="must" may-encrypt="no">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="CC-Input-Octets" code="412" mandatory="must" may-encrypt="no">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="CC-Output-Octets" code="414" mandatory="must" may-encrypt="no">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="CC-Service-Specific-Units" code="417" mandatory="must" may-encrypt="no">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Used-Service-Unit" code="446" mandatory="must" may-encrypt="yes">
+			<grouped>
+				<optional>
+					<avprule name="Reporting-Reason" minimum="1"/>
+					<avprule name="Tariff-Change-Usage" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Total-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Input-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Output-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Used-Service-Unit_IN_U" code="446" mandatory="must" scenario-id="1" may-encrypt="yes">
+			<grouped>
+				<optional>
+					<avprule name="Reporting-Reason" minimum="1"/>
+					<avprule name="Tariff-Change-Usage" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Used-Service-Unit_IN_F" code="446" mandatory="must" scenario-id="2" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Reporting-Reason" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Tariff-Change-Usage" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Used-Service-Unit_PS_U_R" code="446" mandatory="must" scenario-id="3" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Reporting-Reason" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Tariff-Change-Usage" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Total-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Input-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Output-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Used-Service-Unit_PS_F_R" code="446" mandatory="must" scenario-id="4" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Reporting-Reason" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Tariff-Change-Usage" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Total-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Input-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Output-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Tariff-Change-Usage" code="452" mandatory="must" may-encrypt="no">
+			<type type-name="Enumerated"/>
+			<enum name="UNIT_BEFORE_TARIFF_CHANGE" code="0"/>
+			<enum name="UNIT_AFTER_TARIFF_CHANGE" code="1"/>
+			<enum name="UNIT_INDETERMINATE" code="2"/>
+		</avp>
+		<avp name="Multiple-Services-Indicator" code="455" mandatory="must" may-encrypt="no">
+			<type type-name="Enumerated"/>
+			<enum name="MULTIPLE_SERVICES_NOT_SUPPORTED" code="0"/>
+			<enum name="MULTIPLE_SERVICES_SUPPORTED" code="1"/>
+		</avp>
+		<avp name="Multiple-Services-Credit-Control" code="456" mandatory="must" may-encrypt="yes">
+			<grouped>
+				<optional>
+					<avprule name="Reporting-Reason" minimum="1"/>
+					<avprule name="Trigger-Type" minimum="1"/>
+					<avprule name="Quota-Holding-Time" minimum="1"/>
+					<avprule name="Granted-Service-Unit" minimum="1"/>
+					<avprule name="Time-Quota-Threshold" minimum="1"/>
+					<avprule name="Volume-Quota-Threshold" minimum="1"/>
+					<avprule name="Requested-Service-Unit" minimum="1"/>
+					<avprule name="Used-Service-Unit" minimum="1"/>
+					<avprule name="Tariff-Change-Usage" minimum="1"/>
+					<avprule name="Rating-Group" minimum="1"/>
+					<avprule name="Validity-Time" minimum="1"/>
+					<avprule name="Result-Code" minimum="1"/>
+					<avprule name="Final-Unit-Indication" minimum="1"/>
+					<avprule name="LCOCS-PayAcctItemList" minimum="1"/>
+					<avprule name="LCOCS-HoldAcctItemList" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Multiple-Services-Credit-Control_PS_I_R" code="456" mandatory="must" scenario-id="1" may-encrypt="yes">
+			<grouped>
+				<required>
+					<!--          <avprule name="Requested-Service-Unit" minimum="1"/> -->
+					<avprule name="Requested-Service-Unit_PS_I_R" minimum="1" scenario-id="2"/>
+				</required>
+				<optional>
+					<avprule name="Rating-Group" minimum="1"/>
+					<avprule name="LCOCS-PayAcctItemList" minimum="1"/>
+					<avprule name="LCOCS-HoldAcctItemList" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Multiple-Services-Credit-Control_PS_U_R" code="456" mandatory="must" scenario-id="2" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Requested-Service-Unit_PS_U_R" minimum="1" scenario-id="3"/>
+					<avprule name="Used-Service-Unit_PS_U_R" minimum="1" scenario-id="3"/>
+				</required>
+				<optional>
+					<avprule name="Reporting-Reason" minimum="1"/>
+					<avprule name="Rating-Group" minimum="1"/>
+					<avprule name="LCOCS-PayAcctItemList" minimum="1"/>
+					<avprule name="LCOCS-HoldAcctItemList" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Multiple-Services-Credit-Control_PS_F_R" code="456" mandatory="must" scenario-id="3" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Used-Service-Unit_PS_F_R" minimum="1" scenario-id="4"/>
+				</required>
+				<optional>
+					<avprule name="Reporting-Reason" minimum="1"/>
+					<avprule name="Rating-Group" minimum="1"/>
+					<avprule name="LCOCS-PayAcctItemList" minimum="1"/>
+					<avprule name="LCOCS-HoldAcctItemList" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Multiple-Services-Credit-Control_PS_I_A" code="456" mandatory="must" scenario-id="4" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Granted-Service-Unit_PS_I_A" minimum="1" scenario-id="1"/>
+					<avprule name="Validity-Time" minimum="1"/>
+					<avprule name="Result-Code" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Quota-Holding-Time" minimum="1"/>
+					<avprule name="Quota-Consumption-Time" minimum="1"/>
+					<avprule name="Time-Quota-Threshold" minimum="1"/>
+					<avprule name="Volume-Quota-Threshold" minimum="1"/>
+					<avprule name="Rating-Group" minimum="1"/>
+					<avprule name="Final-Unit-Indication" minimum="1"/>
+					<avprule name="LCOCS-PayAcctItemList" minimum="1"/>
+					<avprule name="LCOCS-HoldAcctItemList" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Multiple-Services-Credit-Control_PS_U_A" code="456" mandatory="must" scenario-id="5" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Granted-Service-Unit_PS_U_A" minimum="1" scenario-id="2"/>
+					<avprule name="Validity-Time" minimum="1"/>
+					<avprule name="Result-Code" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Quota-Holding-Time" minimum="1"/>
+					<avprule name="Time-Quota-Threshold" minimum="1"/>
+					<avprule name="Quota-Consumption-Time" minimum="1"/>
+					<avprule name="Volume-Quota-Threshold" minimum="1"/>
+					<avprule name="Rating-Group" minimum="1"/>
+					<avprule name="Final-Unit-Indication" minimum="1"/>
+					<avprule name="LCOCS-PayAcctItemList" minimum="1"/>
+					<avprule name="LCOCS-HoldAcctItemList" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Multiple-Services-Credit-Control_PS_F_A" code="456" mandatory="must" scenario-id="6" may-encrypt="yes">
+			<grouped>
+				<required>
+					<avprule name="Result-Code" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Final-Unit-Indication" minimum="1"/>
+					<avprule name="LCOCS-PayAcctItemList" minimum="1"/>
+					<avprule name="LCOCS-HoldAcctItemList" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Reporting-Reason" code="872" mandatory="must" may-encrypt="no">
+			<type type-name="Enumerated"/>
+			<enum name="THRESHOLD" code="0"/>
+			<enum name="QHT" code="1"/>
+			<enum name="FINAL" code="2"/>
+			<enum name="QUOTA_EXHAUSTED" code="3"/>
+			<enum name="VALIDITY_TIME" code="4"/>
+			<enum name="OTHER_QUOTA_TYPE" code="5"/>
+			<enum name="RATING_CONDITION_CHANGE" code="6"/>
+			<enum name="FORCED_REAUTHORISATION" code="7"/>
+		</avp>
+		<avp name="Trigger-Type" code="870" mandatory="must" may-encrypt="no">
+			<type type-name="Enumerated"/>
+			<enum name="CHANGE_IN_SGSN_IP_ADDRESS" code="0"/>
+			<enum name="CHANGE_IN_QOS" code="1"/>
+			<enum name="CHANGE_IN_LOCATION" code="2"/>
+			<enum name="CHANGE_IN_RAT" code="3"/>
+		</avp>
+		<avp name="Rating-Group" code="432" mandatory="must" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="CC-Correlation-Id" code="411" mandatory="must" may-encrypt="no">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Proxy-Info" code="284" mandatory="must" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Proxy-Host" minimum="1"/>
+					<avprule name="Proxy-State" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Proxy-Host" code="280" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="Proxy-State" code="33" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="User-Equipment-Info" code="458" mandatory="must" may-encrypt="no">
+			<grouped>
+				<required>
+					<avprule name="User-Equipment-Info-Type" minimum="1"/>
+					<avprule name="User-Equipment-Info-Value" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="User-Equipment-Info-Type" code="459" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+		</avp>
+		<avp name="User-Equipment-Info-Value" code="460" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Service-Information" code="873" vendor-id="10415" mandatory="must" may-encrypt="yes">
+			<grouped>
+			    <optional>
+			        <avprule name="Request-Id" maximum="1" minimum="1"/>
+			        <avprule name="Response-Id" maximum="1" minimum="1"/>
+			        <avprule name="Old-Request-Id" maximum="1" minimum="1"/>
+			        <avprule name="Destination-Type" maximum="1" minimum="1"/>
+			        <avprule name="Destination-Account" maximum="1" minimum="1"/>
+			        <avprule name="Destination-Attr" maximum="1" minimum="1"/>
+			        <avprule name="Service-Platform-ID" maximum="1" minimum="1"/>
+			        <avprule name="Request-Time" maximum="1" minimum="1"/>
+			        <avprule name="Deduct-Date" maximum="1" minimum="1"/>
+			        <avprule name="Destination-Id" maximum="1" minimum="1"/>
+			        <avprule name="Destination-Id-Type" maximum="1" minimum="1"/>
+			        <avprule name="AreaCode" maximum="1" minimum="1"/>
+			        <avprule name="ABM-Id" maximum="1" minimum="1"/>
+			        <avprule name="ServId" maximum="1" minimum="1"/>
+			        <avprule name="AcctId" maximum="1" minimum="1"/>
+			        <avprule name="Accout-Id" maximum="1" minimum="1"/>
+			        <avprule name="Staff-ID" maximum="1"/>
+			        <avprule name="Deduct-Amount" maximum="1" minimum="1"/>
+			        <avprule name="Balance-Amount" maximum="1" minimum="1"/>
+			        <avprule name="Balance-Unit" maximum="1" minimum="1"/>
+			        <avprule name="Action-Type-Id" maximum="1" minimum="1"/>
+			        <avprule name="Action-Type" maximum="1" minimum="1"/>
+			        <avprule name="QueryType" maximum="1" minimum="1"/>
+			        <avprule name="PaymentPasswd" maximum="1" minimum="1"/>
+			        <avprule name="Balance-Information" minimum="1"/>
+			        <avprule name="Micropayment-Info" minimum="1"/>
+			        <avprule name="Response-Time" maximum="1" minimum="1"/>
+			        <avprule name="Service-Result-Code" maximum="1" minimum="1"/>
+			        <avprule name="Operate-Seq" maximum="1"/>
+			        <avprule name="Destination-Account-Pin" maximum="1"/>
+			        <avprule name="Para-Field-Result" maximum="1" minimum="1"/>
+			        <avprule name="Data-Information" minimum="1"/>
+			        <avprule name="Recharge-Amount" minimum="1"/>
+			        <avprule name="Request-Debit-Acct-Item" minimum="1"/>
+			        <avprule name="Net-Ctrl-Information" minimum="1"/>
+			        <avprule name="VC-Information" minimum="1"/>
+			        <avprule name="Balance-Type" minimum="1"/>
+			        <avprule name="Balance-Available" maximum="1" minimum="1"/>
+			        <avprule name="Total-Balance-Available" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Net-Ctrl-Information" code="80020" vendor-id="81000" mandatory="must" may-encrypt="yes">
+			<grouped>
+				<optional>
+					<avprule name="NE-Information" minimum="1"/>
+					<avprule name="Service-Context-Information" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Service-Context-Information" code="80031" vendor-id="81000" mandatory="must" may-encrypt="yes">
+			<grouped>
+				<optional>
+					<avprule name="Service-Context-Id" minimum="1"/>
+					<avprule name="Priority" minimum="1"/>
+					<avprule name="Update-Action" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="NE-Information" code="80021" vendor-id="81000" mandatory="must" may-encrypt="yes">
+			<grouped>
+				<optional>
+					<avprule name="NE-Host" minimum="1"/>
+					<avprule name="NE-Type" minimum="1"/>
+					<avprule name="NE-IP" minimum="1"/>
+					<avprule name="NE-Port" minimum="1"/>
+					<avprule name="Network-Latency" minimum="1"/>
+					<avprule name="SR-Disconnect-Cause"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="NE-Host" code="80024" vendor-id="81000" mandatory="mustnot" protected="mustnot" may-encrypt="yes">
+			<type type-name="DiameterIdentity"/>
+		</avp>
+		<avp name="NE-Type" code="80029" vendor-id="81000" mandatory="mustnot" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="NE-IP" code="80025" vendor-id="81000" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="NE-Port" code="80027" vendor-id="81000" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Recharge-Amount" code="5015" vendor-id="81000" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Response-Id" code="80805" vendor-id="81000" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Destination-Account-Pin" code="20627" vendor-id="81000" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Network-Latency" code="80038" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="SR-Disconnect-Cause" code="80040" vendor-id="81000" mandatory="must" protected="mustnot" may-encrypt="no">
+		    <type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Service-Information_PS" code="873" vendor-id="10415" mandatory="must" scenario-id="2" may-encrypt="no">
+			<grouped>
+				<required>
+					<avprule name="PS-Information" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="Service-Information_P2PSMS" code="873" vendor-id="10415" mandatory="must" scenario-id="3" may-encrypt="no">
+			<grouped>
+				<required>
+					<avprule name="P2PSMS-Information" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="Service-Information_ISMP_E" code="873" vendor-id="10415" mandatory="must" scenario-id="5" may-encrypt="no">
+			<grouped>
+				<required>
+					<avprule name="ISMP-Information" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="PS-Information" code="874" vendor-id="10415" mandatory="must" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="ALIAS-3GPP-Charging-Id" minimum="1"/>
+					<avprule name="ALIAS-3GPP-PDP-Type" minimum="1"/>
+					<avprule name="PDP-Address" minimum="1"/>
+					<avprule name="GPRS-Negotiated-Qos-Profile" minimum="1"/>
+					<avprule name="SGSN-Address" minimum="1"/>
+					<avprule name="GGSN-Address" minimum="1"/>
+					<avprule name="CG-Address" minimum="1"/>
+					<avprule name="ALIAS-3GPP-IMSI-MCC-MNC" minimum="1"/>
+					<avprule name="ALIAS-3GPP-GGSN-MCC-MNC" minimum="1"/>
+					<avprule name="ALIAS-3GPP-NSAPI" minimum="1"/>
+					<avprule name="Called-Station-Id" minimum="1"/>
+					<avprule name="ALIAS-3GPP-Session-Stop-Indicator" minimum="1"/>
+					<avprule name="ALIAS-3GPP-Selection-Mode" minimum="1"/>
+					<avprule name="ALIAS-3GPP-Charging-Characteristics" minimum="1"/>
+					<avprule name="ALIAS-3GPP-SGSN-MCC-MNC" minimum="1"/>
+					<avprule name="ALIAS-3GPP-MS-TimeZone" minimum="1"/>
+					<avprule name="ALIAS-3GPP-CAMEL-Charging-Info" minimum="1"/>
+					<avprule name="Charging-Rule-Based-Name" minimum="1"/>
+					<avprule name="ALIAS-3GPP-User-Location-Info" minimum="1"/>
+					<avprule name="ALIAS-3GPP-RAT-Type" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="IN-Information" code="20300" vendor-id="10415" mandatory="must" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Calling-Party-Number" minimum="1"/>
+					<avprule name="Called-Party-Number" minimum="1"/>
+					<avprule name="Service-Key" minimum="1"/>
+					<avprule name="Calling-Partys-Category" minimum="1"/>
+					<avprule name="Calling-Vlr-Number" minimum="1"/>
+					<avprule name="Calling-CellID-Or-SAI" minimum="1"/>
+					<avprule name="Calling-LAI" minimum="1"/>
+					<avprule name="Called-Vlr-Number" minimum="1"/>
+					<avprule name="Called-CellID-Or-SAI" minimum="1"/>
+					<avprule name="Called-LAI" minimum="1"/>
+					<avprule name="Called-IMEI" minimum="1"/>
+					<avprule name="Calling-IMEI" minimum="1"/>
+					<avprule name="Oiginal-Called-Party-Id" minimum="1"/>
+					<avprule name="High-Layer-Compatibility" minimum="1"/>
+					<avprule name="Additional-Calling-Party-Number" minimum="1"/>
+					<avprule name="Bearer-Capability" minimum="1"/>
+					<avprule name="Bearer-Capability2" minimum="1"/>
+					<avprule name="EventType-BCSM" minimum="1"/>
+					<avprule name="Redirecting-Party-Id" minimum="1"/>
+					<avprule name="Redirection-Information" minimum="1"/>
+					<avprule name="IMSI" minimum="1"/>
+					<avprule name="Tele-Service-Code" minimum="1"/>
+					<avprule name="Bearer-Service-Code" minimum="1"/>
+					<avprule name="Call-Reference-Number" minimum="1"/>
+					<avprule name="MSC-Address" minimum="1"/>
+					<avprule name="GMSC-Address" minimum="1"/>
+					<avprule name="Time-Zone" minimum="1"/>
+					<avprule name="IN-Service-Indicator" minimum="1"/>
+					<avprule name="Ms-Classmark2" minimum="1"/>
+					<avprule name="Real-Called-Number" minimum="1"/>
+					<avprule name="Bearer-Service-Code2" minimum="1"/>
+					<avprule name="Charge-Flow-Type" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="P2PSMS-Information" code="20400" vendor-id="81000" mandatory="must" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="OA-Subscription-Id" minimum="1"/>
+					<avprule name="DA-Subscription-Id" minimum="1"/>
+					<avprule name="SMSC-Address" minimum="1"/>
+					<avprule name="SM-Id" minimum="1"/>
+					<avprule name="SM-Length" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="ISMP-Information" code="20500" vendor-id="81000" mandatory="must" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Message-Id" minimum="1"/>
+					<avprule name="Charge-Party-Type" minimum="1"/>
+					<avprule name="OA-Subscription-Id" minimum="1"/>
+					<avprule name="DA-Subscription-Id" minimum="1"/>
+					<avprule name="Third-Party-Subscription-Id" minimum="1"/>
+					<avprule name="SP-Id" minimum="1"/>
+					<avprule name="Sevice-Enabler-Type" minimum="1"/>
+					<avprule name="Product-ID" minimum="1"/>
+					<avprule name="Product-Offer-Id" minimum="1"/>
+					<avprule name="Service-Type" minimum="1"/>
+					<avprule name="Content-Id" minimum="1"/>
+					<avprule name="Media-Type" minimum="1"/>
+					<avprule name="Client-IP" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Result-Code" code="268" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="CC-Session-Failover" code="418" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Enumerated"/>
+			<enum name="FAILOVER_NOT_SUPPORTED" code="0"/>
+			<enum name="FAILOVER_SUPPORTED" code="1"/>
+		</avp>
+		<avp name="Granted-Service-Unit" code="431" mandatory="must" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Tariff-Time-Change" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Total-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Input-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Output-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+					<avprule name="Time-Quota-Threshold" maximum="1" minimum="1"/>
+					<avprule name="Volume-Quota-Threshold" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Granted-Service-Unit_PS_I_A" code="431" mandatory="must" scenario-id="1" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Tariff-Time-Change" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Total-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Input-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Output-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Granted-Service-Unit_PS_U_A" code="431" mandatory="must" scenario-id="2" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Tariff-Time-Change" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Total-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Input-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Output-Octets" maximum="1" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Granted-Service-Unit_IN_I_A" code="431" mandatory="must" scenario-id="3" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Tariff-Time-Change" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Granted-Service-Unit_IN_U_A" code="431" mandatory="must" scenario-id="4" protected="mustnot" may-encrypt="no">
+			<grouped>
+				<optional>
+					<avprule name="Tariff-Time-Change" minimum="1"/>
+					<avprule name="CC-Money" minimum="1"/>
+					<avprule name="CC-Time" minimum="1"/>
+					<avprule name="CC-Service-Specific-Units" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Tariff-Time-Change" code="451" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Time-Quota-Threshold" code="868" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Volume-Quota-Threshold" code="869" mandatory="must" protected="mustnot" may-encrypt="no">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Cost-Information" code="423" mandatory="must" may-encrypt="yes">
+			<grouped>
+				<optional>
+					<avprule name="Unit-Value" minimum="1"/>
+					<avprule name="Currency-Code" minimum="1"/>
+					<avprule name="Cost-Unit" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Cost-Unit" code="424" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Final-Unit-Indication" code="430" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="Final-Unit-Action" minimum="1"/>
+				</required>
+				<optional>
+					<avprule name="Restriction-Filter-Rule" minimum="1"/>
+					<avprule name="Filter-Id" minimum="1"/>
+					<avprule name="Redirect-Server" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Final-Unit-Action" code="449" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="TERMINATE" code="0"/>
+			<enum name="REDIRECT" code="1"/>
+			<enum name="RESTRICT_ACCESS" code="2"/>
+		</avp>
+		<avp name="Restriction-Filter-Rule" code="438" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="IPFilterRule"/>
+		</avp>
+		<avp name="Filter-Id" code="11" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Redirect-Server" code="434" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="Redirect-Address-Type" minimum="1"/>
+					<avprule name="Redirect-Server-Address" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="Redirect-Address-Type" code="433" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="IPv4 Address" code="0"/>
+			<enum name="IPv6 Address" code="1"/>
+			<enum name="URL" code="2"/>
+			<enum name="SIP URI" code="3"/>
+		</avp>
+		<avp name="Redirect-Server-Address" code="435" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Check-Balance-Result" code="422" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="ENOUGH_CREDIT" code="0"/>
+			<enum name="NO_CREDIT" code="1"/>
+		</avp>
+		<avp name="Credit-Control-Failure-Handling" code="427" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="TERMINATE_OR_BUFFER" code="0"/>
+			<enum name="CONTINUE" code="1"/>
+		</avp>
+		<avp name="Validity-Time" code="448" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Direct-Debiting-Failure-Handling" code="428" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="TERMINATE_OR_BUFFER" code="0"/>
+			<enum name="CONTINUE" code="1"/>
+		</avp>
+		<avp name="Quota-Holding-Time" code="871" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Quota-Consumption-Time" code="881" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="ALIAS-3GPP-Charging-Id" code="2" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-PDP-Type" code="3" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="IPv4" code="0"/>
+			<enum name="IPv6" code="1"/>
+			<enum name="PPP" code="2"/>
+		</avp>
+		<avp name="G-S-U-Pool-Reference" code="457" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="G-S-U-Pool-Identifier" minimum="1"/>
+					<avprule name="CC-Unit-Type" minimum="1"/>
+					<avprule name="Unit-Value" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="G-S-U-Pool-Identifier" code="453" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="CC-Unit-Type" code="454" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="MONEY" code="1"/>
+			<enum name="TOTAL-OCTETS" code="2"/>
+			<enum name="INPUT-OCTETS" code="3"/>
+			<enum name="OUTPUT-OCTETS" code="4"/>
+			<enum name="SERVICE-SPECIFIC-UNITS" code="5"/>
+		</avp>
+		<avp name="IMSI" code="20201" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Charging-Id" code="20202" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="PDP-Address" code="20204" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="GPRS-Negotiated-Qos-Profile" code="5" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="SGSN-Address" code="20206" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="RNC-Unsent-Data-Volume" code="20208" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="MS-Network-Capabilities" code="20209" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="GGSN-Address" code="20210" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="GGSN-IPv6-Address" code="20211" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="CG-Address" code="20212" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="CG-IPv6-Address" code="20213" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="ALIAS-3GPP-IMSI-MCC-MNC" code="8" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-GGSN-MCC-MNC" code="9" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-NSAPI" code="10" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Called-Station-Id" code="30" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-Session-Stop-Indicator" code="11" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="ALIAS-3GPP-Selection-Mode" code="12" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-Charging-Characteristics" code="13" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="ALIAS-3GPP-SGSN-MCC-MNC" code="18" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-MS-TimeZone" code="23" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-CAMEL-Charging-Info" code="24" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Charging-Rule-Based-Name" code="1004" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-User-Location-Info" code="22" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ALIAS-3GPP-RAT-Type" code="21" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Service-Key" code="20338" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Calling-Partys-Category" code="20301" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Calling-Vlr-Number" code="20302" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Calling-CellID-Or-SAI" code="20303" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Calling-LAI" code="20304" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Called-Vlr-Number" code="20305" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Called-CellID-Or-SAI" code="20306" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Called-LAI" code="20307" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Called-IMEI" code="20308" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Calling-IMEI" code="20309" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Oiginal-Called-Party-Id" code="20310" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="High-Layer-Compatibility" code="20311" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Additional-Calling-Party-Number" code="20312" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Bearer-Capability" code="20313" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Bearer-Capability2" code="20314" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="EventType-BCSM" code="20315" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Redirecting-Party-Id" code="20316" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Redirection-Information" code="20317" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="UE-IMSI" code="20318" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Tele-Service-Code" code="20319" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Bearer-Service-Code" code="20320" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Call-Reference-Number" code="20321" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="MSC-Address" code="20322" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="GMSC-Address" code="20323" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Time-Zone" code="20324" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="IN-Service-Indicator" code="20325" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Ms-Classmark2" code="20326" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Real-Called-Number" code="20327" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Bearer-Service-Code2" code="20328" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Charge-Method" code="20374" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="MCN" code="0"/>
+			<enum name="AB_CALL" code="1"/>
+			<enum name="CALL_ARRIVE" code="2"/>
+			<enum name="SSN" code="3"/>
+			<enum name="UPDATE_FEE" code="4"/>
+			<enum name="P2PSMS" code="5"/>
+			<enum name="XZ" code="6"/>
+			<enum name="OPEN" code="7"/>
+		</avp>
+		<avp name="SMSC-Address" code="20401" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="SM-Id" code="20402" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="SM-Length" code="20403" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Message-Id" code="20501" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Charge-Party-Type" code="20502" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="OA" code="0"/>
+			<enum name="DA" code="1"/>
+			<enum name="OA_DA" code="2"/>
+			<enum name="THIRD_PARTY" code="3"/>
+			<enum name="SP" code="4"/>
+		</avp>
+		<avp name="Third-Party-Subscription-Id" code="20503" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="Subscription-Id-Type" minimum="1"/>
+					<avprule name="Subscription-Id-Data" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="SP-Id" code="20504" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Sevice-Enabler-Type" code="20505" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="ISMP" code="0"/>
+			<enum name="SMS SAG" code="1"/>
+			<enum name="WAP PORTAL" code="2"/>
+			<enum name="WWW PORTAL" code="3"/>
+			<enum name="MMSC" code="4"/>
+			<enum name="KJAVA" code="5"/>
+			<enum name="WAP GW" code="6"/>
+			<enum name="MAIL SERVER" code="7"/>
+			<enum name="SPProxy" code="8"/>
+			<enum name="MMS GW" code="9"/>
+			<enum name="SMSC" code="10"/>
+			<enum name="LCSC" code="11"/>
+			<enum name="IMPS GW" code="12"/>
+			<enum name="IMPSC" code="13"/>
+			<enum name="Stream Media" code="14"/>
+			<enum name="UMS" code="15"/>
+			<enum name="PTT" code="16"/>
+			<enum name="IPGW" code="17"/>
+		</avp>
+		<avp name="Product-ID" code="20506" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Product-Offer-Id" code="20513" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Service-Type" code="20507" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="MOAT" code="1"/>
+			<enum name="AOMT" code="2"/>
+			<enum name="MOMT" code="3"/>
+			<enum name="MOET" code="4"/>
+			<enum name="EOMT" code="5"/>
+			<enum name="DLV_RPT" code="6"/>
+			<enum name="RD_RPT" code="7"/>
+			<enum name="REPLY" code="8"/>
+			<enum name="RESERVED" code="9"/>
+			<enum name="FOMT" code="10"/>
+			<enum name="FOAT" code="11"/>
+			<enum name="FOET" code="12"/>
+		</avp>
+		<avp name="Content-Id" code="20508" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Media-Type" code="20509" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="Client-IP" code="20510" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Address"/>
+		</avp>
+		<avp name="Failed-AVP" code="279" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="AVP"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="AoC-Information" code="20329" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="AoC-Balance"/>
+					<avprule name="AoC-Language-ID"/>
+					<avprule name="AoC-Tariff"/>
+					<avprule name="AoC-Confirmation"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="AoC-Balance" code="20330" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="AoC-Language-ID" code="20331" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="Mixed" code="0"/>
+			<enum name="Chinese" code="1"/>
+			<enum name="English" code="2"/>
+			<enum name="Chinese Local" code="3"/>
+		</avp>
+		<avp name="AoC-Tariff" code="20332" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="AoC-Price"/>
+				</required>
+				<optional>
+					<avprule name="AoC-Start-Time"/>
+					<avprule name="AoC-Unit"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="AoC-Start-Time" code="20333" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="AoC-Unit" code="20334" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="AoC-Price" code="20335" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="AoC-Confirmation" code="20340" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+		</avp>		
+		
+		<avp name="Calling-Party-Number" code="20336" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>		
+		<avp name="Called-Party-Number" code="20337" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Charge-Flow-Type" code="20339" vendor-id="10415" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="CALLING" code="0"/>
+			<enum name="CALLED" code="1"/>
+			<enum name="OTHER" code="2"/>
+			<enum name="FW" code="3"/>
+		</avp>
+		<avp name="OA-Subscription-Id" code="20511" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="Subscription-Id-Type" maximum="1" minimum="1"/>
+					<avprule name="Subscription-Id-Data" maximum="1" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="DA-Subscription-Id" code="20512" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="Subscription-Id-Type" maximum="1" minimum="1"/>
+					<avprule name="Subscription-Id-Data" maximum="1" minimum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="LCOCS-Message-Type" code="900000001" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-Receive-Group-ID" code="900000002" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-Receive-App-ID" code="900000003" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-EVENT-TYPE" code="900000004" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-SOURCE-EVENT-TYPE" code="900000005" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-Send-Group-ID" code="900000006" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-Send-App-ID" code="900000007" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-PID" code="900000008" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="LCOCS-PayAcctItemList" code="900000009" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="LCOCS-HoldAcctItemList" code="900000010" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="OctetString"/>
+		</avp>
+		<avp name="LCOCS-Billing-Mode-ID" code="900000011" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		
+		<!-- 自定于ABM AVP Begin-->
+		<!--<avp name="Serv-Id" code="5001" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned64"/>
+		</avp>
+		-->
+		<avp name="Serv-Id" code="5001" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+		     <type type-name="Unsigned64"/>
+		</avp>		
+		<avp name="Request-Acct-Item" code="5002" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Acct-Item-Type-Id" maximum="1"/>
+					<avprule name="Requested-Service-Unit"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Acct-Item-Type-Id" code="81173" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>		
+		<avp name="Granted-Acct-Balance" code="5040" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Acct-Item-Type-Id"/>
+					<avprule name="Granted-Service-Unit" maximum="1"/>
+				</optional>
+			</grouped>
+		</avp>		
+		<avp name="Used-Acct-Item" code="5008" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Acct-Item-Type-Id" maximum="1"/>
+					<avprule name="Used-Service-Unit"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Request-Ratable-Update" code="5010" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Owner-Type" maximum="1"/>
+					<avprule name="Owner-Id" maximum="1"/>
+					<avprule name="Ratable-Resource-Id" maximum="1"/>
+					<avprule name="Ratable-Cycle-Id" maximum="1"/>
+					<avprule name="Balance" maximum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Owner-Type" code="5011" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>		
+		<avp name="Owner-Id" code="5012" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned64"/>
+		</avp>				
+		<avp name="Ratable-Resource-Id" code="5013" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<!-- <type type-name="Unsigned32"/> -->
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Ratable-Cycle-Id" code="5014" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<!-- <type type-name="Unsigned32"/> -->
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Balance" code="5015" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Request-Balance-Present" code="5016"  vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Owner-Type" maximum="1"/>
+					<avprule name="Owner-Id" maximum="1"/>
+					<avprule name="Balance-Type-Id" maximum="1"/>
+					<avprule name="Balance" maximum="1"/>
+					<avprule name="Eff-Date" maximum="1"/>
+					<avprule name="Exp-Date" maximum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Balance-Type-Id" code="5019" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Eff-Date" code="5021" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+			<!--<type type-name="UTF8String"/>-->
+		</avp>
+		<avp name="Exp-Date" code="5022" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+			<!--<type type-name="UTF8String"/>-->
+		</avp>		
+		<avp name="Request-Debit-Acct-Item" code="5005" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Billing-Cycle-ID" maximum="1" minimum="1"/>
+					<avprule name="Acct-Item-Type-Id" maximum="1"/>
+					<avprule name="Acct-Balance-Id" maximum="1"/>
+					<avprule name="Acct-Balance-Deduct-Amount" maximum="1"/>
+					<avprule name="Balance-Unit" maximum="1" minimum="1"/>
+					<avprule name="Deduct-Amount" maximum="1" minimum="1"/>
+					<avprule name="Charge-Type" maximum="1" minimum="1"/>
+					<avprule name="Acct-Balance-Amount" maximum="1" minimum="1"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Reponse-Debit-Acct-Item" code="5025" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Acct-Item-Type-Id" maximum="1"/>
+					<!--<avprule name="Requested-Service-Unit" minimum="1"/> -->
+					<avprule name="Billing-Cycle" maximum="1" minimum="1"/>
+					<avprule name="Granted-Service-Unit"/>
+				</optional>
+			</grouped>
+		</avp>
+		<avp name="Request-Ratable-Query" code="5041" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<optional>
+					<avprule name="Owner-Type" maximum="1"/>
+					<avprule name="Owner-Id" maximum="1"/>
+					<avprule name="Ratable-Resource-Id" maximum="1"/>
+					<avprule name="Ratable-Cycle-Id" maximum="1"/>
+				</optional>
+			</grouped>
+		</avp>		
+		<avp name="Respond-Ratable-Query" code="5042" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="Owner-Type" maximum="1"/>
+					<avprule name="Owner-Id" maximum="1"/>
+					<avprule name="Ratable-Resource-Id" maximum="1"/>
+					<avprule name="Ratable-Cycle-Id" maximum="1"/>
+					<avprule name="Balance" maximum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		
+		<avp name="Billing-Cycle" code="5043" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Charge-Type" code="5044" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer32"/>
+		</avp>		
+			<!-- <type type-name="Unsigned32"/> -->
+		<avp name="Respond-Balance-Query" code="5051" vendor-id="81000" mandatory="mustnot" may-encrypt="no" protected="mustnot">
+			<grouped>
+				<required>
+					<avprule name="Acct-Balance-Id" maximum="1"/>
+					<avprule name="Unit-Type-Id" maximum="1"/>
+					<avprule name="Balance" maximum="1"/>
+					<!--add by ljc 091103-->
+					<avprule name="Sum-Balance" maximum="1"/>
+					<avprule name="Balance-Type-Id" maximum="1"/>
+					<avprule name="Item-Group-Id" maximum="1"/>
+					<avprule name="Eff-Date" maximum="1"/>
+					<avprule name="Exp-Date" maximum="1"/>
+					<avprule name="Cycle-Upper" maximum="1"/>
+					<avprule name="Cycle-Lower" maximum="1"/>
+					<avprule name="Cycle-Upper-Type" maximum="1"/>
+					<avprule name="Cycle-Lower-Type" maximum="1"/>
+					<avprule name="Bank-Acct" maximum="1"/>
+					<avprule name="State" maximum="1"/>
+					<avprule name="State-Date" maximum="1"/>
+					<avprule name="Acct-Id" maximum="1"/>
+					<avprule name="Serv-Id" maximum="1"/>
+					<avprule name="Object-Type-Id" maximum="1"/>
+				</required>
+			</grouped>
+		</avp>
+		<avp name="Unit-Type-Id" code="5053" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer32"/>
+		</avp>
+		<avp name="Acct-Balance-Id" code="50243" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned64"/>
+		</avp>
+		
+		<!-- zc add 081210-->
+		<avp name="Debit-Type" code="5054" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer32"/>
+		</avp>
+		<avp name="Sum-Balance" code="5056" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Item-Group-Id" code="5058" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Cycle-Upper" code="5059" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Cycle-Lower" code="5060" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Cycle-Upper-Type" code="5061" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Cycle-Lower-Type" code="5062" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Bank-Acct" code="5063" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="State" code="5064" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="State-Date" code="5065" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Acct-Id" code="5066" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Object-Type-Id" code="5067" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer32"/>
+		</avp>
+		<!-- 自定于ABM AVP End-->
+		<!-- ************** END DIAMETER BASE PROTOCOL AVPS ************* -->
+		<!-- 自定于全国中心ABM AVP BEGIN-->
+		<avp name="Service-Flow-Id" code="80172" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="OutPlatformDescription" code="80409" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Request-Id" code="80805" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Destination-Id" code="5051" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Destination-Id-Type" code="5053" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+		    <type type-name="Enumerated"/>
+		    <enum name="CUST_ID" code="0"/>
+			<enum name="SERV_ID" code="1"/>
+			<enum name="ACC_NBR" code="2"/>
+		</avp>
+		<avp name="AreaCode" code="50207" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ABM-Id" code="80158" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Balance-Unit" code="5019" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Service-Result-Code" code="20631" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Para-Field-Result" code="80407" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Destination-Attr" code="5055" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="PHONE" code="0"/>
+			<enum name="SMART" code="1"/>
+			<enum name="MOBILE" code="2"/>
+			<enum name="ADSL" code="3"/>
+			<enum name="PUBLIC" code="4"/>
+			<enum name="NET" code="5"/>
+			<enum name="UNKNOW" code="99"/>
+		</avp>
+		<avp name="Destination-Attr-VC" code="20647" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="PHONE" code="0"/>
+			<enum name="SMART" code="1"/>
+			<enum name="MOBILE" code="2"/>
+			<enum name="ADSL" code="3"/>
+			<enum name="PUBLIC" code="4"/>
+			<enum name="NET" code="5"/>
+			<enum name="UNKNOW" code="99"/>
+		</avp>
+		<avp name="Service-Platform-ID" code="80105" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="QueryType" code="80164" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="ServId" code="82021" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="AcctId" code="82028" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Accout-Id" code="80107" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="Action-Type-Id" code="80426" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Action-Type" code="80413" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Balance-Amount" code="5015" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Acct-Balance-Deduct-Amount" code="80162" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Acct-Balance-Amount" code="5015" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="PaymentPasswd" code="80183" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Pay-Password" code="80183" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Micropayment-Info" code="80800" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+			        <avprule name="Operate-Action" maximum="1"/>
+			        <avprule name="Operate-Seq" maximum="1"/>
+			        <avprule name="SP-ID" maximum="1"/>
+			        <avprule name="SP-NAME" maximum="1"/>
+			        <avprule name="Service-Platform-ID" maximum="1"/>
+			        <avprule name="Staff-ID" maximum="1"/>
+			        <avprule name="Micropay-Type" maximum="1"/>
+			        <avprule name="Destination-Account" maximum="1"/>
+			        <avprule name="Destination-Type" maximum="1"/>
+			        <avprule name="Destination-Attr" maximum="1"/>
+			        <avprule name="Pay-Password" maximum="1"/>
+			        <avprule name="Random-Password" maximum="1"/>
+			        <avprule name="Pay-Date" maximum="1"/>
+			        <avprule name="Order-ID" maximum="1"/>
+			        <avprule name="Description" maximum="1"/>
+			        <avprule name="PayAmount" maximum="1"/>
+			        <avprule name="Req-Serial" maximum="1"/>
+			        <avprule name="Random-AccNbr" maximum="1"/>
+			        <avprule name="Billing-Cycle-ID" maximum="1"/>
+			        <avprule name="Query-Start-Time" maximum="1"/>
+			        <avprule name="Query-Expiration-Time" maximum="1"/>
+			        <avprule name="Balance-TransFlag" maximum="1"/>
+			        <avprule name="UnitType-Id" maximum="1"/>  
+			        <avprule name="Deduct-Amount" maximum="1"/>  
+			        <avprule name="Balance-Item-Detail"/>
+			        <avprule name="FillRecord-Info"/>
+			    </optional>
+			</grouped>
+		</avp>
+		<avp name="Operate-Action" code="80803" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Operate-Seq" code="80805" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="SP-ID" code="80807" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="SP-NAME" code="90807" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Staff-ID" code="80809" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Micropay-Type" code="80185" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Destination-Account" code="20608" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Destination-Type" code="20607" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="NETUSER" code="1"/>
+			<enum name="MOBILEUSER" code="2"/>
+		</avp>
+		<avp name="Balance-TransFlag" code="80128" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="PTC" code="1"/>
+			<enum name="CTP" code="2"/>
+		</avp>
+		<avp name="Random-Password" code="80124" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Pay-Date" code="80190" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Request-Time" code="80190" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Response-Time" code="80190" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Deduct-Date" code="80190" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Order-ID" code="80106" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Description" code="80120" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="PayAmount" code="80196" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Deduct-Amount" code="80156" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Req-Serial" code="20635" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Res-Serial" code="20636" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Old-Request-Id" code="20635" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="Billing-Cycle-ID" code="80110" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Query-Start-Time" code="20652" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Query-Expiration-Time" code="20653" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Order-Info" code="80198" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+			        <avprule name="Order-ID" maximum="1"/>
+			        <avprule name="Description" maximum="1"/>
+			        <avprule name="SP-ID" maximum="1"/>
+			        <avprule name="Service-Platform-ID" maximum="1"/>
+			        <avprule name="Pay-Date" maximum="1"/>
+			        <avprule name="Status" maximum="1"/>
+			        <avprule name="Micropay-Type" maximum="1"/>
+			        <avprule name="PayAmount" maximum="1"/>
+			    </optional>
+			</grouped>
+		</avp>
+		<avp name="Status" code="80303" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		
+		<avp name="Data-Information" code="80400" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <required>
+		            <avprule name="ServId" maximum="1"/>
+		            <avprule name="LocalServId" maximum="1"/>
+		            <avprule name="AcctId" maximum="1"/>
+		            <avprule name="ProductId" maximum="1"/>
+		            <avprule name="HomeAreaCode" maximum="1"/>
+		            <avprule name="Random-AccNbr" maximum="1"/>
+		            <avprule name="ServState" maximum="1"/>
+		            <avprule name="StateDate" maximum="1"/>
+		            <avprule name="PaymentFlag" maximum="1"/>
+		        </required>
+			</grouped>
+		</avp>
+		<avp name="LocalServId" code="82021" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned64"/>
+		</avp>
+		<avp name="ProductId" code="82022" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="HomeAreaCode" code="80615" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Random-AccNbr" code="80125" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="ServState" code="80423" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="StateDate" code="80419" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="PaymentFlag" code="82023" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="RechargeTime" code="20651" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+		</avp>
+		<avp name="RechargeAmount" code="5059" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+		</avp>
+		<avp name="Balance-Information" code="5000" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+		            <avprule name="Destination-Account" maximum="1"/>
+		            <avprule name="Destination-Id" maximum="1"/>
+		            <avprule name="Destination-Id-Type" maximum="1"/>
+		            <avprule name="Destination-Type" maximum="1"/>
+		            <avprule name="Destination-Attr" maximum="1"/>
+		            <avprule name="AreaCode" maximum="1"/>
+		            <avprule name="Service-Platform-ID" maximum="1"/>
+		            <avprule name="Query-Flag" maximum="1"/>
+		            <avprule name="Query-Item-Type" maximum="1"/>
+		            <avprule name="Balance-Item-Detail"/>
+		        </optional>
+			</grouped>
+		</avp>
+				<avp name="FillRecord-Info" code="20649" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+		            <avprule name="Result" maximum="1"/>
+		            <avprule name="Operate-Action" maximum="1"/>
+		            <avprule name="RechargeTime" maximum="1"/>
+		            <avprule name="Destination-Account" maximum="1"/>
+		            <avprule name="Destination-Attr" maximum="1"/>
+		            <avprule name="Service-Platform-ID" maximum="1"/>
+		            <avprule name="Charge-Type" maximum="1"/>
+		            <avprule name="RechargeAmount" maximum="1"/>
+		        </optional>
+			</grouped>
+		</avp>
+		<avp name="Query-Flag" code="5087" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="ACCT_ID" code="0"/>
+			<enum name="SERV_ID" code="1"/>
+		</avp>
+		<avp name="Query-Item-Type" code="5089" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="ALL_BALANCE" code="0"/>
+			<enum name="BALANCE_CAN_BE_USE" code="1"/>
+			<enum name="BALANCE_CAN_BE_DRAW" code="2"/>
+		</avp>
+		<avp name="Total-Balance-Available" code="50104" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+		</avp>
+		<avp name="Balance-Item-Detail" code="5091" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+		            <avprule name="Balance-Source" maximum="1"/>
+		            <avprule name="UnitType-Id" maximum="1"/>
+		            <avprule name="Balance-Amount" maximum="1"/>
+		            <avprule name="Balance-ItemType-Detail" maximum="1"/>
+		            <avprule name="Balance-Available" maximum="1"/>
+		            <avprule name="Balance-Owe-Used" maximum="1"/>
+		            <avprule name="Balance-Used" maximum="1"/>
+		            <avprule name="Balance-Reserved" maximum="1"/>
+		            <avprule name="Eff-Date" maximum="1"/>
+		            <avprule name="Exp-Date" maximum="1"/>
+		        </optional>
+			</grouped>
+		</avp>
+		<avp name="Balance-Source" code="80126" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Enumerated"/>
+			<enum name="PROVINCE" code="1"/>
+			<enum name="COUNTRY" code="2"/>
+	    </avp>
+		<avp name="UnitType-Id" code="5019" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Balance-ItemType-Detail" code="50103" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+	    </avp>
+	    <avp name="Balance-Available" code="50100" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+	    </avp>
+	    <avp name="Balance-Owe-Used" code="80307" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+	    </avp>
+	    <avp name="Balance-Used" code="50101" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+	    </avp>
+	    <avp name="Balance-Reserved" code="50102" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer64"/>
+	    </avp>
+	    <avp name="VC-Information" code="20603" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+		            <avprule name="Req-Serial" maximum="1"/>
+		            <avprule name="Res-Serial" maximum="1"/>
+		            <avprule name="Balance-Type" maximum="1"/>
+		            <avprule name="Destination-Balance-Unit" maximum="1"/>
+		            <avprule name="Voucher-Value" maximum="1"/>
+		            <avprule name="Prolong-Days" maximum="1"/>
+		            <avprule name="Destination-Type-Vc" maximum="1"/>
+		            <avprule name="Destination-Account" maximum="1"/>
+		            <avprule name="Destination-Attr-VC" maximum="1"/>
+		            <avprule name="Destination-Attr-Detail" maximum="1"/>
+		            <avprule name="AreaCode" maximum="1"/>
+		            <avprule name="Bonus-Info"/>
+		            <avprule name="Result" maximum="1"/>
+		            <avprule name="Balance-Info"/>
+		        </optional>
+		    </grouped>
+	    </avp>
+	    <avp name="Balance-Type" code="20655" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Balance-Type-VC" code="20655" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+	    </avp>
+	    <avp name="Destination-Attr-Detail" code="20667" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Destination-Balance-Unit" code="20637" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Voucher-Value" code="20633" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Prolong-Days" code="20640" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Destination-Type-Vc" code="20607" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="UTF8String"/>
+	    </avp>
+	    <avp name="Bonus-Info" code="20619" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+		            <avprule name="Bonus-Unit" maximum="1"/>
+		            <avprule name="Bonus-Amount" maximum="1"/>
+		            <avprule name="Balance-Type-VC" maximum="1"/>
+		            <avprule name="Bonus-Start-Time" maximum="1"/>
+		            <avprule name="Bonus-Expiration-Time" maximum="1"/>
+		        </optional>
+		    </grouped>
+	    </avp>
+	    <avp name="Bonus-Unit" code="20634" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Bonus-Amount" code="20620" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Bonus-Start-Time" code="20621" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Bonus-Expiration-Time" code="20622" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Result" code="20631" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Balance-Info" code="20638" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<grouped>
+			    <optional>
+		            <avprule name="Destination-Balance" maximum="1"/>
+		            <avprule name="Destination-Balance-Unit" maximum="1"/>
+		            <avprule name="Balance-Type" maximum="1"/>
+		            <avprule name="Destination-Effective-Time" maximum="1"/>
+		            <avprule name="Destination-Expiration-Time" maximum="1"/>
+		        </optional>
+		    </grouped>
+	    </avp>
+	    <avp name="Destination-Balance" code="20617" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Integer32"/>
+	    </avp>
+	    <avp name="Destination-Effective-Time" code="20609" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+	    <avp name="Destination-Expiration-Time" code="20618" vendor-id="81000" mandatory="must" may-encrypt="no" protected="mustnot">
+			<type type-name="Unsigned32"/>
+	    </avp>
+		<!-- 自定于全国中心ABM AVP END-->
+	</base>
+	<application id="4" name="Diameter CC" uri="ftp://ftp.ietf.org/internet-drafts/draft-ietf-aaa-eap-03.txt">
+	
+	<!-- ABM 消息定义 BEGIN-->		
+    <command name="Credit-Control" code="272">
+      <requestrules>
+        <fixed>
+			      <avprule name="Session-Id" maximum="1" minimum="1"/>
+			      <avprule name="Origin-Host" maximum="1" minimum="1"/>
+			      <avprule name="Origin-Realm" maximum="1" minimum="1"/>
+			      <avprule name="Destination-Realm" maximum="1" minimum="1"/>
+			      <avprule name="Auth-Application-Id" maximum="1" minimum="1"/>
+			      <avprule name="CC-Request-Type" maximum="1" minimum="1"/>
+			      <avprule name="CC-Request-Number" maximum="1" minimum="1"/>
+			      <avprule name="Service-Information" maximum="1"/>	
+        </fixed>
+        <optional>
+			      <avprule name="Destination-Host" maximum="1"/>
+			      <avprule name="OutPlatformDescription" maximum="1" minimum="1"/>
+			      <avprule name="Event-Timestamp" maximum="1"/>
+			      <avprule name="Route-Record" />
+			      <avprule name="Service-Context-Id" maximum="1" minimum="1"/>
+			      <avprule name="Requested-Action" maximum="1"/>
+			      <avprule name="Service-Flow-Id" maximum="1" minimum="1"/>
+			      <avprule name="Proxy-Info" />
+		    </optional>
+      </requestrules>
+      <answerrules>
+        <fixed>
+			      <avprule name="Session-Id" maximum="1" minimum="1"/>
+			      <avprule name="Result-Code" maximum="1" minimum="1"/>
+			      <avprule name="Origin-Host" maximum="1" minimum="1"/>
+			      <avprule name="Origin-Realm" maximum="1" minimum="1"/>
+			      <avprule name="Auth-Application-Id" maximum="1" minimum="1"/>
+			      <avprule name="CC-Request-Type" maximum="1" minimum="1"/>
+			      <avprule name="CC-Request-Number" maximum="1" minimum="1"/>
+			      <avprule name="Service-Information" maximum="1"/>		
+        </fixed>
+        <optional>
+			      <avprule name="CC-Session-Failover" maximum="1"/>
+			      <avprule name="Credit-Control-Failure-Handling" maximum="1"/>
+			      <avprule name="Service-Flow-Id" maximum="1" minimum="1"/>
+			      <avprule name="OutPlatformDescription" maximum="1" minimum="1"/>
+			      <avprule name="Route-Record"/>
+			      <avprule name="Proxy-Info" />
+			      <avprule name="Failed-AVP"/>
+			      <avprule name="Forward-Info"/>		
+		</optional>
+      </answerrules>        
+       
+     </command>      
+	<!-- ABM 消息定义 END-->
+	</application>
+	 
+	 
+	
+	<application id="0" name="Common Messages" uri="ftp://ftp.ietf.org/internet-drafts/draft-ietf-aaa-eap-03.txt">
+		<command name="Device-Watchdog" code="280">
+			<requestrules>
+				<fixed>
+					<avprule name="Origin-Host" maximum="1" minimum="1"/>
+					<avprule name="Origin-Realm" maximum="1" minimum="1"/>
+				</fixed>
+				<optional>
+					<avprule name="Origin-State-Id" maximum="1"/>
+				</optional>
+			</requestrules>
+			<answerrules>
+				<fixed>
+					<avprule name="Result-Code" maximum="1" minimum="1"/>
+					<avprule name="Origin-Host" maximum="1" minimum="1"/>
+					<avprule name="Origin-Realm" maximum="1" minimum="1"/>
+				</fixed>
+				<optional>
+					<avprule name="Origin-State-Id" maximum="1"/>
+				</optional>
+			</answerrules>
+		</command>
+		<command name="Disconnect-Peer" code="282">
+			<requestrules>
+				<fixed>
+					<avprule name="Origin-Host" maximum="1" minimum="1"/>
+					<avprule name="Origin-Realm" maximum="1" minimum="1"/>
+					<avprule name="Disconnect-Cause" maximum="1" minimum="1"/>
+				</fixed>
+			</requestrules>
+			<answerrules>
+				<fixed>
+					<avprule name="Result-Code" maximum="1" minimum="1"/>
+					<avprule name="Origin-Host" maximum="1" minimum="1"/>
+					<avprule name="Origin-Realm" maximum="1" minimum="1"/>
+				</fixed>
+				<optional>
+					<avprule name="Error-Message" maximum="1"/>
+					<avprule name="Failed-AVP"/>
+				</optional>
+			</answerrules>
+		</command>
+		<command name="Capabilities-Exchange" code="257">
+			<requestrules>
+				<fixed>
+					<avprule name="Origin-Realm" maximum="1" minimum="1"/>
+					<avprule name="Origin-Host" maximum="1" minimum="1"/>
+					<avprule name="Host-IP-Address" minimum="1"/>
+					<avprule name="Vendor-Id" maximum="1" minimum="1"/>
+					<avprule name="Product-Name" maximum="1" minimum="1"/>
+				</fixed>
+				<optional>
+					<avprule name="Origin-State-Id" maximum="1"/>
+					<avprule name="Supported-Vendor-Id" minimum="1"/>
+					<avprule name="Auth-Application-Id"/>
+					<avprule name="Acct-Application-Id"/>
+					<avprule name="Vendor-Specific-Application-Id"/>
+					<avprule name="Inband-Security-Id"/>
+					<avprule name="Firmware-Revision"/>
+				</optional>
+			</requestrules>
+			<answerrules>
+				<fixed>
+					<avprule name="Result-Code" maximum="1" minimum="1"/>
+					<avprule name="Origin-Realm" maximum="1" minimum="1"/>
+					<avprule name="Origin-Host" maximum="1" minimum="1"/>
+					<avprule name="Host-IP-Address" minimum="1"/>
+					<avprule name="Vendor-Id" maximum="1" minimum="1"/>
+					<avprule name="Product-Name" maximum="1" minimum="1"/>
+				</fixed>
+				<optional>
+					<avprule name="Origin-State-Id" maximum="1"/>
+					<avprule name="Error-Message" maximum="1"/>
+					<avprule name="Failed-AVP"/>
+					<avprule name="Supported-Vendor-Id" minimum="1"/>
+					<avprule name="Auth-Application-Id"/>
+					<avprule name="Acct-Application-Id"/>
+					<avprule name="Vendor-Specific-Application-Id"/>
+					<avprule name="Inband-Security-Id"/>
+					<avprule name="Firmware-Revision"/>
+				</optional>
+			</answerrules>
+		</command>
+	</application>
+</dictionary>

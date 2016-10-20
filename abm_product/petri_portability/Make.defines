@@ -1,0 +1,118 @@
+BILLSRC_HOME=/oradata/yzbill/TIBS_HOME/src
+
+#AREA_DEF=DEF_COMMON
+#程序移植时需要将以上信息改为当地定义，以避免本地化内容的移植
+#  DEF_HEFEI     =  合肥
+#  DEF_SUZHOU    =  苏州
+#  DEF_TAIYUAN   =  太原
+AREA_DEF=DEF_JIANGSU
+
+#操作系统定义, 一些系统调用会不同
+#OS_DEF=DEF_LINUX
+OS_DEF=DEF_HP
+#OS_DEF=DEF_SOLARIS
+#OS_DEF=DEF_AIX
+
+#系统支持的标准，这个对消息队列有影响POSIX or SYSTEM_V
+SYS_TYPE=SYSTEM_V
+
+#系统的开关说明, 加在DEFINE中
+#ACCT_REAL_DISCOUNT: 帐户也做BT实时优惠
+#USE_PRODUCT_PRICING:　启用产品的批价,　江苏外都是这种模式
+#WHOLE_DISCOUNT: 普惠, 这个没有评估开了会出问题
+#RENT_MAKER_EX_NEW: 月租按日计算时,　根据套餐不同，租费不同
+#USE_TARIFF_DISCOUT: tariff要体现成优惠
+#ACCT_ITEM_AGGR_OFFER_ID: 总帐表里面输出OFFER_ID字段
+#PRIVATE_PARAM_DEFINE: b_param_define启用host_id and sys_username
+#JIANGSU_7TO8_TEMP: 升位临时
+#USERINFO_OFFSET_ALLOWED: 启用档案偏移
+#SPLIT_ACCU_BY_BILLING_CYCLE:累积量按帐期累计
+
+DEFINE= -D$(AREA_DEF) -D$(OS_DEF) -D$(SYS_TYPE)  -D__BIGMSGQUEUE_ENABLED \
+	 -DUSE_TARIFF_DISCOUNT -DPRIVATE_PARAM_DEFINE -DACCT_ITEM_AGGR_OFFER_ID \
+	 -DCUST_INTERFACE_SERVICE_MODE -DJIANGSU_7TO8_TEMP -DUSERINFO_OFFSET_ALLOWED \
+	 -DRENT_MAKER_EX_NEW -DSET_FEE_USE_COMBINE_RELATION -DFREE_SERV_USE_OFFER \
+	 -DCAL_BILLING_UNIT -DSPLIT_ACCU_BY_BILLING_CYCLE -D__VPN_JIANGSHU_ -DOCS_CYCLE_CLOSE_JS \
+	 -DDISCT_OCS_CYCLE_CLOSE_JS -DDEF_JSSYNC -DMEASURE_USAGE_IGNORE -DSUBPRODUCT_EVENT_MAKER \
+	 -DRENT_MAKER_EX_NEW_PARAM -DIMMEDIATE_VALID
+
+
+# Compiler
+CC=aCC
+#CFLAGS= -AA -g +DA2.0W -w -lstd_v2 -lCsup_v2 -mt +p
+#CFLAGS= -AA -g +DD64 -w -mt
+CFLAGS= -AA -g +DA2.0W -w -mt
+
+# Compiler cflags use in CC and buildserver. buildclient
+#CFLAGS_TUX="-AA +DD64 -g"
+CFLAGS_TUX="-AA -Wl,+s -Wl,+n +DA2.0W +DS2.0 -w -g"
+
+#AR=ar -X64 -rv
+AR=ar -rv
+
+RANLIB = ranlib
+# Environment define
+I_SYM=-I
+NETWORKHOME=$(ORACLE_HOME)/network/
+PLSQLHOME=$(ORACLE_HOME)/plsql/
+LIBHOME=$(ORACLE_HOME)/lib/
+
+INCLUDE=$(I_SYM). \
+        $(I_SYM)$(ORACLE_HOME)/rdbms/demo   $(I_SYM)$(ORACLE_HOME)/rdbms/public \
+        $(I_SYM)$(TUXDIR)/include           $(I_SYM)/opt/aCC/include/rw \
+        $(I_SYM)/opt/aCC/include_std/rw       $(I_SYM)/opt/aCC/include_std $(I_SYM)/usr/include
+        
+        
+LD_ORA_LIBS = -L$(ORACLE_HOME)/lib -L$(ORACLE_HOME)/rdbms/lib -lclntsh \
+        -L/usr/lib \
+        `cat $(ORACLE_HOME)/lib/sysliblist` -ldl -lm 
+        
+LD_TUX_LIBS =
+
+# Rule to compile any program (specify EXE= and OBJS= on command line)
+.SUFFIXES: .pc .cpp .c .o .txt
+
+.cpp.txt:
+	@echo
+	@echo "=======[ $*.o ]======="
+	$(CC) $(CFLAGS) $(DEFINE) $(INCLUDE) -E $*.cpp > $*.txt
+	@echo
+
+.cpp.o:
+	@echo
+	@echo "=======[ $*.o ]======="
+	$(CC) $(CFLAGS) -o $*.o $(DEFINE) $(INCLUDE) -c $*.cpp
+	@echo
+
+.c.o:
+	@echo
+	@echo "=======[ $*.o ]======="
+	$(CC) $(CFLAGS) -o $*.o $(DEFINE) $(INCLUDE) -c $*.c
+	@echo
+
+#使用简单系统库(包括oracle oci)
+build_simple:
+	@echo
+	@echo "=======[ $(EXE) ]======="
+	$(CC) $(CFLAGS) -o $(EXE) $(INCLUDE) $(OBJS) $(LD_ORA_LIBS)
+	@echo
+	
+
+###########################
+# TUXEDO Build:
+###########################
+-s:
+-f:
+
+TUX_COMM_LIBS= \
+	-f "$(LD_ORA_LIBS)" \
+	-f "$(LD_TUX_LIBS)" 
+
+build_server:
+	@echo
+	@echo "=======[ $(EXE) ]======="
+	CFLAGS=$(CFLAGS_TUX) CC=aCC buildserver -o $(EXE) -v -s $(SVC) -f "$(OBJS)" $(TUX_COMM_LIBS)
+	@echo
+
+CLEANFILES = core core.* *.core *.o temp.* *.out *.lis
+

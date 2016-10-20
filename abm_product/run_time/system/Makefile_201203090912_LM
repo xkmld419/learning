@@ -1,0 +1,13 @@
+include $(MAKE_DEFINES)
+
+CURENT_LIBS=$(SYSTEM_LIBS)
+
+OBJECTS = ReadCfg.o MessageQueueH.o PthreadMutex.o gettime.o ABMException.o LogV2.o MmapFile.o HSSDccFile.o FileV2.o CFTPClient.o HSSLogV3.o Application.o CSemaphoreH.o
+
+all : $(CURENT_LIBS)
+
+$(CURENT_LIBS) : $(OBJECTS)
+	$(AR) $(CURENT_LIBS) $(OBJECTS)
+	$(RANLIB) $(CURENT_LIBS)
+
+include $(BILLDIR)/etc/install/Make.Clean

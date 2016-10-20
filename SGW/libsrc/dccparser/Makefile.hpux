@@ -1,0 +1,4 @@
+HOST_OS=OS_HPUX
+INCLUDES=-I. -I./include_hp
+CXX=aCC
+CFLAGS = $(CXXFLAGS) +DD64 -AA

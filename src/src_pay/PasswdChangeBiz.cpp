@@ -1,0 +1,225 @@
+#include "PasswdChangeBiz.h"
+#include "errorcode.h"
+#include "ABMException.h"
+#include "LogV2.h"
+#include "PublicConndb.h"
+
+static vector<PasswdChangeData *> g_vPasswdChangeData;    // HSS端返回CCA 
+static vector<PasswdChangeData *>::iterator g_itr1;
+	
+static char cPreSessionId[100]={0};
+
+PasswdChangeBiz::PasswdChangeBiz()
+{
+		m_poUnpack = NULL;
+		m_poPack = NULL;		
+		m_dccOperation = new DccOperation;	
+}
+
+PasswdChangeBiz::~PasswdChangeBiz()
+{
+	if (m_dccOperation != NULL)
+		delete m_dccOperation;
+}
+
+int PasswdChangeBiz::deal(ABMCCR *pRecivePack, ABMCCA *pSendPack)
+{
+	__DEBUG_LOG0_(0, "=========>PasswdChangeBiz::deal 响应服务开始");
+	__DEBUG_LOG0_(0, "=========>1：接收全国HSS返回的CCA...");
+	
+	PasswdChangeStruct reqStruct;
+	PasswdChangeCond reqCond;
+	
+	//PasswdChangeCond oCCAData;	//中心ABM响应自服务平台的CCA返回信息
+	
+	int iRet=0;
+	int iSize=0;
+	int LoginServType; //用户类型：互联网用户 OR 通信证用户
+	
+	// 获取pRecivePack的公共CCA消息头
+	char sSessionId[64];
+	struDccHead Head;
+
+	char dccType[1];	// DCC消息类型
+	strcpy(dccType,"A"); 
+	long lDccRecordSeq=0L; // 流水号，主键
+	
+	try
+	{
+		// 取消息包的消息头信息
+		memcpy((void *)&Head,(void *)(pRecivePack->m_sDccBuf),sizeof(Head));
+		// 收到CCA包Session-Id
+		__DEBUG_LOG1_(0, "=======>收到全国HSS返回的CCA的消息头，SESSION_ID:[%s]",Head.m_sSessionId);
+		//根据CCA响应流水去找自服务平台请求CCR的会话ID
+		iRet = m_dccOperation->qryPreSessionId(Head.m_sSessionId,sSessionId);
+		if(iRet != 0)
+		{
+			__DEBUG_LOG0_(0, "查询CCA会话ID的源Session Id失败.");
+		}
+		__DEBUG_LOG1_(0, "========>自服务平台发起CCR的SESSION_ID:[%s]",sSessionId);
+		strcpy(cPreSessionId,sSessionId);
+		iRet = m_dccOperation->QueryDccRecordSeq(lDccRecordSeq);
+		if(iRet != 0)
+		{
+			__DEBUG_LOG0_(0, "查询DCC_INFO_RECORD_SEQ失败");
+			throw -1;
+		}
+		// 将收到的CCA消息头入TT
+		iRet = m_dccOperation->insertDccInfo(Head,dccType,lDccRecordSeq);
+		if(iRet != 0)
+		{
+			__DEBUG_LOG0_(0, "保存全国HSS返回CCA包消息头信息失败");
+			throw -1;
+		}
+		// 根据sessionId取TT对应的CCR信息
+		__DEBUG_LOG0_(0, "=========>根据sessionId取TT对应的CCR[自服务平台CCR请求信息]信息:");
+	
+		iRet = m_dccOperation->getPasswdChangeInfo(sSessionId,reqStruct,reqCond);  //新建函数
+		if(iRet != 0)
+		{
+			__DEBUG_LOG0_(0, "获取自服务平台CCR请求业务信息失败");
+			throw -1;
+		}
+		__DEBUG_LOG1_(0, "getCCRInfo,iRet=[%d]",iRet);
+		
+		//用户类型：互联网用户OR通行证用户
+		LoginServType=reqCond.m_hDestType;
+		
+		//解包
+		m_poPack = (PasswdChangeCCA *)pSendPack;
+		m_poUnpack = (PasswdChangeCCA *)pRecivePack;
+		
+		if(iSize=m_poUnpack->getPasswdChangeData(g_vPasswdChangeData) == 0)
+			{
+				__DEBUG_LOG0_(0, "PasswdChangeBiz::deal 全国HSS返回CCA，请求服务消息包为NULL");
+				m_poPack->setRltCode(ECODE_NOMSG);
+				throw  -1;
+			}
+			else if(iSize < 0)
+				{
+					__DEBUG_LOG0_(0, "PasswdChangeBiz::deal 消息解包出错!");
+					m_poPack->setRltCode(ECODE_UNPACK_FAIL);
+					throw -1;
+				}
+			
+		//CCA解包处理
+		for(g_itr1=g_vPasswdChangeData.begin();g_itr1!=g_vPasswdChangeData.end();++g_itr1)
+		{
+			iRet=_deal(reqStruct,*g_itr1);
+			__DEBUG_LOG1_(0, "PasswdChangeBiz::deal iRet=%d", iRet);
+		}
+	}
+	catch(TTStatus oSt)
+	{
+		iRet = -1;
+		__DEBUG_LOG1_(0, "PasswdChangeBiz::deal oSt.err_msg=%s", oSt.err_msg);
+	}
+	catch(int &value ) 
+	{
+		iRet=value;
+		__DEBUG_LOG1_(0, "PasswdChangeBiz::QryPayoutInfo value=%d",value);
+	}
+	
+	if(iRet != 0)
+	{
+		// 打返回包，赋错误码
+		m_poPack->clear();
+		m_poPack->setRltCode(ECODE_TT_FAIL);
+	}
+	
+	return iRet;	
+}
+
+int PasswdChangeBiz::_deal(PasswdChangeStruct oRes,PasswdChangeData *pData)
+{
+	int iRet=0;
+	PasswdChangeData oCCAData;	//中心ABM响应自服务平台的CCA返回信息
+	char sSessionId[64];
+	struDccHead Head;
+
+	char dccType[1];	// DCC消息类型
+	strcpy(dccType,"A"); 
+	long lDccRecordSeq=0L; // 流水号，主键
+	
+	//CCA解包处理
+	
+	try{
+		//生成返回自服务平台的CCA包
+		strcpy(oCCAData.m_sResID,oRes.m_sReqID);
+		oCCAData.m_hRltCode = pData->m_hRltCode;
+		strcpy(oCCAData.m_sParaRes,pData->m_sParaRes);
+		
+		time_t tTime;
+		tTime = time(NULL);
+		oCCAData.m_iResTime=tTime;
+					
+		//设置消息头
+		// Session-id - 返回自服务平台的Session需要根据请求流水号从DCC业务信息记录表中获取
+		strcpy(Head.m_sSessionId,cPreSessionId);
+		__DEBUG_LOG1_(0, "返回CCA的SESSION_ID:[%s]",Head.m_sSessionId);
+		
+		strcpy(Head.m_sSrvTextId,"LogonPassword_Reset.Micropayment@001.ChinaTelecom.com");
+		strcpy(Head.m_sOutPlatform,"001.ChinaTelecom.com");
+		strcpy(Head.m_sOrignHost,"ABM2@001.ChinaTelecom.com");
+		strcpy(Head.m_sOrignRealm,"001.ChinaTelecom.com");
+		
+		// 获取请求划拨号码的归属地
+		char sOrgId[4];
+		char sLocalAreaId[5]={0};
+		char sAccoutNbr[32];
+		strcpy(sAccoutNbr,"18951765356");
+		//iRet = m_dccOperation->qryAccountOrgId(reqPayInfo.m_iDestinationAttr,sOrgId); // 测试后放开
+		iRet = m_dccOperation->qryAccountOrgId(sAccoutNbr,sOrgId,sLocalAreaId); // 测试时写死
+		if(iRet !=0 )
+		{
+			__DEBUG_LOG0_(0, "取号码所属机构代码失败.");
+			throw -1;
+		}
+		
+		snprintf(Head.m_sDestRealm,sizeof(Head.m_sDestRealm),"%s.ChinaTelecom.com",sOrgId);
+		__DEBUG_LOG1_(0, "消息头，目标设备标识-Head.m_sDestRealm:[%s]",Head.m_sDestRealm);
+		
+		Head.m_iAuthAppId = 4;
+		Head.m_iReqType = 4;
+		Head.m_iReqNumber  = 0;
+		Head.m_iResultCode = 0;
+		
+		memcpy((void *)(m_poPack->m_sDccBuf),(void *)&Head,sizeof(Head));
+		
+		//返回自服务平台CCA打包
+		if(!m_poPack->addPasswdChangeData(oCCAData))
+		{
+			__DEBUG_LOG0_(0, "PasswdChangeBiz::deal 返回自服务平台CCA打包失败!");
+			m_poPack->setRltCode(ECODE_PACK_FAIL);
+			throw -1;
+		}
+		__DEBUG_LOG0_(0, "返回自服务平台CCA打包完成");
+		
+		iRet = m_dccOperation->QueryDccRecordSeq(lDccRecordSeq);
+		if(iRet !=0 )
+		{
+			__DEBUG_LOG0_(0, "取DCC_INFO_RECORD_SEQ失败.");
+			throw -1;
+		}
+		
+		// 保存发出的CCA信息
+		__DEBUG_LOG0_(0, "保存发出的DCC包信息入TT");
+		iRet = m_dccOperation->insertDccInfo(Head,dccType,lDccRecordSeq);
+		if(iRet != 0)
+		{
+			__DEBUG_LOG0_(0, "保存DCC业务信息失败");
+			throw -1;
+		}
+	}
+	catch(TTStatus oSt)
+	{
+		iRet = -1;
+		__DEBUG_LOG1_(0, "[登陆密码修改-收发CCA,发往自服务端]: oSt.err_msg=%s", oSt.err_msg);
+	}
+	catch(int &value ) 
+	{
+		iRet=value;
+		__DEBUG_LOG1_(0, "[登陆密码修改-收发CCA,发往自服务端]: iRet=%d",value);
+	}
+	return iRet;
+}

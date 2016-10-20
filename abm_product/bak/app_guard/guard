@@ -1,0 +1,140 @@
+## DISPLAY_FLAG=0 MNT窗口不显示GuardMain输出信息
+## DISPLAY_FLAG=1 MNT窗口  显示GuardMain输出信息
+DISPLAY_FLAG=1
+
+CheckExistMNT() {
+    iShiftNum=$#
+    if ps -u $LOGNAME -f |grep GuardMain|grep -v "grep"
+    then
+        echo '[message]: GuardMain监控程序 running...'
+        echo ""
+        return
+    else 
+        echo '[WARNING]: GuardMain监控程序启动失败!!!'
+        echo ""
+        return
+    fi
+}
+
+Confirm()
+{
+    echo ""
+    echo "=== Warning: 将强行停止 MC监控服务/后台应用进程/监控守护进程, 清监控共享内存!\n"
+    echo "=== 确认执行上述操作? [y/n]: \c"
+    read  result
+    
+    [ $result ]||{
+        echo ""
+        exit
+    }
+    
+    if [ $result = y ] || [ $result = Y ]
+    then
+        return
+    else
+        echo ""
+        exit
+    fi
+}
+
+BootServer()
+{
+    export LANG=C
+    echo "启动MC监控服务 ..."
+    tmboot -y
+}
+
+ShutdownServer()
+{
+    export LANG=C
+    #tmshutdown -y
+    tmshutdown -s server_monitor
+    tmshutdown -s server_client
+}
+
+case $1 in
+'-b')
+    echo ""
+    [ $DISPLAY_FLAG = 0 ]&&nohup GuardMain -b 1>/dev/null &
+    [ $DISPLAY_FLAG = 1 ]&&GuardMain -b &
+    sleep 1;
+    CheckExistMNT
+    exit;;
+'-d')
+    GuardMain -d
+    echo ""
+    exit;;
+
+'-B')
+    echo ""
+    [ $DISPLAY_FLAG = 0 ]&&nohup GuardMain -b 1>/dev/null &
+    [ $DISPLAY_FLAG = 1 ]&&GuardMain -b &
+    sleep 1;
+    CheckExistMNT
+    BootServer
+    exit;;
+'-D')
+    ShutdownServer
+    GuardMain -d
+    echo ""
+    exit;;
+
+'-k')
+    Confirm
+    ShutdownServer
+    GuardMain -k
+    echo ""
+    exit;;
+
+'-K')
+    Confirm
+    export LANG=C
+    tmshutdown -y
+    GuardMain -k
+    echo ""
+    exit;;
+
+'-r')
+    GuardMain -r
+    echo ""
+    exit;;
+
+'-bstat')
+    [ $DISPLAY_FLAG = 0 ]&&nohup CheckStat >/dev/null &
+    [ $DISPLAY_FLAG = 1 ]&&CheckStat &
+    echo ""
+    exit;;
+
+'-t')
+    CheckStat 1 &
+    echo ""
+    exit;;
+
+'-dstat')
+    CheckStat d
+    echo ""
+    exit;;
+
+
+   *)
+    echo ""
+    echo "脚本使用说明(v.2008.02.28): "
+    echo " =========================================================== "
+    echo " mnt -b: 启监控守护进程(创建共享内存; 若存在,直接连接)"
+    echo " mnt -B: 启监控守护进程(等同'-b'),再启动MC监控服务<包括BBL,WSL>"
+    echo " mnt -d: 停计费监控守护进程(不杀应用进程)"
+    echo " mnt -D: 停MC服务<不停BBL,WSL>,再执行等同'-d'的操作"
+    echo " mnt -k: 停MC服务<不停BBL,WSL>,停监控守护进程,并强杀应用进程,清监控共享内存"
+    echo " mnt -K: 停所有服务<tmshutdown -y>,停监控守护进程,强杀应用进程,清监控共享内存"
+    echo " mnt -r: 动态上载计费流程配置信息(手工修改完成流程配置信息后调用)"
+    echo " -----------------------------------------------------------  "
+    echo " mnt -bstat   : 启动 BSN.系统监控信息点统计 主进程 [CheckStat]   "
+    echo " mnt -dstat   : 停止 BSN.系统监控信息点统计 主进程 [CheckStat d] "
+    echo " CheckStat v  : 查看 BSN.系统监控信息点统计 所有任务状态"
+    #echo " CheckStat k  : 强行停止统计子任务[未指定任务ID表示全停] "
+    echo " ============================================================ "
+    echo " (MNT, mnt, guard 三份脚本是同一个拷贝,可任意使用)"
+    echo ""
+    exit;;
+esac
+

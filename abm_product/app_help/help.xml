@@ -1,0 +1,1008 @@
+<?xml version="1.0" encoding="utf-8"?>
+<help>
+  <versionHelp>
+    <version>HSSV1.0</version>
+		<environment>Unix系统</environment>
+  </versionHelp>
+	
+  <commandHelp>
+  	<command code="hsssyscheck">
+				<subcommand subcode="">
+						<function>检查主机环境是否满足安装要求</function>
+						<format>hsssyscheck [mode]</format>
+						<description>执行结果显示主机操作系统版本、补丁、应用软件是否正确安装，
+						检查参数文件中的参数配置是否存在、是否合理等，
+						并提示用户主机是否满足软件安装要求，若不满足，给出原因。
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssinstall">
+				<subcommand subcode="">
+						<function>应用程序安装</function>
+						<format>hssinstall [package=value]</format>
+						<description>1.在主机平台上生成各个模块的可执行程序，含解压源程序，包括数据库脚本的安装
+                       2.package为安装包文件名称，一个安装包可包含一个或多个安装程序
+                       3.执行过程包括将安装包解压、编译、运行数据库批处理脚本等功能，完成全部应用软件安装
+                       4.软件正式安装前通过调用hsssyscheck指令对待安装环境进行分析分析及安装进行过程中，
+                           每一步操作都要在屏幕上显示
+                       5.异常处理:安装过程异常则提示用户安装失败，并描述安装失败的原因及建议的解决方案。
+                       6.安装过程的日志必须记录下来，可以进行事后查看
+
+	5、样例：hssinstall  -s package.tar
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssuninstall">
+				<subcommand subcode="">
+						<function>卸载程序</function>
+						<format>hssuninstall [-f]</format>
+						<description>1.在主机平台上卸载指定的安装包
+                       2.异常处理:卸载过程异常则提示用户卸载失败，并描述卸载失败的原因及建议的解决方案。
+                       3.卸载过程的日志必须记录下来，可以进行事后查看
+	                       4、样例：hssuninstall 卸载计费应用程序
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssinstalltest">
+				<subcommand subcode="">
+						<function>计费安装验证</function>
+						<format>hssinstalltest</format>
+						<description>1.连接SR，进行网元与能力激活
+                       2.与SGW建立连接，发送DWR做连接测试
+                       3.与计费域内的订阅者网元建立连接，发送DWR做连接测试
+                         4.例：hssinstalltest 验证HSS流程
+            </description>
+				</subcommand>
+		</command>
+		<command code="hsscleantest">
+				<subcommand subcode="">
+						<function>清理验证结果</function>
+						<format>hsscleantest</format>
+						<description>1.理测试加载的资料数据
+                       2.清理日志、稽核报表等结果数据
+                       3.样例：hbcleantest清理验证结果
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssclear">
+				<subcommand subcode="">
+						<function>清理表数据</function>
+						<format>hssclear -m [table_name, …]  -d [yyyymmddhh24miss]</format>
+						<description>hssclear命令可以将HSS内存中指定表、时间戳的历史数据进行清理，以释放内存</description>
+				</subcommand>
+		</command>
+		<command code="hssparam">
+				<subcommand subcode="-set">
+						<function>设置系统参数</function>
+						<format>hssparam -set parameter = value [,...]</format>
+						<description>1、修改系统参数，根据参数生效方式生效，非立即生效的提示生效方式。
+	2、将名称为parameter参数值修改为value。
+	3、如果设置参数出错，显示出错信息。
+	4、如果成功，显示参数提交成功信息。
+	5、样例：hssparam -set memory.key=90006,memory.size=500M
+						</description>
+				</subcommand>
+				<subcommand subcode="-list">
+						<function>显示系统参数</function>
+						<format>hssparam [-f] -list [parameter] [,...]</format>
+						<description>1、显示所有系统参数的名称及当前正在使用的值。
+	2、如果指定parameter，则仅显示指定参数。
+	3、如果未找到parameter参数，则显示出错信息。
+	4、parameter支持 “*” 匹配多个参数，如 memory.* 表示所有内存参数。
+	5、样例：hssparam -list memory.* 显示所有内存类参数及取值信息
+						</description>
+				</subcommand>
+				<subcommand subcode="-refresh">
+						<function>生效已修改的系统参数</function>
+						<format>hssparam -refresh </format>
+						<description>1、功能：将已修改的参数刷新到内存，并立即生效。
+	2、执行命令后，提示确认消息，如果确认将修改的参数立即生效。
+	3、如果参数生效出错，显示出错信息。
+	4、如果成功，则显示成功信息。
+	5、样例：hssparam -refresh 将配置文件中的配置数据刷新到内存
+						</description>
+				</subcommand>
+    </command>
+		<command code="hssinit">
+				<subcommand subcode="">
+						<function>系统运行模式和初始化</function>
+						<format>hssinit [-s] [-i] [-y] [-v] [-h]</format>
+						<description>1、将系统从off-line模式变为on-line模式。
+	2、-s 将系统由将系统从off-line模式变为maintenance模式。
+	3、-i 初始化系统。
+	4、-y 对提示自动回答yes(可选)。
+	5、-v 加入这个选项显示hssinit的处理过程。
+	6、-h 键入此命令可以获得使用帮助。
+	7、样例：hssinit -i 初始化HSS系统
+						</description>
+				</subcommand>
+    </command>
+    <command code="hssprocess">
+        <subcommand subcode="">
+						<function>状态查询</function>
+						<format>hssprocess -a [-p] [-m]</format>
+						<description> 1.-a 显示信息包括进程ID、进程名称、进程/线程状态、CPU占用、内存占用、IO信息等
+   2.-o 启动进程
+   3.-c 停止进程
+   4.-p 后跟进程ID，表明只指针此进程ID操作
+   5.-m 后跟模块名称，表明针对此模块的所有进程进行操作
+   样例：
+hssprocess –o –p 120
+
+						</description>
+				</subcommand>
+    		<subcommand subcode="-a">
+						<function>状态查询</function>
+						<format>hssprocess -a [-p] [-m]</format>
+						<description> 1.-a 显示信息包括进程ID、进程名称、进程/线程状态、CPU占用、内存占用、IO信息等
+						</description>
+				</subcommand>
+				<subcommand subcode="-o">
+						<function>启动进程</function>
+						<format>hssprocess -o [-p] [-m]</format>
+						<description>1、启动进程。
+	2、-p 后跟进程ID，表明只指针此进程ID操作。
+	3、-m 后跟模块名称，表明针对此模块的所有进程进行操作。
+	4、hssprocess -o -p 120 启动进程编号为120的进程
+						</description>
+				</subcommand>
+				<subcommand subcode="-c">
+						<function>停止进程</function>
+						<format>hssprocess -c [-p] [-m]</format>
+						<description>1、停止进程。
+	2、-p 后跟进程ID，表明只指针此进程ID操作。
+	3、-m 后跟模块名称，表明针对此模块的所有进程进行操作。
+	4、hssprocess -c -p 120 停止进程编号为120的进程
+						</description>
+				</subcommand>
+    </command>
+    <command code="hssshm">
+			<subcommand subcode="-stat">
+					<function>内存状态核查</function>
+					<format>hssshm -stat</format>
+					<description>1、功能：核查内存的使用状况，包括当前状态、键值、大小、已用内存大小、初始化时间等。
+	2、执行结果以列表形式显示共享内存的状态信息。
+	3、样例：hssshm stat 核查客户资料共享内存的状态
+					</description>
+			</subcommand>
+			<subcommand subcode="-show">
+					<function>内存数据核查-查询实体数据</function>
+					<format>hssshm -show table_name [indexcolumn=value] [,...]</format>
+					<description>1、功能：核查数据共享内存的数据取值。
+	2、table_name为共享内存实体的名称;indexcolumn=value为列值关系，实现指定条件数据结果核查。
+	3、按照行列值对应关系以矩阵方式显示结果,参考SQL 查询结果输出。
+	4、厂家可按照共享内存的设计追加其它参数。
+	5、hssshm -show cust cust_id=100 核查客户实体中编号为100的数据信息
+					</description>
+			</subcommand>
+			<subcommand subcode="-count">
+					<function>内存数据核查-查询实体记录数</function>
+					<format>hssshm -count table_name [indexcolumn=value] [,...]</format>
+					<description>1、功能：核查数据共享内存的记录数。
+	2、table_name为共享内存实体的名称;indexcolumn=value为列值关系，实现指定条件数据结果核查。
+	3、厂家可按照共享内存的设计追加其它参数。
+	4、hssshm -count cust cust_id=100 核查客户实体中编号为100的记录数
+					</description>
+			</subcommand>
+			<subcommand subcode="-lockstat">
+					<function>共享内存锁状态核查</function>
+					<format>hssshm -lockstat [table_name]</format>
+					<description>1、功能：核查共享内存的锁信息，可指定核查具体实体的锁状态。
+	2、table_name为指定核查锁状态的实体名称。
+	3、执行结果显示所有加锁的实体及锁类型。
+	4、样例：hssshm -lockstat 显示共享内存所有锁的实体及锁类型
+					</description>
+			</subcommand>
+			<subcommand subcode="-lockreset">
+					<function>共享内存锁状态复位</function>
+					<format>hssshm -lockreset [table_name] [,table_name]</format>
+					<description>1、功能：将共享内存锁状态复位。
+	2、table_name为指定复位的实体名称。
+	3、如果不加参数，则将所有的锁复位，如果指定实体，则只对指定的实体进行复位操作。
+	4、样例：hssshm -lockreset serv 复位共享内存serv实体的锁状态
+					</description>
+			</subcommand>
+	  </command> 
+    <command code="hssmonitor">
+				<subcommand subcode="">
+						<function>hss系统监控集成工具</function>
+						<format>hssmonitor</format>
+						<description>1、针针对不同的用户需要有不同的权限控制
+  2.状态监控（包含内存、CPU、IO、等资源的监控）
+  3.进程启停
+  4.参数修改 (相当于hssparam –set的界面修改方式)
+  5.日志查看
+样例：
+hssmonitor
+打开系统监控工具
+
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssmode">
+		    <subcommand subcode="-k">
+						<function>模式转换</function>
+						<format>hssmode -k</format>
+						<description>执行立即shutdown，将系统由maintenance或on-line模式变为off-line模式。
+            </description>
+				</subcommand>
+				<subcommand subcode="-m">
+						<function>模式转换</function>
+						<format>hssmode -m</format>
+						<description>将系统从maintenance模式变为on-line模式。
+            </description>
+				</subcommand>
+				<subcommand subcode="-s">
+						<function>模式转换</function>
+						<format>hssmode -s</format>
+						<description>执行（非强制）由on-line模式变成maintenance模式
+            </description>
+				</subcommand>
+				<subcommand subcode="-u">
+						<function>模式转换</function>
+						<format>hssmode -u</format>
+						<description>执行（强制）由on-line模式变成maintenance模式
+            </description>
+				</subcommand>
+				<subcommand subcode="-r">
+						<function>模式转换</function>
+						<format>hssmode -r</format>
+						<description>执行由离网变成在网状态(计费网注册)
+            </description>
+				</subcommand>
+				<subcommand subcode="-d">
+						<function>模式转换</function>
+						<format>hssmode -d</format>
+						<description>执行由在网状态变成离网状态(计费网注销)
+            </description>
+				</subcommand>
+				<subcommand subcode="-p">
+						<function>模式转换</function>
+						<format>hssmode -p</format>
+						<description> 显示当前hss的状态
+            </description>
+				</subcommand>
+				<subcommand subcode="-n">
+						<function>模式转换</function>
+						<format>hssmode -n</format>
+						<description>对onLine故障的系统经过修复后重新切换成正常态
+            </description>
+				</subcommand>
+				<subcommand subcode="-N">
+						<function>模式转换</function>
+						<format>hssmode -N</format>
+						<description>对offLine故障的系统经过修复后重新切换成正常态。
+            </description>
+				</subcommand>
+				<subcommand subcode="-y">
+						<function>信息确认</function>
+						<format>hssmode -y</format>
+						<description>对提示自动回答yes（可选）
+            </description>
+				</subcommand>
+				<subcommand subcode="-h">
+						<function>帮助信息</function>
+						<format>hssmode -d</format>
+						<description>键入此命令可以获得使用帮助
+						 样例：
+              hbmode –k
+              将系统由on-line模式变成off-line模式
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssstat">
+		    <subcommand subcode="-a">
+						<function>信息统计</function>
+						<format>hssstat -a</format>
+						<description>-a列出所有选项
+            </description>
+				</subcommand>
+				<subcommand subcode="-s">
+						<function>信息统计</function>
+						<format>hssstat -s</format>
+						<description>列出当前系统自上次启动以来运行了多长时间（格式：**年**月**日**时**分**秒）
+            </description>
+				</subcommand>
+				<subcommand subcode="-i">
+						<function>信息统计</function>
+						<format>hssstat -i</format>
+						<description> 设置进入交互模式(可选)
+            </description>
+				</subcommand>
+				<subcommand subcode="-t">
+						<function>信息统计</function>
+						<format>hssstat -t</format>
+						<description>每隔秒后重复选项
+            </description>
+				</subcommand>
+				<subcommand subcode="-p">
+						<function>信息统计</function>
+						<format>hssstat -p</format>
+						<description>显示当天的统计信息，内容至少包括：已接收的外系统工单数、
+						正确工单记录数、拒收工单记录数、
+						异常工单记录数、已发布的工单记录数、发布失败的工单记录数，配合-m使用
+            </description>
+				</subcommand>
+				<subcommand subcode="-P">
+						<function>信息统计</function>
+						<format>hssstat -P</format>
+						<description>显示自启动以来累计的统计信息，内容至少包括：
+						已接收的外系统工单数、正确工单记录数、拒收工单记录数、
+						异常工单记录数、已发布的工单记录数、发布失败的工单记录数，配合-m使用
+            </description>
+				</subcommand>
+				<subcommand subcode="-r">
+						<function>信息统计</function>
+						<format>hssstat -r</format>
+						<description>显示系统实时吞吐量，内容至少包括（接收的积压工单数量、待发布的工单积压记录数、
+						当前吞吐量（每个时间单位的性能）），可配合-m使用（时间单位由-t参数决定）
+            </description>
+				</subcommand>
+				<subcommand subcode="-m">
+						<function>信息统计</function>
+						<format>hssstat -m module</format>
+						<description>网元名称，可以是外部网元，也可以是计费域内的网元，配合-p，-r选项使用 
+            </description>
+				</subcommand>
+				<subcommand subcode="-L">
+						<function>信息统计</function>
+						<format>hssstat -L</format>
+						<description> 显示日志文件的使用情况
+            </description>
+				</subcommand>
+				<subcommand subcode="-ses">
+						<function>信息统计</function>
+						<format>hssstat -ses</format>
+						<description>显示系统进程/线程情况，含义同hssprocess –a
+            </description>
+				</subcommand>
+				<subcommand subcode="-seg">
+						<function>信息统计</function>
+						<format>hssstat -seg</format>
+						<description>显示当前内存的使用状况，含义同hssshm – stat
+            </description>
+				</subcommand>
+				<subcommand subcode="-n">
+						<function>信息统计</function>
+						<format>hssstat -n [ID]</format>
+						<description>显示与HSS连接的所有业务网元、数据网元、控制网元的信息
+						样例：
+            hssstat  -a -t 5
+             每隔5秒钟重复一次列出所有选项
+
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssimport">
+				<subcommand subcode="">
+						<function>数据导入工具</function>
+						<format>hssimport [-q] [-o] [-t]</format>
+						<description>1、-q 不用将导入输出到屏幕上。
+	2、-f 从指定文件导入数据。
+	3、-t 数据库表名。
+	4、样例：hssimport -t disct_table 把disct_table数据实体的数据导入该业务数据所在的内存中去
+						</description>
+				</subcommand>
+    </command>
+    <command code="hssexport">
+				<subcommand subcode="">
+						<function>数据导出工具</function>
+						<format>hssexport [-q] [-d] [-c] [-o] [-t]</format>
+						<description>1、-q 不用将导出输出到屏幕上。
+	2、-d 让dbexport只导出BLOB字段的描述符，而不导出BLOB数据(可选)。
+	3、-c 除非很严重的错误dbexport才中断(可选)。
+	4、-f 可以将内存数据导出到指定的文件中。
+	5、-t 数据库表名。
+	6、样例：hssexport -t disct_table 把名称叫disctdb的内存数据导出到disct_table数据实体中
+						</description>
+				</subcommand>
+    </command>
+    <command code="hssaccess">
+				<subcommand subcode="">
+						<function>交互式查询工具</function>
+						<format></format>
+						<description>hssaccess有两种执行方式：交互式方式和命令行方式
+一：交互式方式(不需要进入控制台,类似于hssmonitor,)
+在shell提示符下，直接敲入hssaccess不带任何参数，就进入交互式方式，在登陆hssaccess的控制台时需要工号和密码的验证，在控制台上至少应有下列菜单，hss系统表名浏览、可有SQL功能、可用应用命令。在控制台中直接敲入sql语句或应用命令回车即可。
+SQL语句：所有在数据库中可以执行的基本SQL查询语句都可以放在这里去执行。
+例：select * from table_name；只能执行select语句 
+二：命令行方式（必选，日常手工脚本要封装，不便于界面显示的需要封装，内控需求的需要封装）
+命令行的方式hssaccess可以不进入窗口界面直接执行应用命令查询功能，但不能执行sql语句。
+   通过参数配置该命令的参数和执行脚本
+            </description>
+				</subcommand>
+				<subcommand subcode="-u">
+						<function>信息统计</function>
+						<format>hssaccess -u</format>
+						<description>通过登录用户来控制权限,管理员可以通过-u 参数添加新的执行命令，其他人员通过已经配置好的参数执行。
+（样例：hssaccess -u getallproduct=SQL "select * from PRODUCT":）
+            </description>
+				</subcommand>
+				<subcommand subcode="-s">
+						<function>信息统计</function>
+						<format>hssaccess -s</format>
+						<description>执行已经配置好的命令（样例：hssaccess –s getallproduct）
+            </description>
+				</subcommand>
+				<subcommand subcode="-d">
+						<function>信息统计</function>
+						<format>hssaccess -d</format>
+						<description>通过登录用户来控制权限,管理员可以通过-d 参数删除执行命令
+						（样例：hssaccess –d getallproduct）
+            </description>
+				</subcommand>
+		</command>
+    <command code="hsshelp">
+    		<subcommand subcode="">
+						<function>显示所有帮助信息</function>
+						<format>hsshelp</format>
+						<description>1、显示HSS所有可用帮助信息及语法。
+						</description>
+				</subcommand>
+				<subcommand subcode="-version">
+						<function>显示hss版本信息</function>
+						<format>hsshelp -version</format>
+						<description>1、显示HSS的版本信息。
+	2、显示HSS的运行环境信息。
+						</description>
+				</subcommand>
+				<subcommand subcode="-param">
+						<function>显示hss系统参数类帮助</function>
+						<format>hsshelp -param [parameter]</format>
+						<description>1、显示参数的帮助信息，包括参数的描述信息、取值范围和对系统的影响。
+	2、如果不带参数，则列出所有参数信息。
+	3、如果指定parameter，则仅显示指定参数。
+	4、如果未找到parameter参数，则显示出错信息。
+	5、样例：hsshelp -param max_product
+						</description>
+				</subcommand>
+				<subcommand subcode="-command">
+						<function>显示hss系统命令集帮助</function>
+						<format>hsshelp -command [commandname] [subcommandname]</format>
+						<description>1、显示HSS命令集的主命令和子命令帮助信息，包括功能、命令格式、参数含义等。
+	2、如果不带参数，则列出所有主命令及功能简要说明。
+	3、如果带command参数，则显示该主命令的子命令列表、参数格式和功能简要说明。
+	4、如果带subcommand参数，则显示该子命令的详细功能说明、参数详细用法。
+	5、样例：hsshelp -command hssprocess
+						</description>
+				</subcommand>
+    </command>
+		<command code="hssfinderr">
+				<subcommand subcode="-code">
+						<function>错误信息编码查询</function>
+						<format>hssfinderr -code message code</format>
+						<description>1、显 显示指定信息编码的含义，包括信息的编码、类型、详细内容、引发原因和应对措施等（样例：hssfinderr –code ***）
+  如果不带具体的错误编码，则显示所有的错误编码的帮助信息；（样例：hssfinderr –code）
+            </description>
+				</subcommand>
+		</command>
+		<command code="hsslog">
+				<subcommand subcode="-l">
+						<function>日志查询</function>
+						<format>hsslog -l</format>
+						<description>显示当前日志组的状态，和使用率
+            </description>
+				</subcommand>
+				<subcommand subcode="-s">
+						<function>切换日志组</function>
+						<format>hsslog -s</format>
+						<description>切换当前使用的日志组,命令将空闲的切换成在用,在用切换成待归档
+            </description>
+				</subcommand>
+				<subcommand subcode="-a">
+						<function>手动归档日志组</function>
+						<format>hsslog -a</format>
+						<description>切手动归档日志组,日常时系统自动归档日志组,
+						  也可用该命令手动归档日志组.归档参数配置厂家自行定义
+            </description>
+				</subcommand>
+				<subcommand subcode="-param">
+						<function>查看参数日志</function>
+						<format>hsslog -param parameter</format>
+						<description>显示指定参数的修改日志内容，包括修改人工号、修改时间、
+						修改前取值、修改后取值；如果未找到parameter参数，则显示出错信息，
+						并提示用户获取所有参数的方法；如果未指定任何参数，则显示所有参数的修改日志内容；
+            </description>
+				</subcommand>
+				<subcommand subcode="-param">
+						<function>查看检查点日志</function>
+						<format>hsslog -checkpoint</format>
+						<description>显示历次checkpoint的日志内容，包括发生时间、处理内容等；
+            </description>
+				</subcommand>
+				<subcommand subcode="-process">
+						<function>查看检查点日志</function>
+						<format>hsslog -process [process]</format>
+						<description>显示指定进程的调度、错误、告警等日志内容；
+						如果未找到process，则显示出错信息，并提示用户获取所有进程名称的方法；
+						如果未指定任何进程名称，则显示所有进程的调度、错误、告警等日志内容
+            </description>
+				</subcommand>
+				<subcommand subcode="-module">
+						<function>查看指定模块日志</function>
+						<format>hsslog -module module</format>
+						<description>显显示指定模块的错误、告警等日志内容；如果未找到module，则显示出错信息，
+						并提示用户获取所有模块名称的方法；
+						如果未指定任何模块名称，则显示所有模块的错误、告警等日志内容；
+            </description>
+				</subcommand>
+				<subcommand subcode="-class">
+						<function>查看知道类别日志</function>
+						<format>hsslog -class [class]</format>
+						<description>显显示指定类别的日志内容；如果未找到class，则显示出错信息，并提示用户获取
+						所有日志类别名称的方法；如果未指定任何日志类别名称，
+						则显示所有类别的日志内容；（注：具体类别分为错误类、告警类和信息类，厂家可自行扩充）
+            </description>
+				</subcommand>
+				<subcommand subcode="-level">
+						<function>查看指定级别日志</function>
+						<format>hsslog -level [level]</format>
+						<description>显显示指定类别的日志内容；如果未找到class，则显示出错信息，并提示用户获取
+						所有日志类别名称的方法；如果未指定任何日志类别名称，
+						则显示所有类别的日志内容；（注：具体类别分为错误类、告警类和信息类，厂家可自行扩充）
+            </description>
+				</subcommand>
+			  <subcommand subcode="-bdate">
+						<function>查看日志开始时间</function>
+						<format>hsslog -bdate 20110503</format>
+						<description>显询日志的开始日期，格式YYYYMMDD
+            </description>
+				</subcommand>
+				<subcommand subcode="-edate">
+						<function>查看日志结束时间</function>
+						<format>hsslog -bdate 20110503</format>
+						<description>显询日志的结束日期，格式YYYYMMDD
+            </description>
+				</subcommand>
+				<subcommand subcode="-staffid">
+						<function>查看指定工号日志</function>
+						<format>hsslog -staffid  [staffid]</format>
+						<description>显示指定工号的操作日志内容
+            </description>
+				</subcommand>
+				<subcommand subcode="-tablename">
+						<function>查看指定表日志</function>
+						<format>hsslog tablename [tablename]</format>
+						<description>显示指定表的相关操作日志内容
+            </description>
+				</subcommand>
+				<subcommand subcode="-sqltype">
+						<function>查看指定sql类型日志</function>
+						<format>hsslog -sqltype [sqltype]</format>
+						<description>显示指定sql类型操作（增/删/改/查）的日志内容，如显示所有update操作的日志内容
+            </description>
+				</subcommand>
+		</command>
+		<command code="hsscheckpoint">
+				<subcommand subcode="">
+						<function>手工落地持久存储</function>
+						<format>hssfinderr -code message code</format>
+						<description>1.将内存中的日志等内容同步到磁盘文件
+  2.异常处理:同步到磁盘失败提示错误信息
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssaudit">
+				<subcommand subcode="-a">
+						<function>数据稽核命令</function>
+						<format>hssaudit -a</format>
+						<description>显 HSS与订阅网元的定单数据稽核命令，
+						稽核结果显示参见《HSS技术规范》“6.3.3.2.与各业务网元定单平衡”的章节
+            </description>
+				</subcommand>
+			  <subcommand subcode="-bdate">
+						<function>指定稽核的开始时间</function>
+						<format>hssaudit -bdate 20110503</format>
+						<description>可选项，指定稽核的开始时间，只能与-a配合使用
+            </description>
+				</subcommand>
+				<subcommand subcode="-edate">
+						<function>指定稽核的截至时间</function>
+						<format>hssaudit -bdate 20110503</format>
+						<description>可选项，指定稽核的截至时间，只能与-a配合使用
+            </description>
+				</subcommand>
+				<subcommand subcode="-s">
+						<function>关键实体表的稽核</function>
+						<format>hssaudit -s</format>
+						<description>显HSS与订阅网元的关键实体表的数据稽核，取最近的时间点的数据，
+						稽核结果显示参见《HSS技术规范》“6.3.3.3.与各业务网元数据量报表”的章节
+            </description>
+				</subcommand>
+				<subcommand subcode="-n">
+						<function>网元稽核</function>
+						<format>hssaudit -n [网元ID/名称]</format>
+						<description>显列出HSS的订阅网元ID和名称
+            </description>
+				</subcommand>
+				<subcommand subcode="-l">
+						<function>列出HSS的订阅网元ID和名称</function>
+						<format>hssaudit -l</format>
+						<description>显列出HSS的订阅网元ID和名称
+            </description>
+				</subcommand>
+		</command>
+		<command code="hssarchive">
+				<subcommand subcode="-o">
+						<function>数据稽核命令</function>
+						<format>hssarchive -o object </format>
+						<description>显hssarchive命令可以把指定对象的数据进行归档，
+						对内存中的数据进行清除，对磁盘中的数据进行转存
+						指定需要归档的数据对象，一般是指表名
+            </description>
+				</subcommand>
+			  <subcommand subcode="-t">
+						<function>指定稽核的开始时间</function>
+						<format>hssarchive -t time</format>
+						<description>
+						hssarchive命令可以把指定对象的数据进行归档，
+						对内存中的数据进行清除，对磁盘中的数据进行转存
+						指定归档的条件，对小于指定时间的数据进行归档操作
+            </description>
+				</subcommand>
+		</command>
+  </commandHelp>
+	
+  <paramHelp>
+    <param code="hss.nelist">
+				<name>网元列表</name>
+				<description>需配置到系统的各网元。</description>
+				<attributes>
+						<rule></rule>
+						<range>根据业务确认 </range>
+						<value></value>
+				</attributes>
+    </param>
+		<param code="ofcs.inc_audit_time">
+				<name>定时增量稽核时间(serv)</name>
+				<description>定时增量稽核时间</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+		<param code="ofcs.audit_path">
+				<name>稽核结果文件存放路径</name>
+				<description>稽核结果文件存放路径</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+    <param code="ofcs.audit_file_clear">
+				<name>稽核文件清理周期</name>
+				<description>稽核文件清理周期,单位天</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+    <param code="ofcs.time_out">
+				<name>消息发送的超时时间</name>
+				<description>消息发送的超时时间</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+    <param code="memory.[object].max_shm_size">
+				<name>共享内存空间的最大值</name>
+				<description>object代表数据对象(如：serv/cust/acct)，object可选。</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+		<param code="memory.[object].ipc_key_value">
+				<name>共享内存key值</name>
+				<description>key_value=0，则使用key_name。</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>数字，根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+		<param code="memory.[object].ipc_key_name">
+				<name>共享内存key名</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>文字，根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+		<param code="memory.[object].sem_key_value">
+				<name>信号灯的key值</name>
+				<description>sem_key=0，则使用sem_name</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+		<param code="memory.[object].sem_key_name">
+				<name>信号灯的key名字</name>
+				<description></description>
+				<attributes>
+						<rule></rule>
+						<range></range>
+						<value></value>
+				</attributes>
+    </param>
+    <param code="memory.init_data_size">
+				<name>共享内存初始大小</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+		<param code="memory.ext_hwm">
+				<name>超过预定使用的阀值后自动扩展</name>
+				<description></description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>85～95(%） </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+    <param code="memory.ext_data_size">
+				<name>共享内存每次扩展的大小</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据系统确定 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+    <param code="memory.max_extents">
+				<name>共享内存可扩展次数</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>不大于操作系统的限制 </range>
+						<value>根据系统确定 </value>
+				</attributes>
+    </param>
+    <param code="memory.[object].shm_hwm_warming">
+				<name>共享内存高水位告警阀值</name>
+				<description>object代表数据对象，object可选。</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>75～99 </range>
+						<value>80 </value>
+				</attributes>
+    </param>
+		<param code="memory.module.shm_write_type">
+				<name>数据的三种写方式</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>根据模块确定</rule>
+						<range>1实时、2定时、3LRU </range>
+						<value>根据模块确定 </value>
+				</attributes>
+    </param>
+    <param code="log.log_level">
+				<name>日志输出级别</name>
+				<description></description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="log.log_file_size">
+				<name>日志文件大小</name>
+				<description></description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>厂家自行确定 </range>
+						<value>200 </value>
+				</attributes>
+    </param>
+    <param code="log.log_path">
+				<name>日志路径</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="log.log_info_size">
+				<name>日志文件大小</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="log.interval">
+				<name>日志输出间隔</name>
+				<description>日志生成间隔，超过指定间隔生成新的日志文件</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="module.prcess_high_level">
+				<name>高低水的高水位</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="module.prcess_low_leve">
+				<name>高低水的低水位</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="module.max_process">
+				<name>高低水的最大进程数</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="module.min_process">
+				<name>高低水的最低进程数</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="module.queue_size">
+				<name>高低水的队列长度</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+		<param code="[host].max_process_num">
+				<name>计费系统所有允许的高低水位涉及的进程数</name>
+				<description>单节点所有允许的高低水位涉及的进程数不得大于此配置。</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="monitor.cpu_warning_value">
+				<name>CPU过载告警阈值</name>
+				<description>当系统的cpu使用率超过预先阀值时告警。</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>75～90 </range>
+						<value>厂家自行确定 </value>
+				</attributes>
+    </param>
+    <param code="monitor.check_process_time">
+				<name>监控常驻进程的时间间隔</name>
+				<description>监控常驻进程的时间间隔</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>60～90 </range>
+						<value>60 </value>
+				</attributes>
+    </param>
+     <param code="monitor.mem_warning_value">
+				<name>主机内存使用率</name>
+				<description>主机内存使用率</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>60～90 </range>
+						<value>80 </value>
+				</attributes>
+    </param>
+        <param code="monitor.table_space_warning_value">
+				<name>表空间使用率</name>
+				<description>表空间使用率</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>60～90 </range>
+						<value>80 </value>
+				</attributes>
+    </param>
+     <param code="monitor.disk_space_warning_value">
+				<name>磁盘空间使用率</name>
+				<description>磁盘空间使用率</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>60～90 </range>
+						<value>80 </value>
+				</attributes>
+    </param>
+		<param code="[db].server_name">
+				<name>数据库名</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+    <param code="[db].username">
+				<name>数据库用户名</name>
+				<description></description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+    <param code="[db].password">
+				<name>数据库密码</name>
+				<description>需加密</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+    <param code="info.version">
+				<name>系统版本号</name>
+				<description></description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+    <param code="info.desc">
+				<name>版本详细描述</name>
+				<description></description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+    <param code="[interface].max_access_connections">
+				<name>各接口的最大连接数</name>
+				<description>如：DCC Server的最大连接数。</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+    <param code="[host].server_name">
+				<name>前台保障主中心hss应用主机名字</name>
+				<description>1、总部SC使用 2、ServerName根据总部命名规范</description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+		<param code="[host].ip">
+				<name>前台保障主中心hss应用主机ip地址</name>
+				<description></description>
+				<attributes>
+						<rule>立即生效</rule>
+						<range>根据业务确认 </range>
+						<value>根据业务确认 </value>
+				</attributes>
+    </param>
+  </paramHelp>
+</help>

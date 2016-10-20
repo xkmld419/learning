@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.06.00"/>
+    <PROJECT value="dccparser.lib"/>
+    <OBJFILES value="error_status.obj Free_List.obj g_avplist.obj Local_Memory_Pool.obj 
+      Malloc.obj Malloc_Allocator.obj Malloc_T.obj memory_manager.obj 
+      Message_Block.obj mxml-attr.obj mxmldoc.obj mxml-entity.obj mxml-file.obj 
+      mxml-index.obj mxml-node.obj mxml-private.obj mxml-search.obj mxml-set.obj 
+      mxml-string.obj Node.obj parser.obj parser_avp.obj parser_avpvalue.obj 
+      parser_q_avplist.obj q_avplist.obj Time_Value.obj Unbounded_Set.obj 
+      xml.obj xml_errorreporter.obj xmldict.obj ACE.obj Auto_Ptr.obj 
+      avp_container.obj avp_header.obj avplist.obj comlist.obj"/>
+    <RESFILES value=""/>
+    <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES)"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value=""/>
+    <PACKAGES value=""/>
+    <PATHCPP value=".;"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <LINKER value="TLib"/>
+    <USERDEFINES value="OS_WIN32;WIN32;MXML"/>
+    <SYSDEFINES value="NO_STRICT"/>
+    <MAINSOURCE value="dccparser.bpf"/>
+    <INCLUDEPATH value="$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\stlport;.\include_bc;."/>
+    <LIBPATH value="$(BCB)\lib\obj;$(BCB)\lib"/>
+    <WARNINGS value="-w-par"/>
+    <LISTFILE value=""/>
+    <OTHERFILES value=""/>
+  </MACROS>
+  <OPTIONS>
+    <IDLCFLAGS value="-I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\stlport 
+      -I.\include_bc -I. -src_suffix cpp -DOS_WIN32 -DWIN32 -DMXML -boa"/>
+    <CFLAG1 value="-OS -H=$(BCB)\lib\vcl60.csm -Hc -w- -Vx -Ve -u- -X -a8 -6 -b- -k- -vi -c 
+      -tW -tWM"/>
+    <PFLAGS value="-$Y- -$L- -$D- -$A8 -v -JPHNE -M"/>
+    <AFLAGS value="/mx /w2 /zn"/>
+    <LFLAGS value="/P32768 /0 /E /C"/>
+    <OTHERFILES value=""/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="$(OBJFILES)"/>
+    <ALLLIB value=""/>
+    <OTHERFILES value=""/>
+  </LINKER>
+  <FILELIST>
+      <FILE FILENAME="dccparser.bpf" FORMNAME="" UNITNAME="dccparser" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="error_status.cpp" FORMNAME="" UNITNAME="error_status.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Free_List.cpp" FORMNAME="" UNITNAME="Free_List.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="g_avplist.cpp" FORMNAME="" UNITNAME="g_avplist.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Local_Memory_Pool.cpp" FORMNAME="" UNITNAME="Local_Memory_Pool.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Malloc.cpp" FORMNAME="" UNITNAME="Malloc.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Malloc_Allocator.cpp" FORMNAME="" UNITNAME="Malloc_Allocator.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Malloc_T.cpp" FORMNAME="" UNITNAME="Malloc_T.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="memory_manager.cpp" FORMNAME="" UNITNAME="memory_manager.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Message_Block.cpp" FORMNAME="" UNITNAME="Message_Block.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-attr.cpp" FORMNAME="" UNITNAME="mxml-attr.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxmldoc.cpp" FORMNAME="" UNITNAME="mxmldoc.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-entity.cpp" FORMNAME="" UNITNAME="mxml-entity.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-file.cpp" FORMNAME="" UNITNAME="mxml-file.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-index.cpp" FORMNAME="" UNITNAME="mxml-index.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-node.cpp" FORMNAME="" UNITNAME="mxml-node.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-private.cpp" FORMNAME="" UNITNAME="mxml-private.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-search.cpp" FORMNAME="" UNITNAME="mxml-search.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-set.cpp" FORMNAME="" UNITNAME="mxml-set.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="mxml-string.cpp" FORMNAME="" UNITNAME="mxml-string.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Node.cpp" FORMNAME="" UNITNAME="Node.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="parser.cpp" FORMNAME="" UNITNAME="parser.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="parser_avp.cpp" FORMNAME="" UNITNAME="parser_avp.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="parser_avpvalue.cpp" FORMNAME="" UNITNAME="parser_avpvalue.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="parser_q_avplist.cpp" FORMNAME="" UNITNAME="parser_q_avplist.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="q_avplist.cpp" FORMNAME="" UNITNAME="q_avplist.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Time_Value.cpp" FORMNAME="" UNITNAME="Time_Value.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Unbounded_Set.cpp" FORMNAME="" UNITNAME="Unbounded_Set.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="xml.cpp" FORMNAME="" UNITNAME="xml.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="xml_errorreporter.cpp" FORMNAME="" UNITNAME="xml_errorreporter.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="xmldict.cpp" FORMNAME="" UNITNAME="xmldict.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ACE.cpp" FORMNAME="" UNITNAME="ACE.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Auto_Ptr.cpp" FORMNAME="" UNITNAME="Auto_Ptr.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="avp_container.cpp" FORMNAME="" UNITNAME="avp_container.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="avp_header.cpp" FORMNAME="" UNITNAME="avp_header.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="avplist.cpp" FORMNAME="" UNITNAME="avplist.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="comlist.cpp" FORMNAME="" UNITNAME="comlist.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=2052
+CodePage=936
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[HistoryLists\hlIncludePath]
+Count=1
+Item0=$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=1
+Item0=$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=3
+Item0=OS_WIN32;WIN32;MXML
+Item1=_DEBUG;OS_WIN32;WIN32;MXML
+Item2=_DEBUG
+
+[HistoryLists\hlTlibPageSize]
+Count=2
+Item0=0x8000
+Item1=0x0010
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+Launcher=
+UseLauncher=0
+DebugCWD=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteLauncher=
+RemoteCWD=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+LinkCGLIB=0
+
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
+  </IDEOPTIONS>
+</PROJECT>

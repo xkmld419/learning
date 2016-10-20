@@ -1,0 +1,10 @@
+# !/bin/sh
+
+Makefile=`find . -name "Makefile"`
+
+for sub in ${Makefile}
+do
+	sed  's/^include.*\/etc\/install\/Make\.Clean.*/include \$\(BILLDIR\)\/etc\/install\/Make\.Clean/g' ${sub} > ${sub}_new
+	cp ${sub}_new ${sub}
+	rm -rf ${sub}_new
+done

@@ -1,0 +1,558 @@
+#!/bin/sh
+
+#set -x;
+
+##新增的目录
+gAddDir="";
+##已经覆盖的目录
+gCover="";
+gRobackPro="";
+gRunProceID="";
+gIsMake="false";
+pwdPath=`pwd`;
+
+trap "ECHO "程序中途被停止!!";EXIT -1;" 1 2 3 15
+
+function EXIT
+{
+if [ $1 -eq 0 ];then
+	ECHO "升级成功，请检查新的程序是否正常。";
+else
+  Rowback=1;
+  
+	if [ ! $1 -eq 0 ];then
+		ECHO "升级失败,是否进行恢复 y/是 n/不";
+		while [ 1 ]; do
+		  read ans;
+			case "$ans" in
+	    	[Yy]) ECHO "你输入了 $ans"; Rowback=0;
+	    				break ;;
+	    	[Nn]) ECHO "你输入了 $ans"; Rowback=1;break;;
+	    		 *) ECHO "你输入 $ans 有误,请重新输入" ;;
+			esac
+		done;
+	fi
+	
+	if [ $Rowback -eq 0 ];then
+		if [ ! -z "$gCover" ];then
+			for x in $gCover;do
+				ECHO "正在恢复代码,请稍后...";
+				cp -Rf $BakPath/$x/* $HSSDIR/$x/
+				cpRet=$?
+			  if [ ! $cpRet -eq 0 ];then
+			  	ECHO "恢复老的代码失败，请手工恢复";
+			  	ECHO "备份路径是: $BakPath/$x";
+			  else
+			  	ECHO "恢复 $HSSDIR/$x 目录成功"
+			  fi
+			done
+		else
+			ECHO "没有代码被覆盖不需要恢复"
+		fi
+		
+	fi	
+	
+	if [ $Rowback -eq 0 ];then
+		if [ "$gIsMake" = "true" ];then
+			ECHO "重新开始编译老代码: $gIsMake"
+			##开始编译老的代码	
+		  forCount=0;
+			for x in $UPDATEFILE;do
+			  ProName="";
+			  forCount2=0;
+				for y in $PROCESSNAME;do
+					if [ $forCount -eq $forCount2 ];then
+						ProName=$y;
+						break;
+					else
+						forCount2=`expr $forCount2 + 1`;
+					fi
+				done
+				
+				forCount=`expr $forCount + 1`;
+				
+			  ECHO "正在编译代码 $x $ProName ,请稍后...";
+			  ECHO "进入编译目录 cd $HSSDIR/$x";
+				cd $HSSDIR/$x
+				cdRet=$?
+			  if [ ! $cdRet -eq 0 ];then
+			  	ECHO "cd 进入 $HSSDIR/$x 目录失败,请手工恢复";
+			  	exit "-1";
+			  fi
+			  
+			  gIsMake=true;
+			  make $ProName >> $HSSDIR/log/makelog.log;
+			  makeallRet=$?
+			  cp $ProName $HSSDIR/bin
+			  if [ ! $makeallRet -eq 0 ];then
+			  	ECHO "重新编译 $HSSDIR/$x/$ProName 失败,请手工恢复";
+			  else
+			  	ECHO "重新编译 $HSSDIR/$x/$ProName 成功";
+			  fi
+			  
+			  ECHO  "----------------------------------";
+			done
+		fi
+	fi
+fi
+	
+	if [ ! -z "$gRobackPro" ];then
+	  ECHO "恢复相关进程的状态";
+		$HSSDIR/bin/onlineUpdate -r 10 $gRobackPro;
+		CallRet=$?
+		if [ $CallRet -eq 0 ];then
+			ECHO "恢复相关进程的状态成功";
+		else
+			ECHO "恢复相关进程的状态失败，请手工恢复";
+		fi;
+	fi
+	
+	ECHO  "############# END [log: $HSSDIR/log/UpdateFile.log] ###############";
+	echo  "\n"
+	exit $1;
+}
+
+function ECHO
+{
+	sDateTmp=`date +%Y-%m-%d{%H:%M:%S`;
+	sDate=`echo $sDateTmp|sed -e 's/{/ /g'`;
+	
+	echo "[$sDate]  $1 $2 $3 $4 $5";
+	echo "[$sDate]  $1 $2 $3 $4 $5" >> $HSSDIR/log/UpdateFile.log;
+}
+
+function Updatefile
+{
+  OrgVersion="";
+  Desversion="";
+  updatefile="";
+  CallFunRet=-1;
+  
+	if [	-z "$1" ];then
+		ECHO update file not find!!;
+		EXIT "-1";
+	fi;
+	
+	if [ ! -e $1 ];then
+		ECHO "Not Find Update File $1";
+		EXIT "-1";
+	fi;
+	
+	updatefile="$1";
+	
+	 ##取源版本号	
+	IfHaveOrgVer=true;
+	if [ ! -f $HSSDIR/etc/version ];then
+		IfHaveOrgVer=false;
+	fi
+  OrgVersion=`awk -F '=' '/version=/{print $2}' $HSSDIR/etc/version`;
+  if [ -z "$Orgersion" ];then
+  	IfHaveOrgVer=false;
+  fi
+	
+	if [ ! $IfHaveOrgVer ];then
+		ECHO "取不到目前的版本号文件";
+		ECHO "是否继续升级 y/n";
+		while [ 1 ]; do
+		  read ans;
+			case "$ans" in
+	    	[Yy]) ECHO "你输入了 $ans";break ;;
+	    	[Nn]) ECHO "你输入了 $ans"; EXIT "-1";break;;
+	    		 *) ECHO "你输入 $ans 有误,请重新输入 " ;;
+			esac
+		done;
+		
+		ECHO "请输入你现在的版本号,或者输入 n 退出,eg: 2.0.01";
+		read ans;
+    case "$ans" in
+    	[Nn]) ECHO "你输入了 $ans"; EXIT "-1";;
+		esac
+		OrgVersion=$ans;
+		ECHO "你输入了 $OrgVersion";
+  fi
+  
+ 	
+  ##取目标的版本号	
+  Desversion=`awk -F '=' '/version=/{print $2}' $updatefile/version`;
+  if [	-z "$Desversion" ];then
+		ECHO "取目标的版本号失败"
+		EXIT "-1";
+	fi;
+	
+	ECHO "取源版本号     $OrgVersion";
+  ECHO "取目标的版本号 $Desversion";
+  
+  OrgVersionT=`echo $OrgVersion|sed -e 's/\.//g'`;
+	DesversionT=`echo $Desversion|sed -e 's/\.//g'`;
+	
+	if [ "$OrgVersionT" -ge "$DesversionT" ];then
+		ECHO "目标版本号:$Desversion 不比现在版本号:$OrgVersion 新.";
+		EXIT "-1";
+	fi;
+	
+	if [ ! -e $HSSDIR/log ];then
+		mkdir -p $HSSDIR/log
+		if [ ! $? -eq 0 ];then
+			ECHO "创建目录失败 $HSSDIR/log";
+			EXIT "-1";
+		fi;
+	fi;
+	
+	##调用程序取 要升级的程序
+	ECHO "调用 onlineUpdate 输入参数是: -p $updatefile/processfile.ini";
+	$HSSDIR/bin/onlineUpdate -p $updatefile/processfile.ini
+	CallFunRet=$?
+	if [ ! $CallFunRet -eq 0 ];then
+		ECHO "调用 onlineUpdate 失败";
+		EXIT "-1";
+	fi;
+	
+	. $HSSDIR/log/onlineUpdate.sh
+	if [ -z "$APPID" ];then
+		ECHO "获取要升级的程序 APPID 失败";
+		EXIT "-1";
+	fi;
+	
+	###调用程序获取要升级的程序
+	ECHO "调用 onlineUpdate 输入参数是: -n $APPID";
+	$HSSDIR/bin/onlineUpdate -n $APPID
+	CallFunRet=$?
+	if [ ! $CallFunRet -eq 0 ];then
+		ECHO "调用 onlineUpdate 失败";
+		EXIT "-1";
+	fi
+	. $HSSDIR/log/onlineUpdate.sh
+	if [ -z $PROCESSNAME ];then
+		ECHO "获取要升级的程序失败，请检查升级包的配置文件 processfile.ini 中的 PROCESSAPP 配置";
+		EXIT "-1";
+	fi
+	
+	ECHO "有以下程序需要升级，请输入 y/确认, n/退出";
+	ECHO "$PROCESSNAME";
+	while [ 1 ]; do
+	  read ans;
+		case "$ans" in
+	  	[Yy]) ECHO "你输入了 $ans";break ;;
+	  	[Nn]) ECHO "你输入了 $ans"; EXIT "-1";break;;
+	  		 *) ECHO "你输入 $ans 有误,请重新输入" ;;
+		esac
+	done;
+	
+	##调用程序取正在运行的程序
+	ECHO "调用 onlineUpdate 输入参数是: -l $APPID";
+	$HSSDIR/bin/onlineUpdate -l $APPID
+	CallFunRet=$?
+	if [ ! $CallFunRet -eq 0 ];then
+		ECHO "调用 onlineUpdate 失败";
+		EXIT "-1";
+	fi
+	
+	. $HSSDIR/log/onlineUpdate.sh
+	gRunProceID=$RUNPROCESSID;
+	if [ ! -z "$gRunProceID" ];then
+		ECHO "有相关的程序正在运行，是否安全暂停程序，进行升级; y 继续,n 退出";
+		while [ 1 ]; do
+		  read ans;
+			case "$ans" in
+	    	[Yy]) ECHO "你输入了 $ans";break ;;
+	    	[Nn]) ECHO "你输入了 $ans"; EXIT "-1";break;;
+	    		 *) ECHO "你输入 $ans 有误,请重新输入" ;;
+			esac
+		done;
+	fi
+	
+	##调用程序获取升级包的文件
+	ECHO "调用 onlineUpdate 输入参数是: -f $updatefile/processfile.ini";
+	$HSSDIR/bin/onlineUpdate -f $updatefile/processfile.ini
+	CallFunRet=$?
+	if [ ! $CallFunRet -eq 0 ];then
+		ECHO "调用 onlineUpdate 失败";
+		EXIT "-1";
+	fi;
+	
+	. $HSSDIR/log/onlineUpdate.sh
+	if [ -z "$UPDATEFILE" ];then
+		ECHO "获取要升级的文件 UPDATEFILE 失败";
+		EXIT "-1";
+	fi;
+		
+	##备份老代码，替换新代码
+	ECHO "备份老代码开始";
+	BakPath="$HSSDIR/data/UpdateBak/$OrgVersion/$gUpdateDate";
+	
+	if [ ! -d "$BakPath" ];then
+		mkdir -p $BakPath;
+		if [ ! $? -eq 0 ];then
+			ECHO "生成备份目录失败";
+			EXIT "-1";
+		fi
+	fi
+	
+	if [ ! -d "$BakPath" ];then
+		ECHO "生成备份目录失败..";
+		EXIT "-1";
+	fi
+	
+	ECHO "请确认代码的备份目录[y/确认 n/退出]: $BakPath";
+	while [ 1 ]; do
+	  read ans;
+		case "$ans" in
+	  	[Yy]) ECHO "你输入了 $ans";break ;;
+	  	[Nn]) 
+	  				ECHO "你输入了 $ans"; 
+	  				EXIT "-1";break;;
+	  		 *) ECHO "你输入 $ans 有误,请重新输入 " ;;
+		esac
+	done;
+	
+
+	for x in $UPDATEFILE;do
+		if [ ! -d $updatefile/$x ];then
+			ECHO "不存在升级目录 $updatefile/$x ，请确认升级包的是否正确";
+			EXIT "-1";
+		fi
+		
+		if [ ! -d $HSSDIR/$x ];then
+			ECHO "源代码中不存在升级目录 $HSSDIR/$x ，请确认是否是新增目录 y/确认 n/退出";
+			while [ 1 ]; do
+			  read ans;
+				case "$ans" in
+		    	[Yy]) ECHO "你输入了 $ans";
+		    	      mkdir $HSSDIR/$x
+		    	      if [ ! $? -eq 0 ];then
+		    	      	ECHO "新建新增目录失败 $HSSDIR/$x";
+		    	      	EXIT "-1";
+		    	      else
+		    	      	gAddDir="$gAddDir $HSSDIR/$x";
+		    	      fi
+		    				break ;;
+		    	[Nn]) ECHO "你输入了 $ans"; EXIT "-1";break;;
+		    		 *) ECHO "你输入 $ans 有误,请重新输入" ;;
+				esac
+			done;
+		fi
+		
+	done
+	
+	##这里是真正备份文件
+
+	for x in $UPDATEFILE;do
+		if [ ! -d $BakPath/$x ];then
+			mkdir -p $BakPath/$x
+			if [ ! $? -eq 0 ];then
+	    	ECHO "新建备份目录失败 $BakPath/$x";
+	    	EXIT "-1";
+	    else
+	    	ECHO "新建备份目录成功  $BakPath/$x";
+	    fi
+	  fi
+	  
+	  ECHO "复制文件 FROM：[ $HSSDIR/$x/ ] TO [ $BakPath/$x/ ]";
+	  ECHO "正在备份代码,请稍后...";
+	  cp -Rf $HSSDIR/$x/* $BakPath/$x/
+	  cpRet=$?
+	  if [ ! $cpRet -eq 0 ];then
+	  	ECHO "备份文件失败";
+	  	EXIT "-1";
+	  fi
+	done
+	
+	ECHO "备份老代码成功";
+	ECHO "开始覆盖老的代码";
+
+	for x in $UPDATEFILE;do
+	  ECHO "正在覆盖代码,请稍后...";
+		cp -Rf $updatefile/$x/* $HSSDIR/$x/
+		cpRet=$?
+		gCover="$gCover $x"
+	  if [ ! $cpRet -eq 0 ];then
+	  	ECHO "覆盖老的代码失败";
+	  	EXIT "-1";
+	  else
+	  	ECHO "覆盖 $HSSDIR/$x 目录成功"
+	  fi
+	done
+	
+	ECHO "覆盖老代码成功";
+	
+	if [ ! -z "$gRunProceID" ];then
+		ECHO "有相关的程序正在运行，是否安全暂停程序，进行升级; y 继续,n 退出";
+		while [ 1 ]; do
+		  read ans;
+			case "$ans" in
+	    	[Yy]) ECHO "你输入了 $ans";
+	    				break ;;
+	    	[Nn]) ECHO "你输入了 $ans"; EXIT "-1";break;;
+	    		 *) ECHO "你输入 $ans 有误,请重新输入" ;;
+			esac
+		done;
+	
+		ECHO "请输入，停止进程的等待时间，秒为单位";
+		WaitStopT="";
+		while [ 1 ]; do
+		  read ans;
+		  WaitStopT=$ans;
+			echo "$WaitStopT"|[ -n "`sed -n '/^[0-9][0-9]*$/p'`" ];
+			IsNumber=$?;
+			if [ $IsNumber -eq 0 ];then
+				ECHO "你输入的是: $WaitStopT";
+				if [ $WaitStopT -eq 0 ];then
+					ECHO "你输入的等待时间不能是 0,请重新输入";
+				else
+					break;
+				fi;
+			else
+				ECHO "你输入的不是数字，请重新输入!!!";
+			fi
+		done;
+		
+		ECHO "调用 onlineUpdate 输入参数是: -b $WaitStopT $gRunProceID";
+		$HSSDIR/bin/onlineUpdate -b $WaitStopT $gRunProceID
+		CallFunRet=$?
+		gRobackPro=$gRunProceID
+		if [ ! $CallFunRet -eq 0 ];then
+			ECHO "停止先关进程失败"
+			EXIT "-1";
+		else
+			ECHO "停止先关进程成功,开始编译新代码"
+		fi
+	fi
+	
+  ##开始编译新的代码	
+  ECHO "开始编译新的代码";
+  forCount=0;
+	for x in "$UPDATEFILE";do
+	  ProName="";
+	  forCount2=0;
+		for y in "$PROCESSNAME";do
+			if [ $forCount -eq $forCount2 ];then
+				ProName=$y;
+				break;
+			else
+				forCount2=`expr $forCount2 + 1`;
+			fi
+		done
+		
+		forCount=`expr $forCount + 1`;
+		
+	  ECHO "正在编译代码 $x $ProName ,请稍后...";
+	  ECHO "进入目录 cd $HSSDIR/$x";
+		cd $HSSDIR/$x
+		cdRet=$?
+	  if [ ! $cdRet -eq 0 ];then
+	  	ECHO "cd 进入 $HSSDIR/$x 目录失败";
+	  	EXIT "-1";
+	  fi
+	  
+	  gIsMake=true;
+	  make $ProName >> $HSSDIR/log/makelog.log;
+	  makeallRet=$?
+	  cp $ProName $HSSDIR/bin
+	  if [ ! $makeallRet -eq 0 ];then
+	  	ECHO "编译 $HSSDIR/$x/ 失败";
+	  	EXIT "-1";
+	  else
+	  	ECHO "编译 $HSSDIR/$x/ 成功";
+	  fi
+	  
+	  ECHO  "----------------------------------";
+	done
+	
+	##覆盖版本号
+	cd $pwdPath;
+	echo "cp -f $updatefile/version $HSSDIR/etc/version";
+	cp -f "$updatefile/version" "$HSSDIR/etc/version"
+	if [ $? -eq 0 ];then
+		ECHO "更新版本号成功";
+	else
+		ECHO "更新版本号失败";
+	fi
+	
+	EXIT "0";
+}
+
+ECHO  "############# BEGIN [log: $HSSDIR/log/UpdateFile.log] ###############";
+
+gUpdateDate=`date +%Y%m%d%H%M%S`;
+if [ -z "$gUpdateDate" ];then
+	ECHO "获取系统时间失败";
+	EXIT "-1";
+fi
+
+if [ -z "$HSSDIR" ];then
+	ECHO "获取环境变量 HSSDIR 失败";
+	EXIT "-1";
+fi	
+
+if [ ! -d $HSSDIR/log ];then
+	mkdir $HSSDIR/log;
+	if [ ! $? -eq 0 ];then
+		ECHO "创建目录失败, $HSSDIR/log ";
+		EXIT "-1";
+	fi
+fi
+
+ECHO "请确认系统的根目录 $HSSDIR ,路径取 HSSDIR 环境变量 y/确认 n/退出";
+while [ 1 ]; do
+		  read ans;
+			case "$ans" in
+	    	[Yy]) ECHO "你输入了 $ans";break ;;
+	    	[Nn]) ECHO "你输入了 $ans"; EXIT "-1";break;;
+	    		 *) ECHO "你输入 $ans 有误,请重新输入" ;;
+			esac
+done;
+
+
+# Check the command line parameters
+if test -x /usr/bin/getopt -o -x bin/getopt; then
+	#
+	# os400 Users will need to comment out the next line.
+	getoptErr=`getopt s: $*`
+	if [ $? != 0 ]
+	   then
+	   usage
+	   exit ${ERROR_EXIT_CODE}
+	fi
+	# Now get the command line parameters
+	set -- `getopt s: $*`
+	while [ $# -gt 0 ]
+	   do
+	   case $1 in
+	   		  
+		 -s|s)
+		  ECHO $2;
+		 	Updatefile "$2"; 
+		 	shift ;
+		 	break;;
+		 	 
+		--)
+		  ECHO "help: onlineup -s 升级包";
+		  shift ;
+		  break;;
+
+	   *)
+		   ECHO "unknown option -$1 $2"
+		   EXIT "1";;
+	   esac
+	done
+
+else
+	while getopts "s:" switch; do
+	   case $switch in
+	   
+		 s)
+		 	Updatefile "$OPTARG";
+		 	shift 2;
+		 	break;;
+		 
+       --)
+       ECHO "help: onlineup -s 升级包";
+	      shift;
+		  break;;
+	   *)
+		   ECHO "unknown option -$switch $OPTARG"
+		   EXIT "1";;
+	   esac
+	done
+fi
+

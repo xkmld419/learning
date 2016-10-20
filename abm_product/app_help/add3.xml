@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<help option="add">
+	<commandHelp>
+		<command code="hbshm">
+
+	  </command>
+	  <command code="hbparam">
+				<subcommand subcode="-refresh">
+						<function>生效已修改的系统参数</function>
+						<format>hbparam -refresh [-m] [-s]</format>
+						<description></description>
+				</subcommand>
+				<subcommand subcode="-asdf">
+						<function>test</function>
+						<format>hbparam -asdf [parameter] [,...]</format>
+						<description></description>
+				</subcommand>
+				<subcommand subcode="-set">
+						<function>设置系统参数</function>
+						<format>hbparam -set parameter = value [,...]</format>
+						<description></description>
+				</subcommand>
+	  </command>
+
+	</commandHelp>
+	
+	<paramHelp>
+	  <param code="max_product">
+				<name>高低水的最大进程数</name>
+				<description>module代表系统模块</description>
+				<attributes>
+						<rule>重启生效</rule>
+						<range>厂家自行确定</range>
+						<value>厂家自行确定</value>
+				</attributes>
+	  </param>
+
+	</paramHelp>
+
+</help>

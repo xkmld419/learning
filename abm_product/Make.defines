@@ -1,0 +1,184 @@
+####################HP 64BIT DEFINE###############
+OS_DEF = DEF_HP
+#HOST_OS = OS_HPUX
+HOST_OS= OS_HP -DOS_HPUX -DRW_ALLOCATOR_NO_REBIND
+CFLAGS = -AA -g -mt +DD64 +Z +d +W829 +W667 +p +DS2.0 +W652 +W336 +W863 +W749
+CFLAGS_TUX=$(CFLAGS)
+CC = aCC -v -w  -Wl,+s
+AR = ar -r
+RANLIB = ranlib
+SYS_TYPE = SYSTEM_V
+DEF_DEBUG = STAND_OUT
+#TIMESTEN_DEFINE=-DUSE_OLD_CPP_STREAMS -DTTEXCEPT -D_THREAD_SAFE -D_REENTRANT -DTTDEBUG -DTT_64BIT
+TIMESTEN_DEFINE=-DTTEXCEPT -D_THREAD_SAFE -D_REENTRANT -DTTDEBUG -DTT_64BIT
+DEFINE =$(TIMESTEN_DEFINE) -D_INCLUDE__STDC__ -D$(HOST_OS) -D_THREAD_SAFE -D_REENTRANT -D$(OS_DEF) \
+	-D$(SYS_TYPE) -DCOMMON -DDEF_UNIX95 $(SYS_SPECIAL_DEF) -D__KERNEL__ -D_TRANS_APP_PACK_ \
+	-D_OPEN_PERF_STAT_ -D_ABM_SERVER_ -DABM_ENV -D_ACCESS_CONTROL_ -D_GET_CFG_FROM_SHM_  -D_GUANGZHOU_R_ -D_DEBUG_TI_XML_ -DMXML  -DSHM_COUNTER_MODE -D$(DEF_DEBUG) -D__BIGMSGQUEUE_ENABLED -DMXML -D_DEFINE_ECODE_FILE_ 
+#####################################################
+
+
+############# 路径的配置 BEGIN #############
+BILLSRC_HOME=$(ABM_PRO_DIR)/src
+BILL_LIB_PATH=$(ABM_PRO_DIR)/lib
+######ABM
+ABM_PRO_RUN=$(ABM_PRO_DIR)
+ABM_LIB=.
+ABM_LIB_D=$(ABM_PRO_DIR)/lib
+ABM_BIN=$(ABM_PRO_DIR)/bin
+RUN_TIME=$(ABM_PRO_RUN)/src/run_time
+
+SYSTEM=$(RUN_TIME)/system
+SERVICE=$(RUN_TIME)/service
+ALGO=$(RUN_TIME)/algo
+ORALCE_OP=$(RUN_TIME)/oracle_op
+TT_OP=$(RUN_TIME)/tt_op
+XML_OP=$(RUN_TIME)/xml_op
+SHM_OP=$(RUN_TIME)/shm_op
+FRAMEWORK=$(RUN_TIME)/framework
+
+PRODLIBHOME=${ORACLE_HOME}/rdbms/lib
+LIBHOME=${ORACLE_HOME}/lib
+NETWORKHOME=$(ORACLE_HOME)/network/
+PLSQLHOME=$(ORACLE_HOME)/plsql/
+
+############# 路径的配置 END ###############
+
+############# 编译参数根据操作系统匹配 BEGIN #############
+ABM_INCLUDE_DCC= -I $(ABM_PRO_RUN)/src/run_time/dccparser/include_hp
+
+
+#LD_BILL_LIB_T=  -lpublic -lframework -ljson -lace -lcurses -lcontrols -lliboci -lbillcommon -lparser -linit -lmmdb -lworkflow -lthreelogapi 
+
+LD_BILL_LIB_T= -lbm28 -lcurses
+
+############# 头文件的 include begin ######################
+#--- Environment Define ---#
+I_SYM = -I
+
+HB_INCLUDE = $(I_SYM)$(PLSQLHOME)public          $(I_SYM)$(NETWORKHOME)public  \
+	$(I_SYM)$(ORACLE_HOME)/rdbms/demo   $(I_SYM)$(ORACLE_HOME)/rdbms/public \
+	$(I_SYM)$(BILLSRC_HOME)/framework 	$(I_SYM)$(BILLSRC_HOME)/lib \
+	$(I_SYM)$(BILLSRC_HOME)/libbnftp \
+	$(I_SYM)$(BILLSRC_HOME)/public  \
+	$(I_SYM)$(BILLSRC_HOME)/liboci 	\
+	$(I_SYM)$(BILLSRC_HOME)/mmdb	$(I_SYM)$(BILLSRC_HOME)/app_abmmonitor \
+	$(I_SYM)/opt/aCC/include/rw	\
+	$(I_SYM)/opt/aCC/include_std/rw       $(I_SYM)/opt/aCC/include_std \
+	$(I_SYM)$(BILLDIR)/src/include  \
+	$(I_SYM)$(BILLSRC_HOME)/app_param \
+	$(I_SYM)$(BILLSRC_HOME)/app_json	$(I_SYM)$(BILLSRC_HOME)/app_hbaccess  \
+	$(I_SYM)$(BILLSRC_HOME)/app_init	\
+	$(I_SYM)$(BILLSRC_HOME)/app_shmmgr	\
+	$(I_SYM)$(BILLSRC_HOME)/app_infocheck	\
+	$(I_SYM)$(BILLSRC_HOME)/threelogapi \
+	$(I_SYM)$(ABM_PRO_RUN)/src/include \
+	$(I_SYM)$(BILLSRC_HOME)/terminal_control \
+	$(I_SYM)$(BILLSRC_HOME)/hss/include 
+	
+ABM_INCLUDE = $(I_SYM). \
+          $(I_SYM)$(ORACLE_HOME)/rdbms/demo	$(I_SYM)$(ORACLE_HOME)/rdbms/public \
+          $(I_SYM)$(TIMESTEN_HOME)/include \
+          $(I_SYM)$(TIMESTEN_HOME)/include/ttclasses \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/system \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/algo \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/service \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/oracle_op \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/tt_op \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/xml_op \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/shm_op \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/framework \
+          $(I_SYM)$(ABM_PRO_RUN)/src/run_time/dccparser \
+          $(I_SYM)$(ABM_PRO_RUN)/src/include \
+          $(I_SYM)$(ABM_PRO_RUN)/app_hss  \
+          $(I_SYM)$(ABM_PRO_RUN)/src \
+          $(I_SYM)$(ABM_PRO_DIR)/src/bill/src/lib
+          
+INCLUDE=$(HB_INCLUDE) $(ABM_INCLUDE)  $(ABM_INCLUDE_DCC)
+
+############## 头文件的 include end   ######################
+
+############## .a define being ##############
+
+#--- Main Library Define ---#
+MAIN_OBJ=$(FRAMEWORK)/main.o
+SYSTEM_LIBS=$(ABM_LIB_D)/libsystem.a
+ALGO_LIBS=$(ABM_LIB_D)/libalgo.a
+ORACLE_OP_LIBS=$(ABM_LIB_D)/liboracleop.a
+TT_OP_LIBS=$(ABM_LIB_D)/libttop.a
+XML_OP_LIBS=$(ABM_LIB_D)/libxmlop.a
+SHM_OP_LIBS=$(ABM_LIB_D)/libshmop.a
+FRAMEWORK_LIBS=$(ABM_LIB_D)/libframework.a
+
+## HB .a BEGIN##
+BILL_PUBLIC_LIBS=$(BILLSRC_HOME)/public/libpublic.a
+BILL_BILL_LIBS=$(BILLSRC_HOME)/bill/libbill.a
+BILL_LIBS=$(BILLSRC_HOME)/lib/libbillcommon.a
+BILL_LIBOCI_LIBS=$(BILLSRC_HOME)/liboci/libliboci.a
+BILL_CPARSER_LIBS=$(BILLSRC_HOME)/cparser/libparser.a
+BILL_CURSES_LIBS=$(BILLSRC_HOME)/terminal_control/libcontrols.a
+BILL_FRAMEWORK_LIBS=$(BILLSRC_HOME)/framework/libframework.a
+BILL_MMDB_LIBS=$(BILLSRC_HOME)/mmdb/libmmdb.a
+BILL_MAIN_OBJ=$(BILLSRC_HOME)/framework/main.o
+BILL_WORKFLOW_LIBS=$(BILLSRC_HOME)/app_abmmonitor/libworkflow.a
+BILL_PENGINE_LIBS=$(BILLSRC_HOME)/pengine/libpengine.a
+BILL_FILEDB_LIBS=$(BILLSRC_HOME)/app_filedb/libfiledb.a
+BILL_IVPN_LIBS=$(BILLSRC_HOME)/app_ivpn/libivpn.a
+BILL_DIAMPARSER_LIBS=$(BILLSRC_HOME)/libdiamparser/libdiamparser.a
+BILL_ACE_LIBS=$(BILLSRC_HOME)/newace/libace.a
+BILL_INIT_LIBS=$(BILLSRC_HOME)/app_init/libinit.a
+BILL_LOGG_LIBS=$(BILLSRC_HOME)/threelogapi/libthreelogapi.a
+
+############## .a define end ##############
+
+############## 库的连接 being ##############
+
+#LD_SYSTEM_LIBS = -L$(ABM_LIB_D) -lsystem
+#LD_BILL_LIBS= -L$(ABM_LIB_D) -lbillcommon
+#LD_ALGO_LIBS = -L$(ABM_LIB_D) -lalgo
+#LD_ORACLE_OP_LIBS = -L$(ABM_LIB_D) -loracleop
+#LD_TT_OP_LIBS = -L$(ABM_LIB_D) -lttop
+#LD_SHM_OP_LIBS = -L$(ABM_LIB_D) -lshmop
+#LD_XML_OP_LIBS = -L$(ABM_LIB_D) -lxmlop
+#LD_FRAMEWORK_LIBS = -L$(ABM_LIB_D) -lframework
+#LD_DCC_PARSER = -L$(ABM_LIB_D) -ldccparser
+
+
+###hb 库 BEGIN###
+BILL_LD_ORA_LIBS = -L$(ORACLE_HOME)/lib -L$(ORACLE_HOME)/rdbms/lib -lclntsh \
+        -L/lib \
+	`cat $(ORACLE_HOME)/lib/sysliblist` -ldl -lm
+
+SHARED_OCCILIBS=-locci -lclntsh
+LD_ORA_LIBS= -lc -L$(PRODLIBHOME) -L$(LIBHOME) ${SHARED_OCCILIBS} \
+	-lm `cat ${ORACLE_HOME}/lib/sysliblist` -lpthread $(BILL_LD_ORA_LIBS)
+	
+LD_USR_LIBS_BILL = -L$(BILL_LIB_PATH) $(LD_BILL_LIB_T) \
+                   -L$(TIMESTEN_HOME)/lib -ltten -lttclasses \
+                   -L$(ABM_PRO_DIR)/lib -lttop -lsystem
+
+###hb 库 end###
+LD_TIMESTEN_LIBS=-lpthread -lnsl -L $(TIMESTEN_HOME)/lib -ltten -lttclasses
+LD_USR_LIBS = $(LD_ORACLE_OP_LIBS)  $(LD_FRAMEWORK_LIBS) $(LD_BILL_LIBS) \
+	$(LD_TT_OP_LIBS)   \
+	$(LD_SHM_OP_LIBS) \
+	$(LD_TIMESTEN_LIBS) \
+	$(LD_ALGO_LIBS) \
+	$(LD_DCC_PARSER) $(LD_SYSTEM_LIBS) $(LD_USR_LIBS_BILL) 
+        
+############## 库的连接 being ##############
+        
+###########################
+# TUXEDO Build: 
+###########################
+TUX_COMM_LIBS= \
+	-f "-L$(BILL_LIB_PATH) $(LD_BILL_LIB_T)" \
+	-f "$(BILL_LD_ORA_LIBS)" \
+	-f "$(LD_TUX_LIBS)" \
+	-f "$(LD_BILL_XERCE_LIBS)"  \
+    -f "-L/usr/lib/hpux64  -lCsup  -lcps -lcres  -lm  -lstd -lstd_v2 -lstream"
+
+#=========================== make install =============== 
+##原来的 build_bill: ... 都定义到 $(BILLDIR)/etc/install/Makefile-Format 文件了
+
+include $(ABM_PRO_DIR)/etc/install/Makefile-Format
+include $(ABM_PRO_DIR)/etc/install/Makefile-install

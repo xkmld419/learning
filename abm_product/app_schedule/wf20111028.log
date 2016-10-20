@@ -1,0 +1,265 @@
+[Date:] 2011/10/28 11:02:39 
+[Message:]
+ monitor监控共享内存(10009999)<<创建>>成功! 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:02:39 
+[Message:]
+ 初始化MC_流程调度共享内存... 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:02:39 
+[Message:]
+ 初始化信号量... 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:02:39 
+[Message:]
+ MC_流程调度共享内存(10010000)<<创建>>成功! 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:07 
+[Message:]
+ monitor监控共享内存(10009999)--连接--成功! 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:08 
+[Message:]
+ 初始化MC_流程调度共享内存... 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:08 
+[Message:]
+ MC_流程调度共享内存(10010000)--连接--成功! 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:27 
+[Message:]
+ monitor监控共享内存(10009999)--连接--成功! 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:27 
+[Message:]
+ 初始化MC_流程调度共享内存... 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:27 
+[Message:]
+ MC_流程调度共享内存(10010000)--连接--成功! 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:28 
+[Message:]
+ StartCommand: TransMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:28 
+[Message:]
+ child process create ,pid:25066 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:28 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:28 
+[Message:]
+ child process create ,pid:25073 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:28 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:28 
+[Message:]
+ child process create ,pid:25077 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:29 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:29 
+[Message:]
+ child process create ,pid:25078 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:29 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:29 
+[Message:]
+ child process create ,pid:25079 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:29 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:29 
+[Message:]
+ child process create ,pid:25080 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:30 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:30 
+[Message:]
+ child process create ,pid:25081 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:30 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:30 
+[Message:]
+ child process create ,pid:25082 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:31 
+[Message:]
+ StartCommand: ConvertMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:31 
+[Message:]
+ child process create ,pid:25083 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:31 
+[Message:]
+ StartCommand: AffairMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:31 
+[Message:]
+ child process create ,pid:25084 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:31 
+[Message:]
+ StartCommand: AffairMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:31 
+[Message:]
+ child process create ,pid:25085 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:32 
+[Message:]
+ StartCommand: AffairMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:32 
+[Message:]
+ child process create ,pid:25090 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:32 
+[Message:]
+ StartCommand: AffairMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:32 
+[Message:]
+ child process create ,pid:25094 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:32 
+[Message:]
+ StartCommand: AffairMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:32 
+[Message:]
+ child process create ,pid:25098 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:33 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:34 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:34 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:34 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:34 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:37 
+[Message:]
+ StartCommand: CongestMgr  
+ ExecPath: /hss/sgw/SGW_HOME/bin
+[File(line):] Guard.cpp(714)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:37 
+[Message:]
+ child process create ,pid:25135 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Date:] 2011/10/28 11:03:37 
+[Message:]
+ App Login sucess! 
+[File(line):] Guard.cpp(1115)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
