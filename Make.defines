@@ -1,0 +1,124 @@
+####################AIX 64BIT DEFINE###############
+#OS_DEF = DEF_AIX
+OS_DEF = DEF_HPUX
+HOST_OS = OS_HPUX
+#CFLAGS = -q64 -g -bnoquiet 
+#CFLAGS =  -DMXML -w -g +DD64 -AA
+CFLAGS =  -DMXML -w -g +DD64 -AA  +DS2.0 -D_RWSTD_MULTI_THREAD -DSS_64BIT_SERVER -Wl,+s -Wl,+n
+CC = aCC
+AR = ar -r
+RANLIB = ranlib
+SYS_TYPE = SYSTEM_V
+DEF_DEBUG = STAND_OUT
+TIMESTEN_DEFINE=-D_DEBUG_DCC_ -DTTEXCEPT -D_THREAD_SAFE -D_REENTRANT -DTTDEBUG -DTT_64BIT -D_DEBUG_TI_XML_
+DEFINE = -DDEF_HP -D$(HOST_OS) -D_THREAD_SAFE -D_REENTRANT -DTOPSPEEDRUN_MODE -DSHM_COUNTER_MODE -D$(OS_DEF) -D$(SYS_TYPE) -D$(DEF_DEBUG) -DTUXEDO -DCOMMON -DDEF_UNIX95 $(TIMESTEN_DEFINE) $(SYS_SPECIAL_DEF) -D__KERNEL__ -DRW_ALLOCATOR_NO_REBIND -DRWSTD_NO_CONST_INST  -D__BIGMSGQUEUE_ENABLED
+#####################################################
+## ENVIRONMENT END
+#####################################################
+ABMAPP_COMPILE=$(ABM_HOME)/compile
+ABMAPP_DEPLOY=$(ABM_HOME)/deploy
+APP_BIN=$(ABMAPP_DEPLOY)/bin
+APP_LIB=$(ABMAPP_COMPILE)
+RUN_TIME=$(ABM_HOME)/run_time
+ACCU_APP=$(ABM_HOME)/accu_app
+SYSTEM=$(RUN_TIME)/system
+ALGO=$(RUN_TIME)/algo
+ORALCE_OP=$(RUN_TIME)/oracle_op
+TT_OP=$(RUN_TIME)/tt_op
+FRAMEWORK=$(RUN_TIME)/framework
+SHARED_OCCILIBS=-locci -lclntsh
+PRODLIBHOME=${ORACLE_HOME}/rdbms/lib
+LIBHOME=${ORACLE_HOME}/lib
+
+#--- Environment Define ---#
+I_SYM = -I
+INCLUDE = $(I_SYM). \
+          $(I_SYM)$(ORACLE_HOME)/rdbms/demo     $(I_SYM)$(ORACLE_HOME)/rdbms/public \
+          $(I_SYM)$(TIMESTEN_HOME)/include \
+          $(I_SYM)$(TIMESTEN_HOME)/include/ttclasses \
+          $(I_SYM)$(ABM_HOME)/run_time/system \
+          $(I_SYM)$(ABM_HOME)/run_time/algo \
+          $(I_SYM)$(ABM_HOME)/run_time/oracle_op \
+          $(I_SYM)$(ABM_HOME)/run_time/tt_op \
+          $(I_SYM)$(ABM_HOME)/run_time/framework \
+          $(I_SYM)$(ABM_HOME)/include \
+          $(I_SYM)$(ABM_HOME)/dccparser \
+          $(I_SYM)$(ABM_HOME)/dccparser/include_hp
+
+#--- Main Library Define ---#
+MAIN_OBJ=$(FRAMEWORK)/main.o
+SYSTEM_LIBS=$(APP_LIB)/libsystem.a
+ALGO_LIBS=$(APP_LIB)/libalgo.a
+ORACLE_OP_LIBS=$(APP_LIB)/liboracleop.a
+TT_OP_LIBS=$(APP_LIB)/libttop.a
+FRAMEWORK_LIBS=$(APP_LIB)/libframework.a
+
+LD_SYSTEM_LIBS = -L$(APP_LIB) -lsystem
+LD_ALGO_LIBS = -L$(APP_LIB) -lalgo
+LD_ORACLE_OP_LIBS = -L$(APP_LIB) -loracleop
+LD_TT_OP_LIBS = -L$(APP_LIB) -lttop
+LD_FRAMEWORK_LIBS = -L$(APP_LIB) -lframework
+LD_DCC_PARSER = -L$(ABM_HOME)/dccparser -ldccparser
+DCC_LINK_OBJ = $(ABM_HOME)/dccparser/DccMsgParser.o
+#############
+
+LD_ORA_LIBS= -L$(PRODLIBHOME) -L$(LIBHOME) ${SHARED_OCCILIBS} \
+        -lm `cat ${ORACLE_HOME}/lib/sysliblist` -lpthread
+
+LD_TIMESTEN_LIBS=-lpthread -lnsl -L$(TIMESTEN_HOME)/lib -ltten -lttclasses
+
+LD_USRT_LIBS = $(LD_SYSTEM_LIBS) \
+                $(LD_ALGO_LIBS) \
+                $(LD_TT_OP_LIBS) \
+                $(LD_FRAMEWORK_LIBS) \
+                $(LD_TIMESTEN_LIBS)  \
+		$(LD_DCC_PARSER)
+
+LD_USR_LIBS = $(LD_SYSTEM_LIBS) \
+                $(LD_ALGO_LIBS) \
+                $(LD_ORACLE_OP_LIBS) \
+                $(LD_TT_OP_LIBS) \
+                $(LD_FRAMEWORK_LIBS) \
+                $(LD_TIMESTEN_LIBS)  \
+                $(LD_DCC_PARSER)
+
+# Rule to compile any program (specify EXE= and OBJS= on command line)
+.SUFFIXES: .pc .cpp .cxx .sql .ecpp .c .m .o .txt
+
+.cpp.o:
+	@echo
+	@echo "=======[ $*.o ]======="
+	$(CC) $(CFLAGS)  -o $*.o $(DEFINE) $(INCLUDE) -c $*.cpp
+	@echo
+
+build_main: $(INCS)
+	@echo
+	@echo "=======[ $(EXE) ]=======" 
+	$(CC) $(CFLAGS) -o $(APP_BIN)/$(EXE) $(OBJS) $(MAIN_OBJ) $(LD_USR_LIBS) $(LD_ORA_LIBS)
+	@echo
+
+build_dcc: $(INCS)
+	@echo
+	@echo "=======[ $(EXE) ]=======" 
+	$(CC) $(CFLAGS) -o $(APP_BIN)/$(EXE) $(OBJS) $(MAIN_OBJ) $(DCC_LINK_OBJ) $(LD_USR_LIBS) $(LD_ORA_LIBS) $(LD_DCC_PARSER)
+	@echo
+
+build_test: $(INCS)
+	@echo
+	@echo "=======[ $(EXE) ]=======" 
+	$(CC) $(CFLAGS) -o $(EXE) $(INCLUDE) $(OBJS) $(LD_XERCESC_LIBS) $(LD_USR_LIBS) $(LD_ORA_LIBS)
+	@echo
+	
+build_xml_test: $(INCS)
+	@echo
+	@echo "=======[ $(EXE) ]=======" 
+	$(CC) $(CFLAGS) -o $(EXE) $(INCLUDE) $(OBJS) $(LD_XERCESC_LIBS) $(LD_USR_LIBS) $(LD_ORA_LIBS)
+	@echo
+
+build_dcc_test: $(INCS)
+	@echo
+	@echo "=======[ $(EXE) ]=======" 
+	$(CC) $(CFLAGS) -o $(EXE) $(INCLUDE) $(OBJS) $(DCC_LINK_OBJ) $(LD_XERCESC_LIBS) $(LD_USR_LIBS) $(LD_ORA_LIBS) $(LD_DCC_PARSER)
+	@echo
+
+CLEANFILES = core core.* *.o temp.* *.out *.lis
